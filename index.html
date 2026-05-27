@@ -488,6 +488,26 @@ main { max-width: 900px; margin: 0 auto; padding: 24px; }
 .dot.aff { background: var(--aff); }
 .dot.neg { background: var(--neg); }
 
+/* Copy toast */
+#copy-toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  background: #1e293b;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   header { padding: 16px; }
@@ -570,6 +590,7 @@ const i18n = {
     verb3: '不規則動詞',
     adverb: '副詞',
     groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'（る動詞）', verb2:'（う動詞）', verb3:'（する・くる）', adverb:'', exist:'（ある・いる）', tai:'（〜たい）', teiru:'（〜ています）', particle:'（は・が・を・に・で）', counter:'（〜本・〜枚・〜冊）' },
+    copied: 'コピーしました',
     informalNote: '（口語）',
     exist: '存在動詞',
     tai: 'たい形',
@@ -615,6 +636,7 @@ const i18n = {
     verb3: 'Irregular Verbs',
     adverb: 'Adverbs',
     groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'(ru-verbs)', verb2:'(u-verbs)', verb3:'(suru・kuru)', adverb:'', exist:'(aru・iru)', tai:'(-tai)', teiru:'(-te imasu)', particle:'(wa/ga/wo/ni/de)', counter:'(hon/mai/satsu)' },
+    copied: 'Copied!',
     informalNote: '(informal)',
     exist: 'Existence Verbs',
     tai: 'Desire Form',
@@ -1676,13 +1698,37 @@ function tm(obj) { return obj[lang] || obj.zh || ''; }
 // Render helpers
 // =====================================================================
 function selectSentence(el) {
+  const text = el.textContent.trim();
+
+  // Desktop: select text
   const range = document.createRange();
   range.selectNodeContents(el);
   const sel = window.getSelection();
   sel.removeAllRanges();
   sel.addRange(range);
+
   el.classList.add('flash');
   setTimeout(() => el.classList.remove('flash'), 200);
+
+  // Mobile + desktop: copy to clipboard and show toast
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showCopyToast()).catch(() => {});
+  } else {
+    showCopyToast();
+  }
+}
+
+function showCopyToast() {
+  const existing = document.getElementById('copy-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.id = 'copy-toast';
+  toast.textContent = t('copied');
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, 1800);
 }
 
 function readingsRow(hira, kata, rom) {
