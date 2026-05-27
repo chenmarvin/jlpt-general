@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日語句型練習 | Japanese Sentence Practice</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #3730a3;
+  --primary-light: #4f46e5;
+  --primary-faint: #eef2ff;
+  --aff: #15803d;
+  --aff-light: #dcfce7;
+  --aff-border: #86efac;
+  --neg: #b91c1c;
+  --neg-light: #fee2e2;
+  --neg-border: #fca5a5;
+  --surface: #ffffff;
+  --bg: #f8f9ff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+  color: white;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(55,48,163,0.3);
+}
+header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.02em; }
+header p { font-size: 0.85rem; opacity: 0.8; margin-top: 2px; }
+
+.lang-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.lang-btn:hover { background: rgba(255,255,255,0.35); }
+
+/* Group tabs */
+.group-nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.group-nav::-webkit-scrollbar { display: none; }
+
+.group-tab {
+  background: none;
+  border: none;
+  padding: 14px 18px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.group-tab:hover { color: var(--primary); }
+.group-tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* Controls bar */
+.controls-bar {
+  background: var(--surface);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.toggle-group {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+.toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 7px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.toggle-btn.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+.toggle-btn.aff.active { color: var(--aff); }
+.toggle-btn.neg.active { color: var(--neg); }
+
+.sep { width: 1px; height: 28px; background: var(--border); }
+
+/* Main content */
+main { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+/* Section */
+.section {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.section-header {
+  padding: 14px 20px;
+  background: var(--primary-faint);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+}
+.section-body { padding: 20px; }
+
+/* Pattern box */
+.pattern-box {
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+}
+.pattern-box.aff { background: var(--aff-light); border: 1px solid var(--aff-border); }
+.pattern-box.neg { background: var(--neg-light); border: 1px solid var(--neg-border); }
+
+.pattern-formula {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  letter-spacing: 0.02em;
+}
+.pattern-box.aff .pattern-formula { color: var(--aff); }
+.pattern-box.neg .pattern-formula { color: var(--neg); }
+
+.pattern-formula-en {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.pattern-note {
+  font-size: 0.875rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* Conjugation table */
+.conj-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+.conj-table th {
+  background: var(--primary-faint);
+  color: var(--primary);
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border);
+}
+.conj-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.conj-table tr:last-child td { border-bottom: none; }
+.conj-table tr:hover td { background: var(--bg); }
+
+/* Vocabulary grid */
+.vocab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+.vocab-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  text-align: center;
+  cursor: default;
+  transition: box-shadow 0.2s;
+}
+.vocab-card:hover { box-shadow: var(--shadow-md); }
+.vocab-kanji {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.vocab-reading {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.vocab-romaji {
+  font-size: 0.7rem;
+  color: var(--text-light);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.vocab-meaning {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--primary-faint);
+  border-radius: 4px;
+  padding: 2px 6px;
+  display: inline-block;
+}
+
+/* Sentence cards */
+.sentence-card {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s;
+}
+.sentence-card:last-child { margin-bottom: 0; }
+.sentence-card:hover { box-shadow: var(--shadow-md); }
+.sentence-card.aff { border-left: 4px solid var(--aff); }
+.sentence-card.neg { border-left: 4px solid var(--neg); }
+
+.sentence-pair {
+  margin-bottom: 16px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.sentence-pair:last-child { margin-bottom: 0; }
+.sentence-pair > .sentence-card {
+  border-radius: 0;
+  border: none;
+  border-left: 4px solid transparent;
+  margin-bottom: 0;
+}
+.sentence-pair > .sentence-card:hover { box-shadow: none; }
+.sentence-pair > .sentence-card.aff {
+  border-left-color: var(--aff);
+  background: var(--aff-light);
+  border-bottom: 1px solid var(--border);
+}
+.sentence-pair > .sentence-card.neg {
+  border-left-color: var(--neg);
+  background: var(--neg-light);
+}
+.toggle-btn.both.active { color: var(--primary); }
+
+.sentence-ja {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+  padding: 2px 4px;
+  margin-left: -4px;
+}
+.sentence-ja:hover { background: var(--primary-faint); color: var(--primary); }
+.sentence-ja.flash {
+  background: var(--primary);
+  color: white;
+}
+
+.readings-table { width: 100%; }
+.readings-table tr td { padding: 3px 0; vertical-align: top; }
+.reading-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-light);
+  width: 72px;
+  padding-right: 10px;
+}
+.reading-value {
+  font-size: 0.9rem;
+  color: var(--text);
+  font-family: 'Noto Sans JP', 'Noto Sans TC', monospace;
+}
+.reading-romaji { font-style: italic; color: var(--text-muted); }
+.sentence-meaning {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Exercise */
+.exercise-container { max-width: 640px; margin: 0 auto; }
+.exercise-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.exercise-count {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  margin: 0 16px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.exercise-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.exercise-type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
+}
+.exercise-type-badge.aff { background: var(--aff-light); color: var(--aff); }
+.exercise-type-badge.neg { background: var(--neg-light); color: var(--neg); }
+.exercise-type-badge.both { background: var(--primary-faint); color: var(--primary); }
+
+.exercise-vocab-ja {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.exercise-vocab-reading {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.exercise-vocab-romaji {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-light);
+  font-style: italic;
+  margin-bottom: 4px;
+}
+.exercise-vocab-meaning {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 28px;
+}
+.exercise-prompt {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+}
+
+.reveal-btn {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid var(--primary);
+  background: var(--primary-faint);
+  color: var(--primary);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.reveal-btn:hover { background: var(--primary); color: white; }
+
+.answer-box {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  animation: fadeIn 0.3s ease;
+}
+.answer-box.aff { border-color: var(--aff-border); background: var(--aff-light); }
+.answer-box.neg { border-color: var(--neg-border); background: var(--neg-light); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+.answer-ja {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.answer-box.aff .answer-ja { color: var(--aff); }
+.answer-box.neg .answer-ja { color: var(--neg); }
+.answer-box.aff .sentence-ja:hover { background: rgba(21,128,61,0.12); color: var(--aff); }
+.answer-box.neg .sentence-ja:hover { background: rgba(185,28,28,0.12); color: var(--neg); }
+
+.exercise-nav {
+  display: flex;
+  gap: 12px;
+}
+.nav-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-btn:hover { background: var(--primary-faint); border-color: var(--primary); color: var(--primary); }
+.nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Type indicator dot */
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+.dot.aff { background: var(--aff); }
+.dot.neg { background: var(--neg); }
+
+/* Responsive */
+@media (max-width: 600px) {
+  header { padding: 16px; }
+  header h1 { font-size: 1.1rem; }
+  main { padding: 16px; }
+  .group-nav { padding: 0 12px; }
+  .controls-bar { padding: 12px 16px; gap: 10px; }
+  .vocab-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  .exercise-card { padding: 20px 16px; }
+  .exercise-vocab-ja { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1 id="hdr-title">日語句型練習</h1>
+    <p id="hdr-subtitle">肯定句與否定句</p>
+  </div>
+  <button class="lang-btn" id="lang-toggle-btn" onclick="toggleLang()">English</button>
+</header>
+
+<nav class="group-nav" id="group-nav"></nav>
+
+<div class="controls-bar">
+  <div class="toggle-group">
+    <button class="toggle-btn active" id="mode-tutor" onclick="setMode('tutor')" data-i18n="modeTutor">學習模式</button>
+    <button class="toggle-btn" id="mode-exercise" onclick="setMode('exercise')" data-i18n="modeExercise">練習模式</button>
+  </div>
+  <div class="sep"></div>
+  <div class="toggle-group" id="sent-type-toggle">
+    <button class="toggle-btn aff active" id="type-aff" onclick="setSentType('aff')" data-i18n="typeAff">肯定句</button>
+    <button class="toggle-btn neg" id="type-neg" onclick="setSentType('neg')" data-i18n="typeNeg">否定句</button>
+    <button class="toggle-btn both" id="type-both" onclick="setSentType('both')" data-i18n="typeBoth">兩者對照</button>
+  </div>
+</div>
+
+<main id="main-content"></main>
+
+<script>
+// =====================================================================
+// i18n
+// =====================================================================
+const i18n = {
+  zh: {
+    appTitle: '日語句型練習',
+    appSubtitle: '肯定句與否定句',
+    langToggle: 'English',
+    modeTutor: '學習模式',
+    modeExercise: '練習模式',
+    typeAff: '肯定句',
+    typeNeg: '否定句',
+    typeBoth: '兩者對照',
+    secPattern: '句型說明',
+    secVocab: '詞彙',
+    secExamples: '例句',
+    secConj: '活用變化',
+    hiragana: '平假名',
+    katakana: '片假名',
+    romaji: '羅馬字',
+    meaning: '意思',
+    affLabel: '肯定',
+    negLabel: '否定',
+    formulaLabel: '句型',
+    noteLabel: '說明',
+    exerPromptAff: '請組成肯定句：',
+    exerPromptNeg: '請組成否定句：',
+    exerPromptBoth: '請組成肯定句與否定句：',
+    exerReveal: '顯示答案',
+    exerHide: '隱藏答案',
+    exerPrev: '← 上一題',
+    exerNext: '下一題 →',
+    exerQ: '第',
+    exerOf: '共',
+    noun: '名詞',
+    iAdj: 'い形容詞',
+    naAdj: 'な形容詞',
+    verb1: '一段動詞',
+    verb2: '五段動詞',
+    verb3: '不規則動詞',
+    adverb: '副詞',
+    groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'（る動詞）', verb2:'（う動詞）', verb3:'（する・くる）', adverb:'', exist:'（ある・いる）', tai:'（〜たい）', teiru:'（〜ています）', particle:'（は・が・を・に・で）', counter:'（〜本・〜枚・〜冊）' },
+    informalNote: '（口語）',
+    exist: '存在動詞',
+    tai: 'たい形',
+    teiru: 'て形＋います',
+    particle: '助詞',
+    counter: '助數詞'
+  },
+  en: {
+    appTitle: 'Japanese Sentence Practice',
+    appSubtitle: 'Affirmative & Negative Sentences',
+    langToggle: '中文',
+    modeTutor: 'Tutor Mode',
+    modeExercise: 'Exercise Mode',
+    typeAff: 'Affirmative',
+    typeNeg: 'Negative',
+    typeBoth: 'Both',
+    secPattern: 'Pattern',
+    secVocab: 'Vocabulary',
+    secExamples: 'Example Sentences',
+    secConj: 'Conjugation',
+    hiragana: 'Hiragana',
+    katakana: 'Katakana',
+    romaji: 'Romaji',
+    meaning: 'Meaning',
+    affLabel: 'Affirmative',
+    negLabel: 'Negative',
+    formulaLabel: 'Formula',
+    noteLabel: 'Note',
+    exerPromptAff: 'Form an affirmative sentence:',
+    exerPromptNeg: 'Form a negative sentence:',
+    exerPromptBoth: 'Form both an affirmative and a negative sentence:',
+    exerReveal: 'Reveal Answer',
+    exerHide: 'Hide Answer',
+    exerPrev: '← Previous',
+    exerNext: 'Next →',
+    exerQ: 'Question',
+    exerOf: 'of',
+    noun: 'Nouns',
+    iAdj: 'I-Adjectives',
+    naAdj: 'Na-Adjectives',
+    verb1: 'Group 1 Verbs',
+    verb2: 'Group 2 Verbs',
+    verb3: 'Irregular Verbs',
+    adverb: 'Adverbs',
+    groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'(ru-verbs)', verb2:'(u-verbs)', verb3:'(suru・kuru)', adverb:'', exist:'(aru・iru)', tai:'(-tai)', teiru:'(-te imasu)', particle:'(wa/ga/wo/ni/de)', counter:'(hon/mai/satsu)' },
+    informalNote: '(informal)',
+    exist: 'Existence Verbs',
+    tai: 'Desire Form',
+    teiru: 'Te-form + imasu',
+    particle: 'Particles',
+    counter: 'Counters'
+  }
+};
+
+// =====================================================================
+// App data
+// =====================================================================
+const groups = [
+  // ----------------------------------------------------------------
+  // NOUNS
+  // ----------------------------------------------------------------
+  {
+    id: 'noun',
+    icon: '📘',
+    nameKey: 'noun',
+    pattern: {
+      aff: {
+        formula: '〔名詞〕 ＋ です',
+        formulaEn: '[Noun] + desu',
+        note: { zh: '名詞後加「です」，表示「是…」。', en: 'Add "desu" after a noun to express "is/am/are …".' }
+      },
+      neg: {
+        formula: '〔名詞〕 ＋ では ありません',
+        formulaEn: '[Noun] + dewa arimasen',
+        note: { zh: '名詞後加「ではありません」，表示「不是…」。口語可用「じゃありません」或「じゃないです」。', en: 'Add "dewa arimasen" after a noun to express "is/am/are not …". Informal: "ja arimasen" or "ja nai desu".' }
+      }
+    },
+    conj: null,
+    vocab: [
+      { kanji:'学生', hira:'がくせい', kata:'ガクセイ', rom:'gakusei', mean:{zh:'學生',en:'student'} },
+      { kanji:'先生', hira:'せんせい', kata:'センセイ', rom:'sensei', mean:{zh:'老師',en:'teacher'} },
+      { kanji:'医者', hira:'いしゃ', kata:'イシャ', rom:'isha', mean:{zh:'醫生',en:'doctor'} },
+      { kanji:'会社員', hira:'かいしゃいん', kata:'カイシャイン', rom:'kaishain', mean:{zh:'上班族',en:'company employee'} },
+      { kanji:'日本人', hira:'にほんじん', kata:'ニホンジン', rom:'nihonjin', mean:{zh:'日本人',en:'Japanese person'} },
+      { kanji:'本', hira:'ほん', kata:'ホン', rom:'hon', mean:{zh:'書',en:'book'} },
+      { kanji:'友達', hira:'ともだち', kata:'トモダチ', rom:'tomodachi', mean:{zh:'朋友',en:'friend'} },
+      { kanji:'家族', hira:'かぞく', kata:'カゾク', rom:'kazoku', mean:{zh:'家人；家庭',en:'family'} },
+      { kanji:'学校', hira:'がっこう', kata:'ガッコウ', rom:'gakkō', mean:{zh:'學校',en:'school'} },
+      { kanji:'大学', hira:'だいがく', kata:'ダイガク', rom:'daigaku', mean:{zh:'大學',en:'university'} },
+      { kanji:'病院', hira:'びょういん', kata:'ビョウイン', rom:'byōin', mean:{zh:'醫院',en:'hospital'} },
+      { kanji:'車', hira:'くるま', kata:'クルマ', rom:'kuruma', mean:{zh:'車',en:'car'} },
+      { kanji:'猫', hira:'ねこ', kata:'ネコ', rom:'neko', mean:{zh:'貓',en:'cat'} },
+      { kanji:'犬', hira:'いぬ', kata:'イヌ', rom:'inu', mean:{zh:'狗',en:'dog'} },
+      { kanji:'映画', hira:'えいが', kata:'エイガ', rom:'eiga', mean:{zh:'電影',en:'movie'} },
+      { kanji:'音楽', hira:'おんがく', kata:'オンガク', rom:'ongaku', mean:{zh:'音樂',en:'music'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'私は 学生 です。', hira:'わたしは がくせい です。', kata:'ワタシワ ガクセイ デス。', rom:'Watashi wa gakusei desu.', mean:{zh:'我是學生。',en:'I am a student.'} },
+        { ja:'これは 本 です。', hira:'これは ほん です。', kata:'コレワ ホン デス。', rom:'Kore wa hon desu.', mean:{zh:'這是書。',en:'This is a book.'} },
+        { ja:'田中さんは 先生 です。', hira:'たなかさんは せんせい です。', kata:'タナカサンワ センセイ デス。', rom:'Tanaka-san wa sensei desu.', mean:{zh:'田中先生是老師。',en:'Mr./Ms. Tanaka is a teacher.'} },
+        { ja:'あの人は 医者 です。', hira:'あのひとは いしゃ です。', kata:'アノヒトワ イシャ デス。', rom:'Ano hito wa isha desu.', mean:{zh:'那個人是醫生。',en:'That person is a doctor.'} },
+        { ja:'あそこは 病院 です。', hira:'あそこは びょういん です。', kata:'アソコワ ビョウイン デス。', rom:'Asoko wa byōin desu.', mean:{zh:'那裡是醫院。',en:'That place over there is a hospital.'} },
+        { ja:'山田さんは 会社員 です。', hira:'やまださんは かいしゃいん です。', kata:'ヤマダサンワ カイシャイン デス。', rom:'Yamada-san wa kaishain desu.', mean:{zh:'山田先生是上班族。',en:'Mr./Ms. Yamada is a company employee.'} },
+        { ja:'これは 友達の 車 です。', hira:'これは ともだちの くるま です。', kata:'コレワ トモダチノ クルマ デス。', rom:'Kore wa tomodachi no kuruma desu.', mean:{zh:'這是朋友的車。',en:'This is my friend\'s car.'} },
+        { ja:'あの 動物は 猫 です。', hira:'あの どうぶつは ねこ です。', kata:'アノ ドウブツワ ネコ デス。', rom:'Ano dōbutsu wa neko desu.', mean:{zh:'那隻動物是貓。',en:'That animal is a cat.'} },
+        { ja:'鈴木さんは 私の 友達 です。', hira:'すずきさんは わたしの ともだち です。', kata:'スズキサンワ ワタシノ トモダチ デス。', rom:'Suzuki-san wa watashi no tomodachi desu.', mean:{zh:'鈴木小姐是我的朋友。',en:'Ms. Suzuki is my friend.'} },
+        { ja:'ここは 私の 学校 です。', hira:'ここは わたしの がっこう です。', kata:'ココワ ワタシノ ガッコウ デス。', rom:'Koko wa watashi no gakkō desu.', mean:{zh:'這裡是我的學校。',en:'This is my school.'} },
+        { ja:'あれは 大学 です。', hira:'あれは だいがく です。', kata:'アレワ ダイガク デス。', rom:'Are wa daigaku desu.', mean:{zh:'那是大學。',en:'That is a university.'} },
+        { ja:'あの 子は 私の 弟 です。', hira:'あの こは わたしの おとうと です。', kata:'アノ コワ ワタシノ オトウト デス。', rom:'Ano ko wa watashi no otōto desu.', mean:{zh:'那個孩子是我的弟弟。',en:'That child is my younger brother.'} },
+        { ja:'山田さんは 医者です。', hira:'やまださんは いしゃです。', kata:'ヤマダサンワ イシャデス。', rom:'Yamada-san wa isha desu.', mean:{zh:'山田先生是醫生。',en:'Mr./Ms. Yamada is a doctor.'} },
+        { ja:'これは 日本語の 教科書です。', hira:'これは にほんごの きょうかしょです。', kata:'コレワ ニホンゴノ キョウカショデス。', rom:'Kore wa Nihongo no kyōkasho desu.', mean:{zh:'這是日語教科書。',en:'This is a Japanese textbook.'} },
+        { ja:'今日は 月曜日です。', hira:'きょうは げつようびです。', kata:'キョウワ ゲツヨウビデス。', rom:'Kyō wa getsuyōbi desu.', mean:{zh:'今天是星期一。',en:'Today is Monday.'} },
+        { ja:'東京は 日本の 首都です。', hira:'とうきょうは にほんの しゅとです。', kata:'トウキョウワ ニホンノ シュトデス。', rom:'Tōkyō wa Nihon no shuto desu.', mean:{zh:'東京是日本的首都。',en:'Tokyo is the capital of Japan.'} }
+      ],
+      neg: [
+        { ja:'私は 学生 では ありません。', hira:'わたしは がくせい では ありません。', kata:'ワタシワ ガクセイ デワ アリマセン。', rom:'Watashi wa gakusei dewa arimasen.', mean:{zh:'我不是學生。',en:'I am not a student.'} },
+        { ja:'これは 本 では ありません。', hira:'これは ほん では ありません。', kata:'コレワ ホン デワ アリマセン。', rom:'Kore wa hon dewa arimasen.', mean:{zh:'這不是書。',en:'This is not a book.'} },
+        { ja:'田中さんは 医者 じゃ ありません。', hira:'たなかさんは いしゃ じゃ ありません。', kata:'タナカサンワ イシャ ジャ アリマセン。', rom:'Tanaka-san wa isha ja arimasen.', mean:{zh:'田中先生不是醫生。（口語）',en:'Mr./Ms. Tanaka is not a doctor. (informal)'} },
+        { ja:'あの人は 日本人 では ありません。', hira:'あのひとは にほんじん では ありません。', kata:'アノヒトワ ニホンジン デワ アリマセン。', rom:'Ano hito wa nihonjin dewa arimasen.', mean:{zh:'那個人不是日本人。',en:'That person is not Japanese.'} },
+        { ja:'あそこは 病院 じゃ ありません。', hira:'あそこは びょういん じゃ ありません。', kata:'アソコワ ビョウイン ジャ アリマセン。', rom:'Asoko wa byōin ja arimasen.', mean:{zh:'那裡不是醫院。（口語）',en:'That place is not a hospital. (informal)'} },
+        { ja:'これは 私の 車 では ありません。', hira:'これは わたしの くるま では ありません。', kata:'コレワ ワタシノ クルマ デワ アリマセン。', rom:'Kore wa watashi no kuruma dewa arimasen.', mean:{zh:'這不是我的車。',en:'This is not my car.'} },
+        { ja:'山田さんは 先生 では ありません。', hira:'やまださんは せんせい では ありません。', kata:'ヤマダサンワ センセイ デワ アリマセン。', rom:'Yamada-san wa sensei dewa arimasen.', mean:{zh:'山田先生不是老師。',en:'Mr./Ms. Yamada is not a teacher.'} },
+        { ja:'あの 動物は 犬 じゃ ないです。', hira:'あの どうぶつは いぬ じゃ ないです。', kata:'アノ ドウブツワ イヌ ジャ ナイデス。', rom:'Ano dōbutsu wa inu ja nai desu.', mean:{zh:'那隻動物不是狗。（口語）',en:'That animal is not a dog. (informal)'} },
+        { ja:'鈴木さんは 私の 家族 では ありません。', hira:'すずきさんは わたしの かぞく では ありません。', kata:'スズキサンワ ワタシノ カゾク デワ アリマセン。', rom:'Suzuki-san wa watashi no kazoku dewa arimasen.', mean:{zh:'鈴木小姐不是我的家人。',en:'Ms. Suzuki is not my family.'} },
+        { ja:'ここは 大学 では ありません。', hira:'ここは だいがく では ありません。', kata:'ココワ ダイガク デワ アリマセン。', rom:'Koko wa daigaku dewa arimasen.', mean:{zh:'這裡不是大學。',en:'This is not a university.'} },
+        { ja:'あれは 私の 本 じゃ ないです。', hira:'あれは わたしの ほん じゃ ないです。', kata:'アレワ ワタシノ ホン ジャ ナイデス。', rom:'Are wa watashi no hon ja nai desu.', mean:{zh:'那不是我的書。（口語）',en:'That is not my book. (informal)'} },
+        { ja:'あの 人は 会社員 では ありません。', hira:'あのひとは かいしゃいん では ありません。', kata:'アノヒトワ カイシャイン デワ アリマセン。', rom:'Ano hito wa kaishain dewa arimasen.', mean:{zh:'那個人不是上班族。',en:'That person is not a company employee.'} },
+        { ja:'山田さんは 医者では ありません。', hira:'やまださんは いしゃでは ありません。', kata:'ヤマダサンワ イシャデワ アリマセン。', rom:'Yamada-san wa isha de wa arimasen.', mean:{zh:'山田先生不是醫生。',en:'Mr./Ms. Yamada is not a doctor.'} },
+        { ja:'これは 日本語の 教科書では ありません。', hira:'これは にほんごの きょうかしょでは ありません。', kata:'コレワ ニホンゴノ キョウカショデワ アリマセン。', rom:'Kore wa Nihongo no kyōkasho de wa arimasen.', mean:{zh:'這不是日語教科書。',en:'This is not a Japanese textbook.'} },
+        { ja:'今日は 月曜日では ありません。', hira:'きょうは げつようびでは ありません。', kata:'キョウワ ゲツヨウビデワ アリマセン。', rom:'Kyō wa getsuyōbi de wa arimasen.', mean:{zh:'今天不是星期一。',en:'Today is not Monday.'} },
+        { ja:'大阪は 日本の 首都では ありません。', hira:'おおさかは にほんの しゅとでは ありません。', kata:'オオサカワ ニホンノ シュトデワ アリマセン。', rom:'Ōsaka wa Nihon no shuto de wa arimasen.', mean:{zh:'大阪不是日本的首都。',en:'Osaka is not the capital of Japan.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // I-ADJECTIVES
+  // ----------------------------------------------------------------
+  {
+    id: 'iAdj',
+    icon: '🔵',
+    nameKey: 'iAdj',
+    pattern: {
+      aff: {
+        formula: '〔い形容詞〕 ＋ です',
+        formulaEn: '[i-adjective] + desu',
+        note: { zh: 'い形容詞保持原形，直接加「です」，表示「是…的」。', en: 'Keep the i-adjective in its dictionary form and add "desu".' }
+      },
+      neg: {
+        formula: '〔い形容詞語幹〕 ＋ くない です　／　くありません',
+        formulaEn: '[i-adj stem] + kunai desu / ku arimasen',
+        note: { zh: '去掉詞尾「い」，加「くない です」（口語）或「くありません」（正式）。例：高い→高くないです。', en: 'Drop the final "i", add "kunai desu" (informal) or "ku arimasen" (formal). Ex: takai → takaku nai desu.' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','肯定（禮貌）','否定（禮貌）'], en:['Dictionary','Affirmative (polite)','Negative (polite)'] },
+      rows: [
+        { zh:['高い　たかい','高い です　たかい です','高くない です　たかくない です'], en:['takai (expensive/tall)','takai desu','takaku nai desu'] },
+        { zh:['安い　やすい','安い です　やすい です','安くない です　やすくない です'], en:['yasui (cheap)','yasui desu','yasuku nai desu'] },
+        { zh:['大きい　おおきい','大きい です','大きくない です'], en:['ookii (big)','ookii desu','ookiku nai desu'] }
+      ]
+    },
+    vocab: [
+      { kanji:'高い', hira:'たかい', kata:'タカイ', rom:'takai', mean:{zh:'貴的；高的',en:'expensive; tall'} },
+      { kanji:'安い', hira:'やすい', kata:'ヤスイ', rom:'yasui', mean:{zh:'便宜的',en:'cheap'} },
+      { kanji:'大きい', hira:'おおきい', kata:'オオキイ', rom:'ōkii', mean:{zh:'大的',en:'big'} },
+      { kanji:'小さい', hira:'ちいさい', kata:'チイサイ', rom:'chiisai', mean:{zh:'小的',en:'small'} },
+      { kanji:'面白い', hira:'おもしろい', kata:'オモシロイ', rom:'omoshiroi', mean:{zh:'有趣的',en:'interesting'} },
+      { kanji:'難しい', hira:'むずかしい', kata:'ムズカシイ', rom:'muzukashii', mean:{zh:'難的',en:'difficult'} },
+      { kanji:'新しい', hira:'あたらしい', kata:'アタラシイ', rom:'atarashii', mean:{zh:'新的',en:'new'} },
+      { kanji:'古い', hira:'ふるい', kata:'フルイ', rom:'furui', mean:{zh:'舊的；老的',en:'old'} },
+      { kanji:'良い', hira:'よい', kata:'ヨイ', rom:'yoi', mean:{zh:'好的',en:'good'} },
+      { kanji:'悪い', hira:'わるい', kata:'ワルイ', rom:'warui', mean:{zh:'壞的',en:'bad'} },
+      { kanji:'速い', hira:'はやい', kata:'ハヤイ', rom:'hayai', mean:{zh:'快的',en:'fast'} },
+      { kanji:'遅い', hira:'おそい', kata:'オソイ', rom:'osoi', mean:{zh:'慢的；晚的',en:'slow; late'} },
+      { kanji:'暑い', hira:'あつい', kata:'アツイ', rom:'atsui', mean:{zh:'（天氣）熱的',en:'hot (weather)'} },
+      { kanji:'寒い', hira:'さむい', kata:'サムイ', rom:'samui', mean:{zh:'冷的',en:'cold'} },
+      { kanji:'甘い', hira:'あまい', kata:'アマイ', rom:'amai', mean:{zh:'甜的',en:'sweet'} },
+      { kanji:'辛い', hira:'からい', kata:'カライ', rom:'karai', mean:{zh:'辣的',en:'spicy'} },
+      { kanji:'重い', hira:'おもい', kata:'オモイ', rom:'omoi', mean:{zh:'重的',en:'heavy'} },
+      { kanji:'軽い', hira:'かるい', kata:'カルイ', rom:'karui', mean:{zh:'輕的',en:'light'} },
+      { kanji:'広い', hira:'ひろい', kata:'ヒロイ', rom:'hiroi', mean:{zh:'寬廣的',en:'wide; spacious'} },
+      { kanji:'狭い', hira:'せまい', kata:'セマイ', rom:'semai', mean:{zh:'狹窄的',en:'narrow; small'} },
+      { kanji:'近い', hira:'ちかい', kata:'チカイ', rom:'chikai', mean:{zh:'近的',en:'near; close'} },
+      { kanji:'遠い', hira:'とおい', kata:'トオイ', rom:'tōi', mean:{zh:'遠的',en:'far'} },
+      { kanji:'忙しい', hira:'いそがしい', kata:'イソガシイ', rom:'isogashii', mean:{zh:'忙碌的',en:'busy'} },
+      { kanji:'嬉しい', hira:'うれしい', kata:'ウレシイ', rom:'ureshii', mean:{zh:'高興的；開心的',en:'happy; glad'} },
+      { kanji:'悲しい', hira:'かなしい', kata:'カナシイ', rom:'kanashii', mean:{zh:'悲傷的',en:'sad'} },
+      { kanji:'痛い', hira:'いたい', kata:'イタイ', rom:'itai', mean:{zh:'痛的',en:'painful; sore'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'この 本は 面白い です。', hira:'この ほんは おもしろい です。', kata:'コノ ホンワ オモシロイ デス。', rom:'Kono hon wa omoshiroi desu.', mean:{zh:'這本書很有趣。',en:'This book is interesting.'} },
+        { ja:'あの 店は 安い です。', hira:'あの みせは やすい です。', kata:'アノ ミセワ ヤスイ デス。', rom:'Ano mise wa yasui desu.', mean:{zh:'那家店很便宜。',en:'That store is cheap.'} },
+        { ja:'日本語は 難しい です。', hira:'にほんごは むずかしい です。', kata:'ニホンゴワ ムズカシイ デス。', rom:'Nihongo wa muzukashii desu.', mean:{zh:'日語很難。',en:'Japanese is difficult.'} },
+        { ja:'この かばんは 高い です。', hira:'この かばんは たかい です。', kata:'コノ カバンワ タカイ デス。', rom:'Kono kaban wa takai desu.', mean:{zh:'這個包包很貴。',en:'This bag is expensive.'} },
+        { ja:'今日は 寒い です。', hira:'きょうは さむい です。', kata:'キョウワ サムイ デス。', rom:'Kyō wa samui desu.', mean:{zh:'今天很冷。',en:'Today is cold.'} },
+        { ja:'この ケーキは 甘い です。', hira:'この けーきは あまい です。', kata:'コノ ケーキワ アマイ デス。', rom:'Kono kēki wa amai desu.', mean:{zh:'這個蛋糕很甜。',en:'This cake is sweet.'} },
+        { ja:'あの 車は 新しい です。', hira:'あの くるまは あたらしい です。', kata:'アノ クルマワ アタラシイ デス。', rom:'Ano kuruma wa atarashii desu.', mean:{zh:'那輛車是新的。',en:'That car is new.'} },
+        { ja:'田中さんの 答えは 良い です。', hira:'たなかさんの こたえは よい です。', kata:'タナカサンノ コタエワ ヨイ デス。', rom:'Tanaka-san no kotae wa yoi desu.', mean:{zh:'田中先生的回答很好。',en:'Mr./Ms. Tanaka\'s answer is good.'} },
+        { ja:'今日は 暑い です。', hira:'きょうは あつい です。', kata:'キョウワ アツイ デス。', rom:'Kyō wa atsui desu.', mean:{zh:'今天很熱。',en:'Today is hot.'} },
+        { ja:'この 映画は 長い です。', hira:'この えいがは ながい です。', kata:'コノ エイガワ ナガイ デス。', rom:'Kono eiga wa nagai desu.', mean:{zh:'這部電影很長。',en:'This movie is long.'} },
+        { ja:'あの 山は 高い です。', hira:'あの やまは たかい です。', kata:'アノ ヤマワ タカイ デス。', rom:'Ano yama wa takai desu.', mean:{zh:'那座山很高。',en:'That mountain is tall.'} },
+        { ja:'冬は 空気が 冷たい です。', hira:'ふゆは くうきが つめたい です。', kata:'フユワ クウキガ ツメタイ デス。', rom:'Fuyu wa kūki ga tsumetai desu.', mean:{zh:'冬天的空氣很冷。',en:'The air in winter is cold.'} },
+        { ja:'この 映画は 長いです。', hira:'この えいがは ながいです。', kata:'コノ エイガワ ナガイデス。', rom:'Kono eiga wa nagai desu.', mean:{zh:'這部電影很長。',en:'This movie is long.'} },
+        { ja:'彼女の 声は 美しいです。', hira:'かのじょの こえは うつくしいです。', kata:'カノジョノ コエワ ウツクシイデス。', rom:'Kanojo no koe wa utsukushii desu.', mean:{zh:'她的聲音很美。',en:'Her voice is beautiful.'} },
+        { ja:'今日は 暑いです。', hira:'きょうは あついです。', kata:'キョウワ アツイデス。', rom:'Kyō wa atsui desu.', mean:{zh:'今天很熱。',en:'It is hot today.'} },
+        { ja:'富士山は 高いです。', hira:'ふじさんは たかいです。', kata:'フジサンワ タカイデス。', rom:'Fujisan wa takai desu.', mean:{zh:'富士山很高。',en:'Mt. Fuji is tall.'} }
+      ],
+      neg: [
+        { ja:'この 本は 面白くない です。', hira:'この ほんは おもしろくない です。', kata:'コノ ホンワ オモシロクナイ デス。', rom:'Kono hon wa omoshiroku nai desu.', mean:{zh:'這本書不有趣。',en:'This book is not interesting.'} },
+        { ja:'日本語は 難しくない です。', hira:'にほんごは むずかしくない です。', kata:'ニホンゴワ ムズカシクナイ デス。', rom:'Nihongo wa muzukashiku nai desu.', mean:{zh:'日語不難。',en:'Japanese is not difficult.'} },
+        { ja:'あの 店は 高くありません。', hira:'あの みせは たかくありません。', kata:'アノ ミセワ タカクアリマセン。', rom:'Ano mise wa takaku arimasen.', mean:{zh:'那家店不貴。',en:'That store is not expensive.'} },
+        { ja:'この かばんは 小さくない です。', hira:'この かばんは ちいさくない です。', kata:'コノ カバンワ チイサクナイ デス。', rom:'Kono kaban wa chiisaku nai desu.', mean:{zh:'這個包包不小。',en:'This bag is not small.'} },
+        { ja:'今日は 寒くない です。', hira:'きょうは さむくない です。', kata:'キョウワ サムクナイ デス。', rom:'Kyō wa samuku nai desu.', mean:{zh:'今天不冷。',en:'Today is not cold.'} },
+        { ja:'この 料理は 辛くありません。', hira:'この りょうりは からくありません。', kata:'コノ リョウリワ カラクアリマセン。', rom:'Kono ryōri wa karaku arimasen.', mean:{zh:'這道料理不辣。',en:'This dish is not spicy.'} },
+        { ja:'あの 車は 新しくない です。', hira:'あの くるまは あたらしくない です。', kata:'アノ クルマワ アタラシクナイ デス。', rom:'Ano kuruma wa atarashiku nai desu.', mean:{zh:'那輛車不是新的。',en:'That car is not new.'} },
+        { ja:'この テストは 良くありません。', hira:'この てすとは よくありません。', kata:'コノ テストワ ヨクアリマセン。', rom:'Kono tesuto wa yoku arimasen.', mean:{zh:'這次考試成績不好。',en:'This test result is not good.'} },
+        { ja:'今日は 暑くない です。', hira:'きょうは あつくない です。', kata:'キョウワ アツクナイ デス。', rom:'Kyō wa atsuku nai desu.', mean:{zh:'今天不熱。',en:'Today is not hot.'} },
+        { ja:'この 映画は 長くありません。', hira:'この えいがは ながくありません。', kata:'コノ エイガワ ナガクアリマセン。', rom:'Kono eiga wa nagaku arimasen.', mean:{zh:'這部電影不長。',en:'This movie is not long.'} },
+        { ja:'あの 山は 低くない です。', hira:'あの やまは ひくくない です。', kata:'アノ ヤマワ ヒククナイ デス。', rom:'Ano yama wa hikuku nai desu.', mean:{zh:'那座山不低。',en:'That mountain is not low.'} },
+        { ja:'この 部屋は 古くありません。', hira:'この へやは ふるくありません。', kata:'コノ ヘヤワ フルクアリマセン。', rom:'Kono heya wa furuku arimasen.', mean:{zh:'這個房間不舊。',en:'This room is not old.'} },
+        { ja:'この 映画は 長くないです。', hira:'この えいがは ながくないです。', kata:'コノ エイガワ ナガクナイデス。', rom:'Kono eiga wa nagaku nai desu.', mean:{zh:'這部電影不長。',en:'This movie is not long.'} },
+        { ja:'彼女の 声は 美しくないです。', hira:'かのじょの こえは うつくしくないです。', kata:'カノジョノ コエワ ウツクシクナイデス。', rom:'Kanojo no koe wa utsukushiku nai desu.', mean:{zh:'她的聲音不美。',en:'Her voice is not beautiful.'} },
+        { ja:'今日は 暑くありません。', hira:'きょうは あつくありません。', kata:'キョウワ アツクアリマセン。', rom:'Kyō wa atsuku arimasen.', mean:{zh:'今天不熱。',en:'It is not hot today.'} },
+        { ja:'この 問題は 難しくありません。', hira:'この もんだいは むずかしくありません。', kata:'コノ モンダイワ ムズカシクアリマセン。', rom:'Kono mondai wa muzukashiku arimasen.', mean:{zh:'這個問題不難。',en:'This problem is not difficult.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // NA-ADJECTIVES
+  // ----------------------------------------------------------------
+  {
+    id: 'naAdj',
+    icon: '🟣',
+    nameKey: 'naAdj',
+    pattern: {
+      aff: {
+        formula: '〔な形容詞〕 ＋ です',
+        formulaEn: '[na-adjective] + desu',
+        note: { zh: 'な形容詞保持詞幹（去掉な），直接加「です」。', en: 'Use the stem of the na-adjective (drop な) and add "desu".' }
+      },
+      neg: {
+        formula: '〔な形容詞〕 ＋ では ありません',
+        formulaEn: '[na-adjective] + dewa arimasen',
+        note: { zh: '詞幹後加「ではありません」（正式）或「じゃないです」（口語）。', en: 'Add "dewa arimasen" (formal) or "ja nai desu" (informal) after the stem.' }
+      }
+    },
+    conj: null,
+    vocab: [
+      { kanji:'きれい', hira:'きれい', kata:'キレイ', rom:'kirei', mean:{zh:'漂亮的；乾淨的',en:'pretty; clean'} },
+      { kanji:'静か', hira:'しずか', kata:'シズカ', rom:'shizuka', mean:{zh:'安靜的',en:'quiet'} },
+      { kanji:'便利', hira:'べんり', kata:'ベンリ', rom:'benri', mean:{zh:'方便的',en:'convenient'} },
+      { kanji:'元気', hira:'げんき', kata:'ゲンキ', rom:'genki', mean:{zh:'精神的；健康的',en:'energetic; healthy'} },
+      { kanji:'上手', hira:'じょうず', kata:'ジョウズ', rom:'jōzu', mean:{zh:'擅長的',en:'skilled; good at'} },
+      { kanji:'親切', hira:'しんせつ', kata:'シンセツ', rom:'shinsetsu', mean:{zh:'親切的',en:'kind'} },
+      { kanji:'好き', hira:'すき', kata:'スキ', rom:'suki', mean:{zh:'喜歡的',en:'liked; favorite'} },
+      { kanji:'嫌い', hira:'きらい', kata:'キライ', rom:'kirai', mean:{zh:'討厭的',en:'disliked'} },
+      { kanji:'有名', hira:'ゆうめい', kata:'ユウメイ', rom:'yūmei', mean:{zh:'有名的',en:'famous'} },
+      { kanji:'大切', hira:'たいせつ', kata:'タイセツ', rom:'taisetsu', mean:{zh:'重要的；珍貴的',en:'important; precious'} },
+      { kanji:'安全', hira:'あんぜん', kata:'アンゼン', rom:'anzen', mean:{zh:'安全的',en:'safe'} },
+      { kanji:'危険', hira:'きけん', kata:'キケン', rom:'kiken', mean:{zh:'危險的',en:'dangerous'} },
+      { kanji:'暇', hira:'ひま', kata:'ヒマ', rom:'hima', mean:{zh:'空閒的；無聊的',en:'free (time); bored'} },
+      { kanji:'下手', hira:'へた', kata:'ヘタ', rom:'heta', mean:{zh:'不擅長的',en:'unskilled; bad at'} },
+      { kanji:'丈夫', hira:'じょうぶ', kata:'ジョウブ', rom:'jōbu', mean:{zh:'堅固的；結實的',en:'sturdy; durable'} },
+      { kanji:'複雑', hira:'ふくざつ', kata:'フクザツ', rom:'fukuzatsu', mean:{zh:'複雜的',en:'complicated'} },
+      { kanji:'必要', hira:'ひつよう', kata:'ヒツヨウ', rom:'hitsuyō', mean:{zh:'必要的',en:'necessary'} },
+      { kanji:'真剣', hira:'しんけん', kata:'シンケン', rom:'shinken', mean:{zh:'認真的；嚴肅的',en:'serious; earnest'} },
+      { kanji:'特別', hira:'とくべつ', kata:'トクベツ', rom:'tokubetsu', mean:{zh:'特別的',en:'special'} },
+      { kanji:'苦手', hira:'にがて', kata:'ニガテ', rom:'nigate', mean:{zh:'不擅長的；弱點',en:'bad at; weak point'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'あの 花は きれい です。', hira:'あの はなは きれい です。', kata:'アノ ハナワ キレイ デス。', rom:'Ano hana wa kirei desu.', mean:{zh:'那朵花很漂亮。',en:'That flower is pretty.'} },
+        { ja:'田中さんは 元気 です。', hira:'たなかさんは げんき です。', kata:'タナカサンワ ゲンキ デス。', rom:'Tanaka-san wa genki desu.', mean:{zh:'田中先生很有精神。',en:'Mr./Ms. Tanaka is energetic.'} },
+        { ja:'この 部屋は 静か です。', hira:'この へやは しずか です。', kata:'コノ ヘヤワ シズカ デス。', rom:'Kono heya wa shizuka desu.', mean:{zh:'這個房間很安靜。',en:'This room is quiet.'} },
+        { ja:'駅は 便利 です。', hira:'えきは べんり です。', kata:'エキワ ベンリ デス。', rom:'Eki wa benri desu.', mean:{zh:'車站很方便。',en:'The station is convenient.'} },
+        { ja:'私は 音楽が 好き です。', hira:'わたしは おんがくが すき です。', kata:'ワタシワ オンガクガ スキ デス。', rom:'Watashi wa ongaku ga suki desu.', mean:{zh:'我喜歡音樂。',en:'I like music.'} },
+        { ja:'この 道は 危険 です。', hira:'この みちは きけん です。', kata:'コノ ミチワ キケン デス。', rom:'Kono michi wa kiken desu.', mean:{zh:'這條路很危險。',en:'This road is dangerous.'} },
+        { ja:'今日は 暇 です。', hira:'きょうは ひま です。', kata:'キョウワ ヒマ デス。', rom:'Kyō wa hima desu.', mean:{zh:'今天很閒。',en:'I am free today.'} },
+        { ja:'あの 俳優は 有名 です。', hira:'あの はいゆうは ゆうめい です。', kata:'アノ ハイユウワ ユウメイ デス。', rom:'Ano haiyū wa yūmei desu.', mean:{zh:'那位演員很有名。',en:'That actor is famous.'} },
+        { ja:'この 公園は きれい です。', hira:'この こうえんは きれい です。', kata:'コノ コウエンワ キレイ デス。', rom:'Kono kōen wa kirei desu.', mean:{zh:'這個公園很漂亮。',en:'This park is beautiful.'} },
+        { ja:'田中先生は 親切 です。', hira:'たなかせんせいは しんせつ です。', kata:'タナカセンセイワ シンセツ デス。', rom:'Tanaka-sensei wa shinsetsu desu.', mean:{zh:'田中老師很親切。',en:'Teacher Tanaka is kind.'} },
+        { ja:'私は 犬が 好き です。', hira:'わたしは いぬが すき です。', kata:'ワタシワ イヌガ スキ デス。', rom:'Watashi wa inu ga suki desu.', mean:{zh:'我喜歡狗。',en:'I like dogs.'} },
+        { ja:'あの 地域は 安全 です。', hira:'あの ちいきは あんぜん です。', kata:'アノ チイキワ アンゼン デス。', rom:'Ano chiiki wa anzen desu.', mean:{zh:'那個地區很安全。',en:'That area is safe.'} },
+        { ja:'彼女は 親切です。', hira:'かのじょは しんせつです。', kata:'カノジョワ シンセツデス。', rom:'Kanojo wa shinsetsu desu.', mean:{zh:'她很親切。',en:'She is kind.'} },
+        { ja:'このレストランは 有名です。', hira:'このれすとらんは ゆうめいです。', kata:'コノレストランワ ユウメイデス。', rom:'Kono resutoran wa yūmei desu.', mean:{zh:'這家餐廳很有名。',en:'This restaurant is famous.'} },
+        { ja:'田中さんは 真面目です。', hira:'たなかさんは まじめです。', kata:'タナカサンワ マジメデス。', rom:'Tanaka-san wa majime desu.', mean:{zh:'田中先生很認真。',en:'Mr./Ms. Tanaka is diligent.'} },
+        { ja:'図書館は 静かです。', hira:'としょかんは しずかです。', kata:'トショカンワ シズカデス。', rom:'Toshokan wa shizuka desu.', mean:{zh:'圖書館很安靜。',en:'The library is quiet.'} }
+      ],
+      neg: [
+        { ja:'あの 花は きれい では ありません。', hira:'あの はなは きれい では ありません。', kata:'アノ ハナワ キレイ デワ アリマセン。', rom:'Ano hana wa kirei dewa arimasen.', mean:{zh:'那朵花不漂亮。',en:'That flower is not pretty.'} },
+        { ja:'この 部屋は 静か じゃ ないです。', hira:'この へやは しずか じゃ ないです。', kata:'コノ ヘヤワ シズカ ジャ ナイデス。', rom:'Kono heya wa shizuka ja nai desu.', mean:{zh:'這個房間不安靜。（口語）',en:'This room is not quiet. (informal)'} },
+        { ja:'私は 上手 では ありません。', hira:'わたしは じょうず では ありません。', kata:'ワタシワ ジョウズ デワ アリマセン。', rom:'Watashi wa jōzu dewa arimasen.', mean:{zh:'我不擅長。',en:'I am not skilled.'} },
+        { ja:'あの 人は 親切 じゃ ないです。', hira:'あのひとは しんせつ じゃ ないです。', kata:'アノヒトワ シンセツ ジャ ナイデス。', rom:'Ano hito wa shinsetsu ja nai desu.', mean:{zh:'那個人不親切。（口語）',en:'That person is not kind. (informal)'} },
+        { ja:'私は 料理が 上手 では ありません。', hira:'わたしは りょうりが じょうず では ありません。', kata:'ワタシワ リョウリガ ジョウズ デワ アリマセン。', rom:'Watashi wa ryōri ga jōzu dewa arimasen.', mean:{zh:'我不擅長做料理。',en:'I am not good at cooking.'} },
+        { ja:'この 問題は 複雑 じゃ ないです。', hira:'この もんだいは ふくざつ じゃ ないです。', kata:'コノ モンダイワ フクザツ ジャ ナイデス。', rom:'Kono mondai wa fukuzatsu ja nai desu.', mean:{zh:'這個問題不複雜。（口語）',en:'This problem is not complicated. (informal)'} },
+        { ja:'あの 道は 安全 では ありません。', hira:'あの みちは あんぜん では ありません。', kata:'アノ ミチワ アンゼン デワ アリマセン。', rom:'Ano michi wa anzen dewa arimasen.', mean:{zh:'那條路不安全。',en:'That road is not safe.'} },
+        { ja:'今日は 暇 じゃ ありません。', hira:'きょうは ひま じゃ ありません。', kata:'キョウワ ヒマ ジャ アリマセン。', rom:'Kyō wa hima ja arimasen.', mean:{zh:'今天不閒。（口語）',en:'I am not free today. (informal)'} },
+        { ja:'この 公園は きれい じゃ ないです。', hira:'この こうえんは きれい じゃ ないです。', kata:'コノ コウエンワ キレイ ジャ ナイデス。', rom:'Kono kōen wa kirei ja nai desu.', mean:{zh:'這個公園不漂亮。（口語）',en:'This park is not beautiful. (informal)'} },
+        { ja:'私は 英語が 上手 では ありません。', hira:'わたしは えいごが じょうず では ありません。', kata:'ワタシワ エイゴガ ジョウズ デワ アリマセン。', rom:'Watashi wa eigo ga jōzu dewa arimasen.', mean:{zh:'我英語不好。',en:'I am not good at English.'} },
+        { ja:'あの 映画は 有名 じゃ ないです。', hira:'あの えいがは ゆうめい じゃ ないです。', kata:'アノ エイガワ ユウメイ ジャ ナイデス。', rom:'Ano eiga wa yūmei ja nai desu.', mean:{zh:'那部電影不有名。（口語）',en:'That movie is not famous. (informal)'} },
+        { ja:'今週は 暇 では ありません。', hira:'こんしゅうは ひま では ありません。', kata:'コンシュウワ ヒマ デワ アリマセン。', rom:'Konshū wa hima dewa arimasen.', mean:{zh:'這週不閒。',en:'I am not free this week.'} },
+        { ja:'彼女は 親切では ありません。', hira:'かのじょは しんせつでは ありません。', kata:'カノジョワ シンセツデワ アリマセン。', rom:'Kanojo wa shinsetsu de wa arimasen.', mean:{zh:'她不親切。',en:'She is not kind.'} },
+        { ja:'このレストランは 有名では ありません。', hira:'このれすとらんは ゆうめいでは ありません。', kata:'コノレストランワ ユウメイデワ アリマセン。', rom:'Kono resutoran wa yūmei de wa arimasen.', mean:{zh:'這家餐廳不有名。',en:'This restaurant is not famous.'} },
+        { ja:'田中さんは 真面目では ありません。', hira:'たなかさんは まじめでは ありません。', kata:'タナカサンワ マジメデワ アリマセン。', rom:'Tanaka-san wa majime de wa arimasen.', mean:{zh:'田中先生不認真。',en:'Mr./Ms. Tanaka is not diligent.'} },
+        { ja:'駅の 近くは 静かでは ありません。', hira:'えきの ちかくは しずかでは ありません。', kata:'エキノ チカクワ シズカデワ アリマセン。', rom:'Eki no chikaku wa shizuka de wa arimasen.', mean:{zh:'車站附近不安靜。',en:'The area near the station is not quiet.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // ICHIDAN VERBS (Group 1 / る verbs)
+  // ----------------------------------------------------------------
+  {
+    id: 'verb1',
+    icon: '🟢',
+    nameKey: 'verb1',
+    pattern: {
+      aff: {
+        formula: '〔動詞語幹〕 ＋ ます',
+        formulaEn: '[verb stem] + masu',
+        note: { zh: '一段動詞：去掉辭書形的「る」，加「ます」。例：食べる → 食べ ＋ ます = 食べます', en: 'Ichidan (ru-verbs): Remove the final "ru" and add "masu". Ex: taberu → tabe + masu = tabemasu' }
+      },
+      neg: {
+        formula: '〔動詞語幹〕 ＋ ません',
+        formulaEn: '[verb stem] + masen',
+        note: { zh: '一段動詞：去掉辭書形的「る」，加「ません」。例：食べる → 食べ ＋ ません = 食べません', en: 'Ichidan (ru-verbs): Remove the final "ru" and add "masen". Ex: taberu → tabe + masen = tabemasen' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','語幹','肯定（ます形）','否定（ません形）'], en:['Dictionary','Stem','Affirmative (-masu)','Negative (-masen)'] },
+      rows: [
+        { zh:['食べる　たべる','食べ　たべ','食べます　たべます','食べません　たべません'], en:['taberu (eat)','tabe','tabemasu','tabemasen'] },
+        { zh:['見る　みる','見　み','見ます　みます','見ません　みません'], en:['miru (see/watch)','mi','mimasu','mimasen'] },
+        { zh:['起きる　おきる','起き　おき','起きます　おきます','起きません　おきません'], en:['okiru (wake up)','oki','okimasu','okimasen'] },
+        { zh:['寝る　ねる','寝　ね','寝ます　ねます','寝ません　ねません'], en:['neru (sleep)','ne','nemasu','nemasen'] }
+      ]
+    },
+    vocab: [
+      { kanji:'食べる', hira:'たべる', kata:'タベル', rom:'taberu', mean:{zh:'吃',en:'eat'} },
+      { kanji:'見る', hira:'みる', kata:'ミル', rom:'miru', mean:{zh:'看',en:'see/watch'} },
+      { kanji:'起きる', hira:'おきる', kata:'オキル', rom:'okiru', mean:{zh:'起床',en:'wake up'} },
+      { kanji:'寝る', hira:'ねる', kata:'ネル', rom:'neru', mean:{zh:'睡覺',en:'sleep'} },
+      { kanji:'教える', hira:'おしえる', kata:'オシエル', rom:'oshieru', mean:{zh:'教',en:'teach'} },
+      { kanji:'着る', hira:'きる', kata:'キル', rom:'kiru', mean:{zh:'穿（衣服）',en:'wear (clothes)'} },
+      { kanji:'出る', hira:'でる', kata:'デル', rom:'deru', mean:{zh:'出去；離開',en:'leave; exit'} },
+      { kanji:'開ける', hira:'あける', kata:'アケル', rom:'akeru', mean:{zh:'打開',en:'open'} },
+      { kanji:'閉める', hira:'しめる', kata:'シメル', rom:'shimeru', mean:{zh:'關閉',en:'close'} },
+      { kanji:'覚える', hira:'おぼえる', kata:'オボエル', rom:'oboeru', mean:{zh:'記住；背誦',en:'remember; memorize'} },
+      { kanji:'忘れる', hira:'わすれる', kata:'ワスレル', rom:'wasureru', mean:{zh:'忘記',en:'forget'} },
+      { kanji:'調べる', hira:'しらべる', kata:'シラベル', rom:'shiraberu', mean:{zh:'調查；查詢',en:'look up; investigate'} },
+      { kanji:'答える', hira:'こたえる', kata:'コタエル', rom:'kotaeru', mean:{zh:'回答',en:'answer'} },
+      { kanji:'続ける', hira:'つづける', kata:'ツヅケル', rom:'tsudukeru', mean:{zh:'繼續',en:'continue'} },
+      { kanji:'受ける', hira:'うける', kata:'ウケル', rom:'ukeru', mean:{zh:'接受；參加（考試）',en:'receive; take (an exam)'} },
+      { kanji:'集める', hira:'あつめる', kata:'アツメル', rom:'atsumeru', mean:{zh:'收集',en:'collect; gather'} },
+      { kanji:'考える', hira:'かんがえる', kata:'カンガエル', rom:'kangaeru', mean:{zh:'思考；考慮',en:'think; consider'} },
+      { kanji:'決める', hira:'きめる', kata:'キメル', rom:'kimeru', mean:{zh:'決定',en:'decide'} },
+      { kanji:'伝える', hira:'つたえる', kata:'ツタエル', rom:'tsutaeru', mean:{zh:'傳達；告訴',en:'convey; tell'} },
+      { kanji:'信じる', hira:'しんじる', kata:'シンジル', rom:'shinjiru', mean:{zh:'相信',en:'believe'} },
+      { kanji:'諦める', hira:'あきらめる', kata:'アキラメル', rom:'akirameru', mean:{zh:'放棄',en:'give up'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'私は 朝ごはんを 食べます。', hira:'わたしは あさごはんを たべます。', kata:'ワタシワ アサゴハンヲ タベマス。', rom:'Watashi wa asagohan wo tabemasu.', mean:{zh:'我吃早餐。',en:'I eat breakfast.'} },
+        { ja:'毎晩、テレビを 見ます。', hira:'まいばん、てれびを みます。', kata:'マイバン、テレビヲ ミマス。', rom:'Maiban, terebi wo mimasu.', mean:{zh:'每晚看電視。',en:'I watch TV every night.'} },
+        { ja:'田中さんは 6時に 起きます。', hira:'たなかさんは ろくじに おきます。', kata:'タナカサンワ ロクジニ オキマス。', rom:'Tanaka-san wa roku-ji ni okimasu.', mean:{zh:'田中先生六點起床。',en:'Mr./Ms. Tanaka wakes up at 6 o\'clock.'} },
+        { ja:'夜、早く 寝ます。', hira:'よる、はやく ねます。', kata:'ヨル、ハヤク ネマス。', rom:'Yoru, hayaku nemasu.', mean:{zh:'晚上早點睡覺。',en:'I go to sleep early at night.'} },
+        { ja:'窓を 開けます。', hira:'まどを あけます。', kata:'マドヲ アケマス。', rom:'Mado wo akemasu.', mean:{zh:'打開窗戶。',en:'I open the window.'} },
+        { ja:'毎日、単語を 覚えます。', hira:'まいにち、たんごを おぼえます。', kata:'マイニチ、タンゴヲ オボエマス。', rom:'Mainichi, tango wo oboemasu.', mean:{zh:'每天背單字。',en:'I memorize vocabulary every day.'} },
+        { ja:'先生の 質問に 答えます。', hira:'せんせいの しつもんに こたえます。', kata:'センセイノ シツモンニ コタエマス。', rom:'Sensei no shitsumon ni kotaemasu.', mean:{zh:'回答老師的問題。',en:'I answer the teacher\'s question.'} },
+        { ja:'新しい 言葉を 調べます。', hira:'あたらしい ことばを しらべます。', kata:'アタラシイ コトバヲ シラベマス。', rom:'Atarashii kotoba wo shirabemasu.', mean:{zh:'查詢新的詞彙。',en:'I look up new words.'} },
+        { ja:'毎朝、シャワーを 浴びます。', hira:'まいあさ、しゃわーを あびます。', kata:'マイアサ、シャワーヲ アビマス。', rom:'Maiasa, shawā wo abimasu.', mean:{zh:'每天早上洗澡。',en:'I shower every morning.'} },
+        { ja:'日本語を 教えます。', hira:'にほんごを おしえます。', kata:'ニホンゴヲ オシエマス。', rom:'Nihongo wo oshiemasu.', mean:{zh:'教日語。',en:'I teach Japanese.'} },
+        { ja:'コートを 着ます。', hira:'こーとを きます。', kata:'コートヲ キマス。', rom:'Kōto wo kimasu.', mean:{zh:'穿外套。',en:'I wear a coat.'} },
+        { ja:'試験を 受けます。', hira:'しけんを うけます。', kata:'シケンヲ ウケマス。', rom:'Shiken wo ukemasu.', mean:{zh:'參加考試。',en:'I take an exam.'} },
+        { ja:'毎朝 シャワーを 浴びます。', hira:'まいあさ しゃわーを あびます。', kata:'マイアサ シャワーヲ アビマス。', rom:'Maiasa shawā wo abimasu.', mean:{zh:'每天早上洗澡。',en:'I take a shower every morning.'} },
+        { ja:'図書館から 本を 借ります。', hira:'としょかんから ほんを かります。', kata:'トショカンカラ ホンヲ カリマス。', rom:'Toshokan kara hon wo karimasu.', mean:{zh:'從圖書館借書。',en:'I borrow books from the library.'} },
+        { ja:'窓を 開けます。', hira:'まどを あけます。', kata:'マドヲ アケマス。', rom:'Mado wo akemasu.', mean:{zh:'打開窗戶。',en:'I open the window.'} },
+        { ja:'疲れたので 早く 寝ます。', hira:'つかれたので はやく ねます。', kata:'ツカレタノデ ハヤク ネマス。', rom:'Tsukareta node hayaku nemasu.', mean:{zh:'因為累了所以早點睡。',en:'I go to sleep early because I am tired.'} }
+      ],
+      neg: [
+        { ja:'私は 朝ごはんを 食べません。', hira:'わたしは あさごはんを たべません。', kata:'ワタシワ アサゴハンヲ タベマセン。', rom:'Watashi wa asagohan wo tabemasen.', mean:{zh:'我不吃早餐。',en:'I do not eat breakfast.'} },
+        { ja:'今日は テレビを 見ません。', hira:'きょうは てれびを みません。', kata:'キョウワ テレビヲ ミマセン。', rom:'Kyō wa terebi wo mimasen.', mean:{zh:'今天不看電視。',en:'I do not watch TV today.'} },
+        { ja:'田中さんは 早く 起きません。', hira:'たなかさんは はやく おきません。', kata:'タナカサンワ ハヤク オキマセン。', rom:'Tanaka-san wa hayaku okimasen.', mean:{zh:'田中先生不早起。',en:'Mr./Ms. Tanaka does not wake up early.'} },
+        { ja:'子どもは 野菜を 食べません。', hira:'こどもは やさいを たべません。', kata:'コドモワ ヤサイヲ タベマセン。', rom:'Kodomo wa yasai wo tabemasen.', mean:{zh:'小孩不吃蔬菜。',en:'The child does not eat vegetables.'} },
+        { ja:'宿題を 忘れません。', hira:'しゅくだいを わすれません。', kata:'シュクダイヲ ワスレマセン。', rom:'Shukudai wo wasuremasen.', mean:{zh:'不忘做作業。',en:'I do not forget my homework.'} },
+        { ja:'窓を 閉めません。', hira:'まどを しめません。', kata:'マドヲ シメマセン。', rom:'Mado wo shimemasen.', mean:{zh:'不關窗戶。',en:'I do not close the window.'} },
+        { ja:'今日は 早く 出ません。', hira:'きょうは はやく でません。', kata:'キョウワ ハヤク デマセン。', rom:'Kyō wa hayaku demasen.', mean:{zh:'今天不早出門。',en:'I do not leave early today.'} },
+        { ja:'難しい 単語は 覚えません。', hira:'むずかしい たんごは おぼえません。', kata:'ムズカシイ タンゴワ オボエマセン。', rom:'Muzukashii tango wa oboemasen.', mean:{zh:'難的單字記不起來。',en:'I do not memorize difficult words.'} },
+        { ja:'今日は シャワーを 浴びません。', hira:'きょうは しゃわーを あびません。', kata:'キョウワ シャワーヲ アビマセン。', rom:'Kyō wa shawā wo abimasen.', mean:{zh:'今天不洗澡。',en:'I do not shower today.'} },
+        { ja:'この 映画は 見ません。', hira:'この えいがは みません。', kata:'コノ エイガワ ミマセン。', rom:'Kono eiga wa mimasen.', mean:{zh:'不看這部電影。',en:'I do not watch this movie.'} },
+        { ja:'寒い 日は 窓を 開けません。', hira:'さむい ひは まどを あけません。', kata:'サムイ ヒワ マドヲ アケマセン。', rom:'Samui hi wa mado wo akemasen.', mean:{zh:'冷天不開窗。',en:'I do not open the window on cold days.'} },
+        { ja:'今学期は 試験を 受けません。', hira:'こんがっきは しけんを うけません。', kata:'コンガッキワ シケンヲ ウケマセン。', rom:'Kongakki wa shiken wo ukemasen.', mean:{zh:'這學期不參加考試。',en:'I do not take an exam this semester.'} },
+        { ja:'今日は シャワーを 浴びません。', hira:'きょうは しゃわーを あびません。', kata:'キョウワ シャワーヲ アビマセン。', rom:'Kyō wa shawā wo abimasen.', mean:{zh:'今天不洗澡。',en:'I do not take a shower today.'} },
+        { ja:'図書館から 本を 借りません。', hira:'としょかんから ほんを かりません。', kata:'トショカンカラ ホンヲ カリマセン。', rom:'Toshokan kara hon wo karimasen.', mean:{zh:'不從圖書館借書。',en:'I do not borrow books from the library.'} },
+        { ja:'暑いので 窓を 閉めません。', hira:'あついので まどを しめません。', kata:'アツイノデ マドヲ シメマセン。', rom:'Atsui node mado wo shimemasen.', mean:{zh:'因為熱所以不關窗。',en:'I do not close the window because it is hot.'} },
+        { ja:'今夜は 疲れていないので 早く 寝ません。', hira:'こんやは つかれていないので はやく ねません。', kata:'コンヤワ ツカレテイナイノデ ハヤク ネマセン。', rom:'Kon\'ya wa tsukarete inai node hayaku nemasen.', mean:{zh:'今晚因為不累所以不早睡。',en:'I do not go to sleep early tonight because I am not tired.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // GODAN VERBS (Group 2 / う verbs)
+  // ----------------------------------------------------------------
+  {
+    id: 'verb2',
+    icon: '🟡',
+    nameKey: 'verb2',
+    pattern: {
+      aff: {
+        formula: '〔う段 → い段〕 ＋ ます',
+        formulaEn: '[u-row → i-row] + masu',
+        note: { zh: '五段動詞：將詞尾的う段假名換成同行的い段假名，再加「ます」。\nく→き、ぐ→ぎ、す→し、つ→ち、ぬ→に、ぶ→び、む→み、る→り、う→い', en: 'Godan (u-verbs): Change the final u-row kana to the i-row, then add "masu".\nku→ki, gu→gi, su→shi, tsu→chi, nu→ni, bu→bi, mu→mi, ru→ri, u→i' }
+      },
+      neg: {
+        formula: '〔う段 → い段〕 ＋ ません',
+        formulaEn: '[u-row → i-row] + masen',
+        note: { zh: '同肯定形變化規則，將「ます」換成「ません」。', en: 'Same stem change as affirmative, replace "masu" with "masen".' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','い段変形','肯定（ます）','否定（ません）'], en:['Dictionary','I-form stem','Affirmative','Negative'] },
+      rows: [
+        { zh:['書く　かく','書き　かき','書きます　かきます','書きません　かきません'], en:['kaku (write)','kaki','kakimasu','kakimasen'] },
+        { zh:['飲む　のむ','飲み　のみ','飲みます　のみます','飲みません　のみません'], en:['nomu (drink)','nomi','nomimasu','nomimasen'] },
+        { zh:['話す　はなす','話し　はなし','話します　はなします','話しません　はなしません'], en:['hanasu (speak)','hanashi','hanashimasu','hanashimasen'] },
+        { zh:['行く　いく','行き　いき','行きます　いきます','行きません　いきません'], en:['iku (go)','iki','ikimasu','ikimasen'] },
+        { zh:['買う　かう','買い　かい','買います　かいます','買いません　かいません'], en:['kau (buy)','kai','kaimasu','kaimasen'] }
+      ]
+    },
+    vocab: [
+      { kanji:'書く', hira:'かく', kata:'カク', rom:'kaku', mean:{zh:'寫',en:'write'} },
+      { kanji:'飲む', hira:'のむ', kata:'ノム', rom:'nomu', mean:{zh:'喝',en:'drink'} },
+      { kanji:'話す', hira:'はなす', kata:'ハナス', rom:'hanasu', mean:{zh:'說話',en:'speak'} },
+      { kanji:'行く', hira:'いく', kata:'イク', rom:'iku', mean:{zh:'去',en:'go'} },
+      { kanji:'買う', hira:'かう', kata:'カウ', rom:'kau', mean:{zh:'買',en:'buy'} },
+      { kanji:'読む', hira:'よむ', kata:'ヨム', rom:'yomu', mean:{zh:'讀',en:'read'} },
+      { kanji:'聞く', hira:'きく', kata:'キク', rom:'kiku', mean:{zh:'聽；問',en:'listen; ask'} },
+      { kanji:'泳ぐ', hira:'およぐ', kata:'オヨグ', rom:'oyogu', mean:{zh:'游泳',en:'swim'} },
+      { kanji:'待つ', hira:'まつ', kata:'マツ', rom:'matsu', mean:{zh:'等待',en:'wait'} },
+      { kanji:'帰る', hira:'かえる', kata:'カエル', rom:'kaeru', mean:{zh:'回家；返回',en:'return home'} },
+      { kanji:'乗る', hira:'のる', kata:'ノル', rom:'noru', mean:{zh:'乘坐；搭乘',en:'ride; board'} },
+      { kanji:'走る', hira:'はしる', kata:'ハシル', rom:'hashiru', mean:{zh:'跑',en:'run'} },
+      { kanji:'作る', hira:'つくる', kata:'ツクル', rom:'tsukuru', mean:{zh:'製作；做',en:'make; create'} },
+      { kanji:'歌う', hira:'うたう', kata:'ウタウ', rom:'utau', mean:{zh:'唱歌',en:'sing'} },
+      { kanji:'遊ぶ', hira:'あそぶ', kata:'アソブ', rom:'asobu', mean:{zh:'玩耍；遊玩',en:'play; have fun'} },
+      { kanji:'急ぐ', hira:'いそぐ', kata:'イソグ', rom:'isogu', mean:{zh:'趕快；急忙',en:'hurry'} },
+      { kanji:'持つ', hira:'もつ', kata:'モツ', rom:'motsu', mean:{zh:'拿；持有',en:'hold; have'} },
+      { kanji:'送る', hira:'おくる', kata:'オクル', rom:'okuru', mean:{zh:'送；寄',en:'send'} },
+      { kanji:'撮る', hira:'とる', kata:'トル', rom:'toru', mean:{zh:'拍（照）',en:'take (a photo)'} },
+      { kanji:'泊まる', hira:'とまる', kata:'トマル', rom:'tomaru', mean:{zh:'住宿；過夜',en:'stay overnight'} },
+      { kanji:'切る', hira:'きる', kata:'キル', rom:'kiru', mean:{zh:'切；剪',en:'cut'} },
+      { kanji:'貸す', hira:'かす', kata:'カス', rom:'kasu', mean:{zh:'借出；借給',en:'lend'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'手紙を 書きます。', hira:'てがみを かきます。', kata:'テガミヲ カキマス。', rom:'Tegami wo kakimasu.', mean:{zh:'寫信。',en:'I write a letter.'} },
+        { ja:'水を 飲みます。', hira:'みずを のみます。', kata:'ミズヲ ノミマス。', rom:'Mizu wo nomimasu.', mean:{zh:'喝水。',en:'I drink water.'} },
+        { ja:'学校へ 行きます。', hira:'がっこうへ いきます。', kata:'ガッコウエ イキマス。', rom:'Gakkō e ikimasu.', mean:{zh:'去學校。',en:'I go to school.'} },
+        { ja:'本を 読みます。', hira:'ほんを よみます。', kata:'ホンヲ ヨミマス。', rom:'Hon wo yomimasu.', mean:{zh:'讀書。',en:'I read a book.'} },
+        { ja:'音楽を 聞きます。', hira:'おんがくを ききます。', kata:'オンガクヲ キキマス。', rom:'Ongaku wo kikimasu.', mean:{zh:'聽音樂。',en:'I listen to music.'} },
+        { ja:'友達を 待ちます。', hira:'ともだちを まちます。', kata:'トモダチヲ マチマス。', rom:'Tomodachi wo machimasu.', mean:{zh:'等待朋友。',en:'I wait for my friend.'} },
+        { ja:'バスに 乗ります。', hira:'ばすに のります。', kata:'バスニ ノリマス。', rom:'Basu ni norimasu.', mean:{zh:'搭公車。',en:'I ride the bus.'} },
+        { ja:'好きな 歌を 歌います。', hira:'すきな うたを うたいます。', kata:'スキナ ウタヲ ウタイマス。', rom:'Suki na uta wo utaimasu.', mean:{zh:'唱喜歡的歌。',en:'I sing my favorite song.'} },
+        { ja:'日記を 書きます。', hira:'にっきを かきます。', kata:'ニッキヲ カキマス。', rom:'Nikki wo kakimasu.', mean:{zh:'寫日記。',en:'I write a diary.'} },
+        { ja:'友達と 話します。', hira:'ともだちと はなします。', kata:'トモダチト ハナシマス。', rom:'Tomodachi to hanashimasu.', mean:{zh:'和朋友聊天。',en:'I talk with friends.'} },
+        { ja:'夜に 家に 帰ります。', hira:'よるに いえに かえります。', kata:'ヨルニ イエニ カエリマス。', rom:'Yoru ni ie ni kaerimasu.', mean:{zh:'晚上回家。',en:'I return home at night.'} },
+        { ja:'プールで 泳ぎます。', hira:'ぷーるで およぎます。', kata:'プールデ オヨギマス。', rom:'Pūru de oyogimasu.', mean:{zh:'在游泳池游泳。',en:'I swim in the pool.'} },
+        { ja:'毎日 日記を 書きます。', hira:'まいにち にっきを かきます。', kata:'マイニチ ニッキヲ カキマス。', rom:'Mainichi nikki wo kakimasu.', mean:{zh:'每天寫日記。',en:'I write in my diary every day.'} },
+        { ja:'友達と 話します。', hira:'ともだちと はなします。', kata:'トモダチト ハナシマス。', rom:'Tomodachi to hanashimasu.', mean:{zh:'和朋友說話。',en:'I talk with my friend.'} },
+        { ja:'電車を 待ちます。', hira:'でんしゃを まちます。', kata:'デンシャヲ マチマス。', rom:'Densha wo machimasu.', mean:{zh:'等電車。',en:'I wait for the train.'} },
+        { ja:'お金を 払います。', hira:'おかねを はらいます。', kata:'オカネヲ ハライマス。', rom:'Okane wo haraimasu.', mean:{zh:'付錢。',en:'I pay money.'} }
+      ],
+      neg: [
+        { ja:'手紙を 書きません。', hira:'てがみを かきません。', kata:'テガミヲ カキマセン。', rom:'Tegami wo kakimasen.', mean:{zh:'不寫信。',en:'I do not write a letter.'} },
+        { ja:'お酒を 飲みません。', hira:'おさけを のみません。', kata:'オサケヲ ノミマセン。', rom:'Osake wo nomimasen.', mean:{zh:'不喝酒。',en:'I do not drink alcohol.'} },
+        { ja:'今日は 学校へ 行きません。', hira:'きょうは がっこうへ いきません。', kata:'キョウワ ガッコウエ イキマセン。', rom:'Kyō wa gakkō e ikimasen.', mean:{zh:'今天不去學校。',en:'I do not go to school today.'} },
+        { ja:'新聞を 読みません。', hira:'しんぶんを よみません。', kata:'シンブンヲ ヨミマセン。', rom:'Shinbun wo yomimasen.', mean:{zh:'不讀報紙。',en:'I do not read the newspaper.'} },
+        { ja:'クラシック音楽は 聞きません。', hira:'くらしっくおんがくは ききません。', kata:'クラシックオンガクワ キキマセン。', rom:'Kurashikku ongaku wa kikimasen.', mean:{zh:'不聽古典音樂。',en:'I do not listen to classical music.'} },
+        { ja:'バスに 乗りません。', hira:'ばすに のりません。', kata:'バスニ ノリマセン。', rom:'Basu ni norimasen.', mean:{zh:'不搭公車。',en:'I do not ride the bus.'} },
+        { ja:'公園では 走りません。', hira:'こうえんでは はしりません。', kata:'コウエンデワ ハシリマセン。', rom:'Kōen de wa hashirimasen.', mean:{zh:'不在公園跑步。',en:'I do not run in the park.'} },
+        { ja:'友達と 遊びません。', hira:'ともだちと あそびません。', kata:'トモダチト アソビマセン。', rom:'Tomodachi to asobimasen.', mean:{zh:'不和朋友玩。',en:'I do not hang out with friends.'} },
+        { ja:'日記を 書きません。', hira:'にっきを かきません。', kata:'ニッキヲ カキマセン。', rom:'Nikki wo kakimasen.', mean:{zh:'不寫日記。',en:'I do not write a diary.'} },
+        { ja:'知らない 人と 話しません。', hira:'しらない ひとと はなしません。', kata:'シラナイ ヒトト ハナシマセン。', rom:'Shiranai hito to hanashimasen.', mean:{zh:'不和陌生人說話。',en:'I do not talk to strangers.'} },
+        { ja:'週末は 早く 帰りません。', hira:'しゅうまつは はやく かえりません。', kata:'シュウマツワ ハヤク カエリマセン。', rom:'Shūmatsu wa hayaku kaerimasen.', mean:{zh:'週末不早回家。',en:'I do not return home early on weekends.'} },
+        { ja:'プールでは 泳ぎません。', hira:'ぷーるでは およぎません。', kata:'プールデワ オヨギマセン。', rom:'Pūru de wa oyogimasen.', mean:{zh:'不在游泳池游泳。',en:'I do not swim in the pool.'} },
+        { ja:'今日は 日記を 書きません。', hira:'きょうは にっきを かきません。', kata:'キョウワ ニッキヲ カキマセン。', rom:'Kyō wa nikki wo kakimasen.', mean:{zh:'今天不寫日記。',en:'I do not write in my diary today.'} },
+        { ja:'あまり 知らない 人とは 話しません。', hira:'あまり しらない ひととは はなしません。', kata:'アマリ シラナイ ヒトトワ ハナシマセン。', rom:'Amari shiranai hito to wa hanashimasen.', mean:{zh:'不和不太熟的人說話。',en:'I do not talk with people I barely know.'} },
+        { ja:'今日は バスを 待ちません。', hira:'きょうは バスを まちません。', kata:'キョウワ バスヲ マチマセン。', rom:'Kyō wa basu wo machimasen.', mean:{zh:'今天不等巴士。',en:'I do not wait for the bus today.'} },
+        { ja:'クレジットカードで 払いません。', hira:'くれじっとかーどで はらいません。', kata:'クレジットカードデ ハライマセン。', rom:'Kurejitto kādo de haraimasen.', mean:{zh:'不用信用卡付錢。',en:'I do not pay by credit card.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // IRREGULAR VERBS (Group 3)
+  // ----------------------------------------------------------------
+  {
+    id: 'verb3',
+    icon: '🔴',
+    nameKey: 'verb3',
+    pattern: {
+      aff: {
+        formula: 'する → します　／　くる → きます',
+        formulaEn: 'suru → shimasu  /  kuru → kimasu',
+        note: { zh: '只有兩個不規則動詞：する（做）和くる（來）。必須記憶其変化形。', en: 'Only two irregular verbs: suru (do) and kuru (come). Their conjugations must be memorized.' }
+      },
+      neg: {
+        formula: 'する → しません　／　くる → きません',
+        formulaEn: 'suru → shimasen  /  kuru → kimasen',
+        note: { zh: 'する的否定形是「しません」，くる的否定形是「きません」。', en: 'The negative of "suru" is "shimasen"; the negative of "kuru" is "kimasen".' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','意思','肯定（ます）','否定（ません）'], en:['Dictionary','Meaning','Affirmative','Negative'] },
+      rows: [
+        { zh:['する','する','します　しまし','しません　しません'], en:['suru','do','shimasu','shimasen'] },
+        { zh:['くる','くる','きます　きます','きません　きません'], en:['kuru','come','kimasu','kimasen'] },
+        { zh:['勉強する　べんきょうする','勉強する','勉強します　べんきょうします','勉強しません　べんきょうしません'], en:['benkyō suru','study','benkyō shimasu','benkyō shimasen'] },
+        { zh:['運動する　うんどうする','運動する','運動します　うんどうします','運動しません　うんどうしません'], en:['undō suru','exercise','undō shimasu','undō shimasen'] }
+      ]
+    },
+    vocab: [
+      { kanji:'する', hira:'する', kata:'スル', rom:'suru', mean:{zh:'做',en:'do'} },
+      { kanji:'来る', hira:'くる', kata:'クル', rom:'kuru', mean:{zh:'來',en:'come'} },
+      { kanji:'勉強する', hira:'べんきょうする', kata:'ベンキョウスル', rom:'benkyō suru', mean:{zh:'學習；念書',en:'study'} },
+      { kanji:'運動する', hira:'うんどうする', kata:'ウンドウスル', rom:'undō suru', mean:{zh:'運動',en:'exercise'} },
+      { kanji:'料理する', hira:'りょうりする', kata:'リョウリスル', rom:'ryōri suru', mean:{zh:'做料理',en:'cook'} },
+      { kanji:'電話する', hira:'でんわする', kata:'デンワスル', rom:'denwa suru', mean:{zh:'打電話',en:'make a phone call'} },
+      { kanji:'散歩する', hira:'さんぽする', kata:'サンポスル', rom:'sanpo suru', mean:{zh:'散步',en:'take a walk'} },
+      { kanji:'旅行する', hira:'りょこうする', kata:'リョコウスル', rom:'ryokō suru', mean:{zh:'旅行',en:'travel'} },
+      { kanji:'掃除する', hira:'そうじする', kata:'ソウジスル', rom:'sōji suru', mean:{zh:'打掃',en:'clean; tidy up'} },
+      { kanji:'洗濯する', hira:'せんたくする', kata:'センタクスル', rom:'sentaku suru', mean:{zh:'洗衣服',en:'do laundry'} },
+      { kanji:'仕事する', hira:'しごとする', kata:'シゴトスル', rom:'shigoto suru', mean:{zh:'工作',en:'work'} },
+      { kanji:'結婚する', hira:'けっこんする', kata:'ケッコンスル', rom:'kekkon suru', mean:{zh:'結婚',en:'get married'} },
+      { kanji:'卒業する', hira:'そつぎょうする', kata:'ソツギョウスル', rom:'sotsugyō suru', mean:{zh:'畢業',en:'graduate'} },
+      { kanji:'予約する', hira:'よやくする', kata:'ヨヤクスル', rom:'yoyaku suru', mean:{zh:'預約；訂位',en:'make a reservation'} },
+      { kanji:'練習する', hira:'れんしゅうする', kata:'レンシュウスル', rom:'renshū suru', mean:{zh:'練習',en:'practice'} },
+      { kanji:'準備する', hira:'じゅんびする', kata:'ジュンビスル', rom:'junbi suru', mean:{zh:'準備',en:'prepare'} },
+      { kanji:'説明する', hira:'せつめいする', kata:'セツメイスル', rom:'setsumei suru', mean:{zh:'說明；解釋',en:'explain'} },
+      { kanji:'参加する', hira:'さんかする', kata:'サンカスル', rom:'sanka suru', mean:{zh:'參加',en:'participate'} },
+      { kanji:'相談する', hira:'そうだんする', kata:'ソウダンスル', rom:'sōdan suru', mean:{zh:'商量；諮詢',en:'consult; discuss'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'毎日、勉強します。', hira:'まいにち、べんきょうします。', kata:'マイニチ、ベンキョウシマス。', rom:'Mainichi, benkyō shimasu.', mean:{zh:'每天學習。',en:'I study every day.'} },
+        { ja:'明日、来ます。', hira:'あした、きます。', kata:'アシタ、キマス。', rom:'Ashita, kimasu.', mean:{zh:'明天來。',en:'I will come tomorrow.'} },
+        { ja:'朝、運動します。', hira:'あさ、うんどうします。', kata:'アサ、ウンドウシマス。', rom:'Asa, undō shimasu.', mean:{zh:'早上運動。',en:'I exercise in the morning.'} },
+        { ja:'今日、料理します。', hira:'きょう、りょうりします。', kata:'キョウ、リョウリシマス。', rom:'Kyō, ryōri shimasu.', mean:{zh:'今天做料理。',en:'I will cook today.'} },
+        { ja:'毎週末、公園を 散歩します。', hira:'まいしゅうまつ、こうえんを さんぽします。', kata:'マイシュウマツ、コウエンヲ サンポシマス。', rom:'Maishūmatsu, kōen wo sanpo shimasu.', mean:{zh:'每個週末在公園散步。',en:'I take a walk in the park every weekend.'} },
+        { ja:'来年、日本へ 旅行します。', hira:'らいねん、にほんへ りょこうします。', kata:'ライネン、ニホンエ リョコウシマス。', rom:'Rainen, Nihon e ryokō shimasu.', mean:{zh:'明年去日本旅行。',en:'I will travel to Japan next year.'} },
+        { ja:'部屋を 掃除します。', hira:'へやを そうじします。', kata:'ヘヤヲ ソウジシマス。', rom:'Heya wo sōji shimasu.', mean:{zh:'打掃房間。',en:'I clean the room.'} },
+        { ja:'友達に 電話します。', hira:'ともだちに でんわします。', kata:'トモダチニ デンワシマス。', rom:'Tomodachi ni denwa shimasu.', mean:{zh:'打電話給朋友。',en:'I call my friend.'} },
+        { ja:'図書館で 勉強します。', hira:'としょかんで べんきょうします。', kata:'トショカンデ ベンキョウシマス。', rom:'Toshokan de benkyō shimasu.', mean:{zh:'在圖書館學習。',en:'I study at the library.'} },
+        { ja:'毎朝 犬と 散歩します。', hira:'まいあさ いぬと さんぽします。', kata:'マイアサ イヌト サンポシマス。', rom:'Maiasa inu to sanpo shimasu.', mean:{zh:'每天早上和狗散步。',en:'I take a walk with my dog every morning.'} },
+        { ja:'週末に 洗濯します。', hira:'しゅうまつに せんたくします。', kata:'シュウマツニ センタクシマス。', rom:'Shūmatsu ni sentaku shimasu.', mean:{zh:'週末洗衣服。',en:'I do laundry on weekends.'} },
+        { ja:'来月 結婚します。', hira:'らいげつ けっこんします。', kata:'ライゲツ ケッコンシマス。', rom:'Raigetsu kekkon shimasu.', mean:{zh:'下個月結婚。',en:'I am getting married next month.'} },
+        { ja:'毎日 運動します。', hira:'まいにち うんどうします。', kata:'マイニチ ウンドウシマス。', rom:'Mainichi undō shimasu.', mean:{zh:'每天運動。',en:'I exercise every day.'} },
+        { ja:'日本語の 練習を します。', hira:'にほんごの れんしゅうを します。', kata:'ニホンゴノ レンシュウヲ シマス。', rom:'Nihongo no renshū wo shimasu.', mean:{zh:'做日語練習。',en:'I do Japanese practice.'} },
+        { ja:'来月 友達が 来ます。', hira:'らいげつ ともだちが きます。', kata:'ライゲツ トモダチガ キマス。', rom:'Raigetsu tomodachi ga kimasu.', mean:{zh:'下個月朋友要來。',en:'My friend is coming next month.'} },
+        { ja:'一緒に 散歩します。', hira:'いっしょに さんぽします。', kata:'イッショニ サンポシマス。', rom:'Issho ni sanpo shimasu.', mean:{zh:'一起散步。',en:'We take a walk together.'} }
+      ],
+      neg: [
+        { ja:'今日は 勉強しません。', hira:'きょうは べんきょうしません。', kata:'キョウワ ベンキョウシマセン。', rom:'Kyō wa benkyō shimasen.', mean:{zh:'今天不學習。',en:'I do not study today.'} },
+        { ja:'明日は 来ません。', hira:'あしたは きません。', kata:'アシタワ キマセン。', rom:'Ashita wa kimasen.', mean:{zh:'明天不來。',en:'I will not come tomorrow.'} },
+        { ja:'運動しません。', hira:'うんどうしません。', kata:'ウンドウシマセン。', rom:'Undō shimasen.', mean:{zh:'不運動。',en:'I do not exercise.'} },
+        { ja:'料理しません。', hira:'りょうりしません。', kata:'リョウリシマセン。', rom:'Ryōri shimasen.', mean:{zh:'不做料理。',en:'I do not cook.'} },
+        { ja:'今日は 散歩しません。', hira:'きょうは さんぽしません。', kata:'キョウワ サンポシマセン。', rom:'Kyō wa sanpo shimasen.', mean:{zh:'今天不散步。',en:'I do not take a walk today.'} },
+        { ja:'今年は 旅行しません。', hira:'ことしは りょこうしません。', kata:'コトシワ リョコウシマセン。', rom:'Kotoshi wa ryokō shimasen.', mean:{zh:'今年不旅行。',en:'I will not travel this year.'} },
+        { ja:'洗濯しません。', hira:'せんたくしません。', kata:'センタクシマセン。', rom:'Sentaku shimasen.', mean:{zh:'不洗衣服。',en:'I do not do laundry.'} },
+        { ja:'今日は 仕事しません。', hira:'きょうは しごとしません。', kata:'キョウワ シゴトシマセン。', rom:'Kyō wa shigoto shimasen.', mean:{zh:'今天不工作。',en:'I do not work today.'} },
+        { ja:'図書館では 勉強しません。', hira:'としょかんでは べんきょうしません。', kata:'トショカンデワ ベンキョウシマセン。', rom:'Toshokan de wa benkyō shimasen.', mean:{zh:'不在圖書館學習。',en:'I do not study at the library.'} },
+        { ja:'今日は 掃除しません。', hira:'きょうは そうじしません。', kata:'キョウワ ソウジシマセン。', rom:'Kyō wa sōji shimasen.', mean:{zh:'今天不打掃。',en:'I do not clean today.'} },
+        { ja:'今月は 旅行しません。', hira:'こんげつは りょこうしません。', kata:'コンゲツワ リョコウシマセン。', rom:'Kongetsu wa ryokō shimasen.', mean:{zh:'這個月不旅行。',en:'I will not travel this month.'} },
+        { ja:'あまり 電話しません。', hira:'あまり でんわしません。', kata:'アマリ デンワシマセン。', rom:'Amari denwa shimasen.', mean:{zh:'不太打電話。',en:'I do not call very often.'} },
+        { ja:'今日は 運動しません。', hira:'きょうは うんどうしません。', kata:'キョウワ ウンドウシマセン。', rom:'Kyō wa undō shimasen.', mean:{zh:'今天不運動。',en:'I do not exercise today.'} },
+        { ja:'今は 練習しません。', hira:'いまは れんしゅうしません。', kata:'イマワ レンシュウシマセン。', rom:'Ima wa renshū shimasen.', mean:{zh:'現在不練習。',en:'I do not practice now.'} },
+        { ja:'今週は 友達が 来ません。', hira:'こんしゅうは ともだちが きません。', kata:'コンシュウワ トモダチガ キマセン。', rom:'Konshū wa tomodachi ga kimasen.', mean:{zh:'這週朋友不來。',en:'My friend is not coming this week.'} },
+        { ja:'雨なので 散歩しません。', hira:'あめなので さんぽしません。', kata:'アメナノデ サンポシマセン。', rom:'Ame na node sanpo shimasen.', mean:{zh:'因為下雨所以不散步。',en:'I do not take a walk because it is raining.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // ADVERBS
+  // ----------------------------------------------------------------
+  {
+    id: 'adverb',
+    icon: '⚡',
+    nameKey: 'adverb',
+    pattern: {
+      aff: {
+        formula: '〔頻度副詞〕 ＋ 肯定述語',
+        formulaEn: '[Frequency adverb] + Affirmative predicate',
+        note: { zh: '表示頻率的副詞（いつも・よく・たいてい・ときどき）通常搭配肯定句。\n頻率：いつも(100%) ＞ よく(70%) ＞ たいてい(60%) ＞ ときどき(30%)', en: 'Frequency adverbs (itsumo, yoku, taitei, tokidoki) are typically used with affirmative sentences.\nFrequency: itsumo(100%) > yoku(70%) > taitei(60%) > tokidoki(30%)' }
+      },
+      neg: {
+        formula: '〔程度副詞〕 ＋ 否定述語',
+        formulaEn: '[Degree adverb] + Negative predicate',
+        note: { zh: '表示否定程度的副詞（あまり・ぜんぜん・めったに）必須搭配否定句。\nあまり ＋ ～ません（不太…），ぜんぜん ＋ ～ません（完全不…）', en: 'Negative-polarity adverbs (amari, zenzen, metta ni) must be used with negative predicates.\namari + ~masen (not very), zenzen + ~masen (not at all)' }
+      }
+    },
+    conj: null,
+    vocab: [
+      { kanji:'いつも', hira:'いつも', kata:'イツモ', rom:'itsumo', mean:{zh:'總是（100%）',en:'always (100%)'} },
+      { kanji:'よく', hira:'よく', kata:'ヨク', rom:'yoku', mean:{zh:'常常（70%）',en:'often (70%)'} },
+      { kanji:'たいてい', hira:'たいてい', kata:'タイテイ', rom:'taitei', mean:{zh:'大概（60%）',en:'usually (60%)'} },
+      { kanji:'ときどき', hira:'ときどき', kata:'トキドキ', rom:'tokidoki', mean:{zh:'有時（30%）',en:'sometimes (30%)'} },
+      { kanji:'あまり', hira:'あまり', kata:'アマリ', rom:'amari', mean:{zh:'不太〔+否定〕',en:'not very [+neg]'} },
+      { kanji:'ぜんぜん', hira:'ぜんぜん', kata:'ゼンゼン', rom:'zenzen', mean:{zh:'完全不〔+否定〕',en:'not at all [+neg]'} },
+      { kanji:'めったに', hira:'めったに', kata:'メッタニ', rom:'metta ni', mean:{zh:'幾乎不〔+否定〕',en:'rarely [+neg]'} },
+      { kanji:'もう', hira:'もう', kata:'モウ', rom:'mō', mean:{zh:'已經；再也〔+否定〕',en:'already; no longer [+neg]'} },
+      { kanji:'まだ', hira:'まだ', kata:'マダ', rom:'mada', mean:{zh:'還；尚未〔+否定〕',en:'still; not yet [+neg]'} },
+      { kanji:'すぐ', hira:'すぐ', kata:'スグ', rom:'sugu', mean:{zh:'馬上；立刻',en:'soon; immediately'} },
+      { kanji:'もっと', hira:'もっと', kata:'モット', rom:'motto', mean:{zh:'更加；再多',en:'more'} },
+      { kanji:'とても', hira:'とても', kata:'トテモ', rom:'totemo', mean:{zh:'非常；很',en:'very; extremely'} },
+      { kanji:'少し', hira:'すこし', kata:'スコシ', rom:'sukoshi', mean:{zh:'稍微；一點',en:'a little; slightly'} },
+      { kanji:'なかなか', hira:'なかなか', kata:'ナカナカ', rom:'nakanaka', mean:{zh:'相當；不容易〔+否定〕',en:'quite; not easily [+neg]'} },
+      { kanji:'だいたい', hira:'だいたい', kata:'ダイタイ', rom:'daitai', mean:{zh:'大致；大約',en:'approximately; mostly'} },
+      { kanji:'特に', hira:'とくに', kata:'トクニ', rom:'toku ni', mean:{zh:'特別；尤其',en:'especially; in particular'} },
+      { kanji:'絶対に', hira:'ぜったいに', kata:'ゼッタイニ', rom:'zettai ni', mean:{zh:'絕對',en:'absolutely; definitely'} },
+      { kanji:'最近', hira:'さいきん', kata:'サイキン', rom:'saikin', mean:{zh:'最近；近來',en:'recently; lately'} },
+      { kanji:'別に', hira:'べつに', kata:'ベツニ', rom:'betsu ni', mean:{zh:'別；不特別〔+否定〕',en:'not particularly [+neg]'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'私は いつも 朝ごはんを 食べます。', hira:'わたしは いつも あさごはんを たべます。', kata:'ワタシワ イツモ アサゴハンヲ タベマス。', rom:'Watashi wa itsumo asagohan wo tabemasu.', mean:{zh:'我總是吃早餐。',en:'I always eat breakfast.'} },
+        { ja:'よく 図書館へ 行きます。', hira:'よく としょかんへ いきます。', kata:'ヨク トショカンエ イキマス。', rom:'Yoku toshokan e ikimasu.', mean:{zh:'常常去圖書館。',en:'I often go to the library.'} },
+        { ja:'たいてい 電車で 来ます。', hira:'たいてい でんしゃで きます。', kata:'タイテイ デンシャデ キマス。', rom:'Taitei densha de kimasu.', mean:{zh:'通常搭電車來。',en:'I usually come by train.'} },
+        { ja:'ときどき 友達と 映画を 見ます。', hira:'ときどき ともだちと えいがを みます。', kata:'トキドキ トモダチト エイガヲ ミマス。', rom:'Tokidoki tomodachi to eiga wo mimasu.', mean:{zh:'有時和朋友看電影。',en:'I sometimes watch movies with friends.'} },
+        { ja:'もう 準備が できます。', hira:'もう じゅんびが できます。', kata:'モウ ジュンビガ デキマス。', rom:'Mō junbi ga dekimasu.', mean:{zh:'已經準備好了。',en:'I am already ready.'} },
+        { ja:'すぐ 行きます。', hira:'すぐ いきます。', kata:'スグ イキマス。', rom:'Sugu ikimasu.', mean:{zh:'馬上去。',en:'I will go right away.'} },
+        { ja:'今日は とても 楽しい です。', hira:'きょうは とても たのしい です。', kata:'キョウワ トテモ タノシイ デス。', rom:'Kyō wa totemo tanoshii desu.', mean:{zh:'今天非常開心。',en:'Today is very fun.'} },
+        { ja:'もっと 日本語を 勉強します。', hira:'もっと にほんごを べんきょうします。', kata:'モット ニホンゴヲ ベンキョウシマス。', rom:'Motto Nihongo wo benkyō shimasu.', mean:{zh:'要更努力學日語。',en:'I will study Japanese more.'} },
+        { ja:'たいてい 7時に 起きます。', hira:'たいてい しちじに おきます。', kata:'タイテイ シチジニ オキマス。', rom:'Taitei shichi-ji ni okimasu.', mean:{zh:'通常七點起床。',en:'I usually wake up at 7 o\'clock.'} },
+        { ja:'よく 友達と 話します。', hira:'よく ともだちと はなします。', kata:'ヨク トモダチト ハナシマス。', rom:'Yoku tomodachi to hanashimasu.', mean:{zh:'常常和朋友聊天。',en:'I often talk with friends.'} },
+        { ja:'少し 待ちます。', hira:'すこし まちます。', kata:'スコシ マチマス。', rom:'Sukoshi machimasu.', mean:{zh:'稍等一下。',en:'I will wait a little.'} },
+        { ja:'だいたい 9時に 寝ます。', hira:'だいたい くじに ねます。', kata:'ダイタイ クジニ ネマス。', rom:'Daitai ku-ji ni nemasu.', mean:{zh:'大概九點睡覺。',en:'I sleep at around 9 o\'clock.'} },
+        { ja:'もう 宿題が 終わりました。', hira:'もう しゅくだいが おわりました。', kata:'モウ シュクダイガ オワリマシタ。', rom:'Mō shukudai ga owarimashita.', mean:{zh:'作業已經做完了。',en:'I have already finished my homework.'} },
+        { ja:'ゆっくり 歩きます。', hira:'ゆっくり あるきます。', kata:'ユックリ アルキマス。', rom:'Yukkuri arukimasu.', mean:{zh:'慢慢地走。',en:'I walk slowly.'} },
+        { ja:'たぶん 明日 晴れます。', hira:'たぶん あした はれます。', kata:'タブン アシタ ハレマス。', rom:'Tabun ashita haremasu.', mean:{zh:'明天大概會放晴。',en:'It will probably be sunny tomorrow.'} },
+        { ja:'かなり 上手に なりました。', hira:'かなり じょうずに なりました。', kata:'カナリ ジョウズニ ナリマシタ。', rom:'Kanari jōzu ni narimashita.', mean:{zh:'變得相當厲害了。',en:'I have become quite skilled.'} }
+      ],
+      neg: [
+        { ja:'あまり お酒を 飲みません。', hira:'あまり おさけを のみません。', kata:'アマリ オサケヲ ノミマセン。', rom:'Amari osake wo nomimasen.', mean:{zh:'不太喝酒。',en:'I don\'t drink alcohol very often.'} },
+        { ja:'ぜんぜん 運動しません。', hira:'ぜんぜん うんどうしません。', kata:'ゼンゼン ウンドウシマセン。', rom:'Zenzen undō shimasen.', mean:{zh:'完全不運動。',en:'I don\'t exercise at all.'} },
+        { ja:'めったに 映画を 見ません。', hira:'めったに えいがを みません。', kata:'メッタニ エイガヲ ミマセン。', rom:'Metta ni eiga wo mimasen.', mean:{zh:'幾乎不看電影。',en:'I rarely watch movies.'} },
+        { ja:'あまり 肉を 食べません。', hira:'あまり にくを たべません。', kata:'アマリ ニクヲ タベマセン。', rom:'Amari niku wo tabemasen.', mean:{zh:'不太吃肉。',en:'I don\'t eat much meat.'} },
+        { ja:'まだ 終わりません。', hira:'まだ おわりません。', kata:'マダ オワリマセン。', rom:'Mada owarimasen.', mean:{zh:'還沒結束。',en:'It is not finished yet.'} },
+        { ja:'なかなか 上手に なりません。', hira:'なかなか じょうずに なりません。', kata:'ナカナカ ジョウズニ ナリマセン。', rom:'Nakanaka jōzu ni narimasen.', mean:{zh:'就是學不好。',en:'I just can\'t seem to get better.'} },
+        { ja:'もう あそこへは 行きません。', hira:'もう あそこへは いきません。', kata:'モウ アソコエワ イキマセン。', rom:'Mō asoko e wa ikimasen.', mean:{zh:'再也不去那裡了。',en:'I will not go there anymore.'} },
+        { ja:'ぜんぜん 分かりません。', hira:'ぜんぜん わかりません。', kata:'ゼンゼン ワカリマセン。', rom:'Zenzen wakarimasen.', mean:{zh:'完全不懂。',en:'I don\'t understand at all.'} },
+        { ja:'あまり 甘い ものを 食べません。', hira:'あまり あまい ものを たべません。', kata:'アマリ アマイ モノヲ タベマセン。', rom:'Amari amai mono wo tabemasen.', mean:{zh:'不太吃甜食。',en:'I do not eat sweet things very much.'} },
+        { ja:'めったに タクシーに 乗りません。', hira:'めったに たくしーに のりません。', kata:'メッタニ タクシーニ ノリマセン。', rom:'Metta ni takushī ni norimasen.', mean:{zh:'幾乎不搭計程車。',en:'I rarely take a taxi.'} },
+        { ja:'まだ 昼ごはんを 食べません。', hira:'まだ ひるごはんを たべません。', kata:'マダ ヒルゴハンヲ タベマセン。', rom:'Mada hirugohan wo tabemasen.', mean:{zh:'還沒吃午飯。',en:'I haven\'t eaten lunch yet.'} },
+        { ja:'なかなか 早く 起きません。', hira:'なかなか はやく おきません。', kata:'ナカナカ ハヤク オキマセン。', rom:'Nakanaka hayaku okimasen.', mean:{zh:'就是起不了早。',en:'I just can\'t seem to wake up early.'} },
+        { ja:'まだ 宿題が 終わっていません。', hira:'まだ しゅくだいが おわっていません。', kata:'マダ シュクダイガ オワッテイマセン。', rom:'Mada shukudai ga owatte imasen.', mean:{zh:'作業還沒做完。',en:'I have not finished my homework yet.'} },
+        { ja:'あまり 早く 歩きません。', hira:'あまり はやく あるきません。', kata:'アマリ ハヤク アルキマセン。', rom:'Amari hayaku arukimasen.', mean:{zh:'不太快走。',en:'I do not walk very fast.'} },
+        { ja:'たぶん 明日は 晴れません。', hira:'たぶん あしたは はれません。', kata:'タブン アシタワ ハレマセン。', rom:'Tabun ashita wa haremasen.', mean:{zh:'明天大概不會放晴。',en:'It probably will not be sunny tomorrow.'} },
+        { ja:'まだ 全然 わかりません。', hira:'まだ ぜんぜん わかりません。', kata:'マダ ゼンゼン ワカリマセン。', rom:'Mada zenzen wakarimasen.', mean:{zh:'還是完全不懂。',en:'I still do not understand at all.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // EXISTENCE VERBS (ある・いる)
+  // ----------------------------------------------------------------
+  {
+    id: 'exist',
+    icon: '📍',
+    nameKey: 'exist',
+    pattern: {
+      aff: {
+        formula: '〔場所〕に〔物〕が あります　／　〔場所〕に〔人・動物〕が います',
+        formulaEn: '[Place] ni [thing] ga arimasu  /  [Place] ni [person/animal] ga imasu',
+        note: { zh: '「あります」用於無生命的物品（物、植物等）；「います」用於有生命的存在（人、動物）。\nあります = inanimate（本・車・建物）\nいます = animate（人・動物）', en: '"arimasu" is used for inanimate things (objects, plants, buildings). "imasu" is used for animate beings (people, animals).\narimasu = inanimate  /  imasu = animate' }
+      },
+      neg: {
+        formula: '〔場所〕に〔物〕が ありません　／　〔場所〕に〔人・動物〕が いません',
+        formulaEn: '[Place] ni [thing] ga arimasen  /  [Place] ni [person/animal] ga imasen',
+        note: { zh: '「ありません」是「あります」的否定形；「いません」是「います」的否定形。', en: '"arimasen" is the negative of "arimasu"; "imasen" is the negative of "imasu".' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','用法','肯定（禮貌）','否定（禮貌）'], en:['Dictionary','Usage','Affirmative (polite)','Negative (polite)'] },
+      rows: [
+        { zh:['ある','（物・植物）が ある','あります','ありません'], en:['aru','(thing/plant) exists','arimasu','arimasen'] },
+        { zh:['いる','（人・動物）が いる','います','いません'], en:['iru','(person/animal) is present','imasu','imasen'] }
+      ]
+    },
+    vocab: [
+      { kanji:'机', hira:'つくえ', kata:'ツクエ', rom:'tsukue', mean:{zh:'桌子',en:'desk'} },
+      { kanji:'椅子', hira:'いす', kata:'イス', rom:'isu', mean:{zh:'椅子',en:'chair'} },
+      { kanji:'鍵', hira:'かぎ', kata:'カギ', rom:'kagi', mean:{zh:'鑰匙',en:'key'} },
+      { kanji:'財布', hira:'さいふ', kata:'サイフ', rom:'saifu', mean:{zh:'錢包',en:'wallet'} },
+      { kanji:'冷蔵庫', hira:'れいぞうこ', kata:'レイゾウコ', rom:'reizōko', mean:{zh:'冰箱',en:'refrigerator'} },
+      { kanji:'教室', hira:'きょうしつ', kata:'キョウシツ', rom:'kyōshitsu', mean:{zh:'教室',en:'classroom'} },
+      { kanji:'庭', hira:'にわ', kata:'ニワ', rom:'niwa', mean:{zh:'庭院',en:'garden'} },
+      { kanji:'コンビニ', hira:'こんびに', kata:'コンビニ', rom:'konbini', mean:{zh:'便利店',en:'convenience store'} },
+      { kanji:'お金', hira:'おかね', kata:'オカネ', rom:'okane', mean:{zh:'錢',en:'money'} },
+      { kanji:'子ども', hira:'こども', kata:'コドモ', rom:'kodomo', mean:{zh:'孩子',en:'child'} },
+      { kanji:'外国人', hira:'がいこくじん', kata:'ガイコクジン', rom:'gaikokujin', mean:{zh:'外國人',en:'foreigner'} },
+      { kanji:'近く', hira:'ちかく', kata:'チカク', rom:'chikaku', mean:{zh:'附近',en:'nearby; vicinity'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'机の上に 本が あります。', hira:'つくえの うえに ほんが あります。', kata:'ツクエノ ウエニ ホンガ アリマス。', rom:'Tsukue no ue ni hon ga arimasu.', mean:{zh:'桌子上有書。',en:'There is a book on the desk.'} },
+        { ja:'公園に 子どもが います。', hira:'こうえんに こどもが います。', kata:'コウエンニ コドモガ イマス。', rom:'Kōen ni kodomo ga imasu.', mean:{zh:'公園裡有孩子。',en:'There are children in the park.'} },
+        { ja:'冷蔵庫の中に ビールが あります。', hira:'れいぞうこの なかに びーるが あります。', kata:'レイゾウコノ ナカニ ビールガ アリマス。', rom:'Reizōko no naka ni bīru ga arimasu.', mean:{zh:'冰箱裡有啤酒。',en:'There is beer in the refrigerator.'} },
+        { ja:'教室に 学生が います。', hira:'きょうしつに がくせいが います。', kata:'キョウシツニ ガクセイガ イマス。', rom:'Kyōshitsu ni gakusei ga imasu.', mean:{zh:'教室裡有學生。',en:'There are students in the classroom.'} },
+        { ja:'財布の中に お金が あります。', hira:'さいふの なかに おかねが あります。', kata:'サイフノ ナカニ オカネガ アリマス。', rom:'Saifu no naka ni okane ga arimasu.', mean:{zh:'錢包裡有錢。',en:'There is money in the wallet.'} },
+        { ja:'駅の前に カフェが あります。', hira:'えきの まえに かふぇが あります。', kata:'エキノ マエニ カフェガ アリマス。', rom:'Eki no mae ni kafe ga arimasu.', mean:{zh:'車站前有咖啡廳。',en:'There is a café in front of the station.'} },
+        { ja:'部屋に 猫が います。', hira:'へやに ねこが います。', kata:'ヘヤニ ネコガ イマス。', rom:'Heya ni neko ga imasu.', mean:{zh:'房間裡有貓。',en:'There is a cat in the room.'} },
+        { ja:'図書館に 田中さんが います。', hira:'としょかんに たなかさんが います。', kata:'トショカンニ タナカサンガ イマス。', rom:'Toshokan ni Tanaka-san ga imasu.', mean:{zh:'圖書館裡有田中先生。',en:'Mr./Ms. Tanaka is in the library.'} },
+        { ja:'テーブルの上に 鍵が あります。', hira:'てーぶるの うえに かぎが あります。', kata:'テーブルノ ウエニ カギガ アリマス。', rom:'Tēburu no ue ni kagi ga arimasu.', mean:{zh:'桌子上有鑰匙。',en:'There is a key on the table.'} },
+        { ja:'庭に 犬が います。', hira:'にわに いぬが います。', kata:'ニワニ イヌガ イマス。', rom:'Niwa ni inu ga imasu.', mean:{zh:'庭院裡有狗。',en:'There is a dog in the garden.'} },
+        { ja:'バッグの中に 財布が あります。', hira:'ばっぐの なかに さいふが あります。', kata:'バッグノ ナカニ サイフガ アリマス。', rom:'Baggu no naka ni saifu ga arimasu.', mean:{zh:'包包裡有錢包。',en:'There is a wallet in the bag.'} },
+        { ja:'学校の近くに 病院が あります。', hira:'がっこうの ちかくに びょういんが あります。', kata:'ガッコウノ チカクニ ビョウインガ アリマス。', rom:'Gakkō no chikaku ni byōin ga arimasu.', mean:{zh:'學校附近有醫院。',en:'There is a hospital near the school.'} },
+        { ja:'冷蔵庫の 中に 牛乳が あります。', hira:'れいぞうこの なかに ぎゅうにゅうが あります。', kata:'レイゾウコノ ナカニ ギュウニュウガ アリマス。', rom:'Reizōko no naka ni gyūnyū ga arimasu.', mean:{zh:'冰箱裡有牛奶。',en:'There is milk in the refrigerator.'} },
+        { ja:'駅の 前に バス停が あります。', hira:'えきの まえに バスていが あります。', kata:'エキノ マエニ バステイガ アリマス。', rom:'Eki no mae ni basutei ga arimasu.', mean:{zh:'車站前面有公車站。',en:'There is a bus stop in front of the station.'} },
+        { ja:'教室に 先生が います。', hira:'きょうしつに せんせいが います。', kata:'キョウシツニ センセイガ イマス。', rom:'Kyōshitsu ni sensei ga imasu.', mean:{zh:'教室裡有老師。',en:'There is a teacher in the classroom.'} },
+        { ja:'公園に 子どもたちが います。', hira:'こうえんに こどもたちが います。', kata:'コウエンニ コドモタチガ イマス。', rom:'Kōen ni kodomotachi ga imasu.', mean:{zh:'公園裡有孩子們。',en:'There are children in the park.'} }
+      ],
+      neg: [
+        { ja:'机の上に 本が ありません。', hira:'つくえの うえに ほんが ありません。', kata:'ツクエノ ウエニ ホンガ アリマセン。', rom:'Tsukue no ue ni hon ga arimasen.', mean:{zh:'桌子上沒有書。',en:'There is no book on the desk.'} },
+        { ja:'公園に 子どもが いません。', hira:'こうえんに こどもが いません。', kata:'コウエンニ コドモガ イマセン。', rom:'Kōen ni kodomo ga imasen.', mean:{zh:'公園裡沒有孩子。',en:'There are no children in the park.'} },
+        { ja:'冷蔵庫の中に ビールが ありません。', hira:'れいぞうこの なかに びーるが ありません。', kata:'レイゾウコノ ナカニ ビールガ アリマセン。', rom:'Reizōko no naka ni bīru ga arimasen.', mean:{zh:'冰箱裡沒有啤酒。',en:'There is no beer in the refrigerator.'} },
+        { ja:'教室に 学生が いません。', hira:'きょうしつに がくせいが いません。', kata:'キョウシツニ ガクセイガ イマセン。', rom:'Kyōshitsu ni gakusei ga imasen.', mean:{zh:'教室裡沒有學生。',en:'There are no students in the classroom.'} },
+        { ja:'財布の中に お金が ありません。', hira:'さいふの なかに おかねが ありません。', kata:'サイフノ ナカニ オカネガ アリマセン。', rom:'Saifu no naka ni okane ga arimasen.', mean:{zh:'錢包裡沒有錢。',en:'There is no money in the wallet.'} },
+        { ja:'駅の近くに コンビニが ありません。', hira:'えきの ちかくに こんびにが ありません。', kata:'エキノ チカクニ コンビニガ アリマセン。', rom:'Eki no chikaku ni konbini ga arimasen.', mean:{zh:'車站附近沒有便利店。',en:'There is no convenience store near the station.'} },
+        { ja:'部屋に 猫が いません。', hira:'へやに ねこが いません。', kata:'ヘヤニ ネコガ イマセン。', rom:'Heya ni neko ga imasen.', mean:{zh:'房間裡沒有貓。',en:'There is no cat in the room.'} },
+        { ja:'図書館に 田中さんが いません。', hira:'としょかんに たなかさんが いません。', kata:'トショカンニ タナカサンガ イマセン。', rom:'Toshokan ni Tanaka-san ga imasen.', mean:{zh:'圖書館裡沒有田中先生。',en:'Mr./Ms. Tanaka is not in the library.'} },
+        { ja:'テーブルの上に 鍵が ありません。', hira:'てーぶるの うえに かぎが ありません。', kata:'テーブルノ ウエニ カギガ アリマセン。', rom:'Tēburu no ue ni kagi ga arimasen.', mean:{zh:'桌子上沒有鑰匙。',en:'There is no key on the table.'} },
+        { ja:'庭に 犬が いません。', hira:'にわに いぬが いません。', kata:'ニワニ イヌガ イマセン。', rom:'Niwa ni inu ga imasen.', mean:{zh:'庭院裡沒有狗。',en:'There is no dog in the garden.'} },
+        { ja:'バッグの中に 財布が ありません。', hira:'ばっぐの なかに さいふが ありません。', kata:'バッグノ ナカニ サイフガ アリマセン。', rom:'Baggu no naka ni saifu ga arimasen.', mean:{zh:'包包裡沒有錢包。',en:'There is no wallet in the bag.'} },
+        { ja:'この 町に 病院が ありません。', hira:'この まちに びょういんが ありません。', kata:'コノ マチニ ビョウインガ アリマセン。', rom:'Kono machi ni byōin ga arimasen.', mean:{zh:'這個城鎮裡沒有醫院。',en:'There is no hospital in this town.'} },
+        { ja:'冷蔵庫に 何も ありません。', hira:'れいぞうこに なにも ありません。', kata:'レイゾウコニ ナニモ アリマセン。', rom:'Reizōko ni nani mo arimasen.', mean:{zh:'冰箱裡什麼都沒有。',en:'There is nothing in the refrigerator.'} },
+        { ja:'今日は バス停に 人が いません。', hira:'きょうは バスていに ひとが いません。', kata:'キョウワ バステイニ ヒトガ イマセン。', rom:'Kyō wa basutei ni hito ga imasen.', mean:{zh:'今天公車站沒有人。',en:'There is no one at the bus stop today.'} },
+        { ja:'今は 教室に 誰も いません。', hira:'いまは きょうしつに だれも いません。', kata:'イマワ キョウシツニ ダレモ イマセン。', rom:'Ima wa kyōshitsu ni dare mo imasen.', mean:{zh:'現在教室裡沒有任何人。',en:'There is no one in the classroom now.'} },
+        { ja:'この 公園には ベンチが ありません。', hira:'この こうえんには べんちが ありません。', kata:'コノ コウエンニワ ベンチガ アリマセン。', rom:'Kono kōen ni wa benchi ga arimasen.', mean:{zh:'這個公園沒有長椅。',en:'There are no benches in this park.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // DESIRE FORM (～たい)
+  // ----------------------------------------------------------------
+  {
+    id: 'tai',
+    icon: '💭',
+    nameKey: 'tai',
+    pattern: {
+      aff: {
+        formula: '〔動詞語幹〕 ＋ たい です',
+        formulaEn: '[verb stem] + tai desu',
+        note: { zh: '一段動詞：去掉「る」加「たい」。五段動詞：い段変形後加「たい」。する→したい、くる→きたい。\n例：食べる→食べたい　行く→行きたい　する→したい', en: 'Ichidan: drop "ru", add "tai". Godan: change to i-row, add "tai". suru→shitai, kuru→kitai.\nEx: taberu→tabetai  iku→ikitai  suru→shitai' }
+      },
+      neg: {
+        formula: '〔動詞語幹〕 ＋ たくない です　／　たくありません',
+        formulaEn: '[verb stem] + takunai desu / taku arimasen',
+        note: { zh: '「たい」的否定形與い形容詞完全相同：去掉「い」加「くない」。\nたい → たくない（口語）／ たくありません（正式）', en: '"tai" negates exactly like an i-adjective — drop "i", add "kunai".\ntai → takunai (informal)  /  taku arimasen (formal)' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','たい形（肯定）','たくない形（否定）'], en:['Dictionary','Tai-form (want to)','Takunai-form (don\'t want to)'] },
+      rows: [
+        { zh:['食べる　たべる（一段）','食べたい　たべたい','食べたくない　たべたくない'], en:['taberu (ichidan)','tabetai','tabetakunai'] },
+        { zh:['行く　いく（五段）','行きたい　いきたい','行きたくない　いきたくない'], en:['iku (godan)','ikitai','ikitakunai'] },
+        { zh:['話す　はなす（五段）','話したい　はなしたい','話したくない　はなしたくない'], en:['hanasu (godan)','hanashitai','hanashitakunai'] },
+        { zh:['する（不規則）','したい','したくない'], en:['suru (irregular)','shitai','shitakunai'] },
+        { zh:['くる（不規則）','きたい','きたくない'], en:['kuru (irregular)','kitai','kitakunai'] }
+      ]
+    },
+    vocab: [
+      { kanji:'食べたい', hira:'たべたい', kata:'タベタイ', rom:'tabetai', mean:{zh:'想吃',en:'want to eat'} },
+      { kanji:'飲みたい', hira:'のみたい', kata:'ノミタイ', rom:'nomitai', mean:{zh:'想喝',en:'want to drink'} },
+      { kanji:'行きたい', hira:'いきたい', kata:'イキタイ', rom:'ikitai', mean:{zh:'想去',en:'want to go'} },
+      { kanji:'見たい', hira:'みたい', kata:'ミタイ', rom:'mitai', mean:{zh:'想看',en:'want to see/watch'} },
+      { kanji:'買いたい', hira:'かいたい', kata:'カイタイ', rom:'kaitai', mean:{zh:'想買',en:'want to buy'} },
+      { kanji:'寝たい', hira:'ねたい', kata:'ネタイ', rom:'netai', mean:{zh:'想睡',en:'want to sleep'} },
+      { kanji:'話したい', hira:'はなしたい', kata:'ハナシタイ', rom:'hanashitai', mean:{zh:'想說話',en:'want to talk'} },
+      { kanji:'会いたい', hira:'あいたい', kata:'アイタイ', rom:'aitai', mean:{zh:'想見面',en:'want to meet'} },
+      { kanji:'帰りたい', hira:'かえりたい', kata:'カエリタイ', rom:'kaeritai', mean:{zh:'想回家',en:'want to go home'} },
+      { kanji:'休みたい', hira:'やすみたい', kata:'ヤスミタイ', rom:'yasumitai', mean:{zh:'想休息',en:'want to rest'} },
+      { kanji:'勉強したい', hira:'べんきょうしたい', kata:'ベンキョウシタイ', rom:'benkyō shitai', mean:{zh:'想學習',en:'want to study'} },
+      { kanji:'旅行したい', hira:'りょこうしたい', kata:'リョコウシタイ', rom:'ryokō shitai', mean:{zh:'想旅行',en:'want to travel'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'日本語を 話したい です。', hira:'にほんごを はなしたい です。', kata:'ニホンゴヲ ハナシタイ デス。', rom:'Nihongo wo hanashitai desu.', mean:{zh:'我想說日語。',en:'I want to speak Japanese.'} },
+        { ja:'日本へ 行きたい です。', hira:'にほんへ いきたい です。', kata:'ニホンエ イキタイ デス。', rom:'Nihon e ikitai desu.', mean:{zh:'我想去日本。',en:'I want to go to Japan.'} },
+        { ja:'ラーメンを 食べたい です。', hira:'らーめんを たべたい です。', kata:'ラーメンヲ タベタイ デス。', rom:'Rāmen wo tabetai desu.', mean:{zh:'我想吃拉麵。',en:'I want to eat ramen.'} },
+        { ja:'友達に 会いたい です。', hira:'ともだちに あいたい です。', kata:'トモダチニ アイタイ デス。', rom:'Tomodachi ni aitai desu.', mean:{zh:'我想見朋友。',en:'I want to meet my friend.'} },
+        { ja:'早く 家に 帰りたい です。', hira:'はやく いえに かえりたい です。', kata:'ハヤク イエニ カエリタイ デス。', rom:'Hayaku ie ni kaeritai desu.', mean:{zh:'想早點回家。',en:'I want to go home early.'} },
+        { ja:'今日は 早く 寝たい です。', hira:'きょうは はやく ねたい です。', kata:'キョウワ ハヤク ネタイ デス。', rom:'Kyō wa hayaku netai desu.', mean:{zh:'今天想早點睡。',en:'I want to sleep early today.'} },
+        { ja:'もっと 勉強したい です。', hira:'もっと べんきょうしたい です。', kata:'モット ベンキョウシタイ デス。', rom:'Motto benkyō shitai desu.', mean:{zh:'想更努力學習。',en:'I want to study more.'} },
+        { ja:'世界を 旅行したい です。', hira:'せかいを りょこうしたい です。', kata:'セカイヲ リョコウシタイ デス。', rom:'Sekai wo ryokō shitai desu.', mean:{zh:'想環遊世界。',en:'I want to travel the world.'} },
+        { ja:'この 映画を 見たい です。', hira:'この えいがを みたい です。', kata:'コノ エイガヲ ミタイ デス。', rom:'Kono eiga wo mitai desu.', mean:{zh:'想看這部電影。',en:'I want to watch this movie.'} },
+        { ja:'新しい 車を 買いたい です。', hira:'あたらしい くるまを かいたい です。', kata:'アタラシイ クルマヲ カイタイ デス。', rom:'Atarashii kuruma wo kaitai desu.', mean:{zh:'想買新車。',en:'I want to buy a new car.'} },
+        { ja:'コーヒーを 飲みたい です。', hira:'こーひーを のみたい です。', kata:'コーヒーヲ ノミタイ デス。', rom:'Kōhī wo nomitai desu.', mean:{zh:'想喝咖啡。',en:'I want to drink coffee.'} },
+        { ja:'少し 休みたい です。', hira:'すこし やすみたい です。', kata:'スコシ ヤスミタイ デス。', rom:'Sukoshi yasumitai desu.', mean:{zh:'想稍微休息一下。',en:'I want to rest a little.'} },
+        { ja:'日本に 住みたい です。', hira:'にほんに すみたい です。', kata:'ニホンニ スミタイ デス。', rom:'Nihon ni sumitai desu.', mean:{zh:'想住在日本。',en:'I want to live in Japan.'} },
+        { ja:'新しい 友達を 作りたい です。', hira:'あたらしい ともだちを つくりたい です。', kata:'アタラシイ トモダチヲ ツクリタイ デス。', rom:'Atarashii tomodachi wo tsukuritai desu.', mean:{zh:'想交新朋友。',en:'I want to make new friends.'} },
+        { ja:'音楽を 聴きたい です。', hira:'おんがくを ききたい です。', kata:'オンガクヲ キキタイ デス。', rom:'Ongaku wo kikitai desu.', mean:{zh:'想聽音樂。',en:'I want to listen to music.'} },
+        { ja:'温泉に 入りたい です。', hira:'おんせんに はいりたい です。', kata:'オンセンニ ハイリタイ デス。', rom:'Onsen ni hairitai desu.', mean:{zh:'想泡溫泉。',en:'I want to take a hot spring bath.'} }
+      ],
+      neg: [
+        { ja:'今日は 外に 出たくない です。', hira:'きょうは そとに でたくない です。', kata:'キョウワ ソトニ デタクナイ デス。', rom:'Kyō wa soto ni detakunai desu.', mean:{zh:'今天不想出門。',en:'I don\'t want to go outside today.'} },
+        { ja:'辛い ものは 食べたくない です。', hira:'からい ものは たべたくない です。', kata:'カライ モノワ タベタクナイ デス。', rom:'Karai mono wa tabetakunai desu.', mean:{zh:'不想吃辣的東西。',en:'I don\'t want to eat spicy things.'} },
+        { ja:'今は 話したくない です。', hira:'いまは はなしたくない です。', kata:'イマワ ハナシタクナイ デス。', rom:'Ima wa hanashitakunai desu.', mean:{zh:'現在不想說話。',en:'I don\'t want to talk right now.'} },
+        { ja:'今日は 学校へ 行きたくない です。', hira:'きょうは がっこうへ いきたくない です。', kata:'キョウワ ガッコウエ イキタクナイ デス。', rom:'Kyō wa gakkō e ikitakunai desu.', mean:{zh:'今天不想去學校。',en:'I don\'t want to go to school today.'} },
+        { ja:'早く 起きたくない です。', hira:'はやく おきたくない です。', kata:'ハヤク オキタクナイ デス。', rom:'Hayaku okitakunai desu.', mean:{zh:'不想早起。',en:'I don\'t want to wake up early.'} },
+        { ja:'今は 勉強したくない です。', hira:'いまは べんきょうしたくない です。', kata:'イマワ ベンキョウシタクナイ デス。', rom:'Ima wa benkyō shitakunai desu.', mean:{zh:'現在不想學習。',en:'I don\'t want to study right now.'} },
+        { ja:'その 映画は 見たくありません。', hira:'その えいがは みたくありません。', kata:'ソノ エイガワ ミタクアリマセン。', rom:'Sono eiga wa mitaku arimasen.', mean:{zh:'不想看那部電影。',en:'I don\'t want to watch that movie.'} },
+        { ja:'一人で 帰りたくない です。', hira:'ひとりで かえりたくない です。', kata:'ヒトリデ カエリタクナイ デス。', rom:'Hitori de kaeritakunai desu.', mean:{zh:'不想一個人回家。',en:'I don\'t want to go home alone.'} },
+        { ja:'お酒は 飲みたくない です。', hira:'おさけは のみたくない です。', kata:'オサケワ ノミタクナイ デス。', rom:'Osake wa nomitakunai desu.', mean:{zh:'不想喝酒。',en:'I don\'t want to drink alcohol.'} },
+        { ja:'働きたくありません。', hira:'はたらきたくありません。', kata:'ハタライタクアリマセン。', rom:'Hatarakitaku arimasen.', mean:{zh:'不想工作。',en:'I don\'t want to work.'} },
+        { ja:'冷たい ものは 飲みたくない です。', hira:'つめたい ものは のみたくない です。', kata:'ツメタイ モノワ ノミタクナイ デス。', rom:'Tsumetai mono wa nomitakunai desu.', mean:{zh:'不想喝冷的東西。',en:'I don\'t want to drink cold things.'} },
+        { ja:'悲しい 映画は 見たくありません。', hira:'かなしい えいがは みたくありません。', kata:'カナシイ エイガワ ミタクアリマセン。', rom:'Kanashii eiga wa mitaku arimasen.', mean:{zh:'不想看悲傷的電影。',en:'I don\'t want to watch sad movies.'} },
+        { ja:'日本を 離れたくないです。', hira:'にほんを はなれたくないです。', kata:'ニホンヲ ハナレタクナイデス。', rom:'Nihon wo hanaretaku nai desu.', mean:{zh:'不想離開日本。',en:'I do not want to leave Japan.'} },
+        { ja:'今は 新しい 友達を 作りたくないです。', hira:'いまは あたらしい ともだちを つくりたくないです。', kata:'イマワ アタラシイ トモダチヲ ツクリタクナイデス。', rom:'Ima wa atarashii tomodachi wo tsukuritaku nai desu.', mean:{zh:'現在不想交新朋友。',en:'I do not want to make new friends now.'} },
+        { ja:'今は 音楽を 聴きたくないです。', hira:'いまは おんがくを ききたくないです。', kata:'イマワ オンガクヲ キキタクナイデス。', rom:'Ima wa ongaku wo kikitaku nai desu.', mean:{zh:'現在不想聽音樂。',en:'I do not want to listen to music now.'} },
+        { ja:'今日は 温泉に 入りたくありません。', hira:'きょうは おんせんに はいりたくありません。', kata:'キョウワ オンセンニ ハイリタクアリマセン。', rom:'Kyō wa onsen ni hairitaku arimasen.', mean:{zh:'今天不想泡溫泉。',en:'I do not want to take a hot spring bath today.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // TE-FORM + IMASU (Progressive / State)
+  // ----------------------------------------------------------------
+  {
+    id: 'teiru',
+    icon: '🔄',
+    nameKey: 'teiru',
+    pattern: {
+      aff: {
+        formula: '〔て形〕 ＋ います',
+        formulaEn: '[te-form] + imasu',
+        note: { zh: 'て形＋います有兩種用法：\n①継続動作：今、食べています（正在吃）\n②結果状態：結婚しています（已婚）・住んでいます（住在）\n知っています（知道）は状態動詞の特殊用法。', en: 'Two uses of te-form + imasu:\n① Ongoing action: ima, tabete imasu (eating now)\n② Resulting state: kekkon shite imasu (be married) / sunde imasu (live in)\nShitte imasu (know) is a special stative use.' }
+      },
+      neg: {
+        formula: '〔て形〕 ＋ いません',
+        formulaEn: '[te-form] + imasen',
+        note: { zh: 'て形＋いません表示動作未進行，或不在該状態。', en: 'Te-form + imasen: the action is not ongoing, or the state does not apply.' }
+      }
+    },
+    conj: {
+      headers: { zh:['動詞','て形の作り方','て形','て形＋います'], en:['Verb','Te-form rule','Te-form','Te + imasu'] },
+      rows: [
+        { zh:['食べる（一段）','る → て','食べて','食べています'], en:['taberu (ichidan)','drop ru → add te','tabete','tabete imasu'] },
+        { zh:['書く（五段 く）','く → いて','書いて','書いています'], en:['kaku (godan -ku)','ku → ite','kaite','kaite imasu'] },
+        { zh:['飲む（五段 む）','む → んで','飲んで','飲んでいます'], en:['nomu (godan -mu)','mu → nde','nonde','nonde imasu'] },
+        { zh:['話す（五段 す）','す → して','話して','話しています'], en:['hanasu (godan -su)','su → shite','hanashite','hanashite imasu'] },
+        { zh:['待つ（五段 つ）','つ → って','待って','待っています'], en:['matsu (godan -tsu)','tsu → tte','matte','matte imasu'] },
+        { zh:['する（不規則）','する → して','して','しています'], en:['suru (irregular)','suru → shite','shite','shite imasu'] },
+        { zh:['くる（不規則）','くる → きて','きて','きています'], en:['kuru (irregular)','kuru → kite','kite','kite imasu'] }
+      ]
+    },
+    vocab: [
+      { kanji:'食べています', hira:'たべています', kata:'タベテイマス', rom:'tabete imasu', mean:{zh:'正在吃',en:'am/is eating'} },
+      { kanji:'飲んでいます', hira:'のんでいます', kata:'ノンデイマス', rom:'nonde imasu', mean:{zh:'正在喝',en:'am/is drinking'} },
+      { kanji:'書いています', hira:'かいています', kata:'カイテイマス', rom:'kaite imasu', mean:{zh:'正在寫',en:'am/is writing'} },
+      { kanji:'話しています', hira:'はなしています', kata:'ハナシテイマス', rom:'hanashite imasu', mean:{zh:'正在說話',en:'am/is speaking'} },
+      { kanji:'走っています', hira:'はしっています', kata:'ハシッテイマス', rom:'hashitte imasu', mean:{zh:'正在跑',en:'am/is running'} },
+      { kanji:'住んでいます', hira:'すんでいます', kata:'スンデイマス', rom:'sunde imasu', mean:{zh:'住在（狀態）',en:'live in (state)'} },
+      { kanji:'働いています', hira:'はたらいています', kata:'ハタライテイマス', rom:'hataraite imasu', mean:{zh:'正在工作',en:'am/is working'} },
+      { kanji:'勉強しています', hira:'べんきょうしています', kata:'ベンキョウシテイマス', rom:'benkyō shite imasu', mean:{zh:'正在學習',en:'am/is studying'} },
+      { kanji:'結婚しています', hira:'けっこんしています', kata:'ケッコンシテイマス', rom:'kekkon shite imasu', mean:{zh:'已婚（狀態）',en:'be married (state)'} },
+      { kanji:'着ています', hira:'きています', kata:'キテイマス', rom:'kite imasu', mean:{zh:'穿著（狀態）',en:'am/is wearing (state)'} },
+      { kanji:'待っています', hira:'まっています', kata:'マッテイマス', rom:'matte imasu', mean:{zh:'正在等',en:'am/is waiting'} },
+      { kanji:'知っています', hira:'しっています', kata:'シッテイマス', rom:'shitte imasu', mean:{zh:'知道（狀態）',en:'know (state)'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'今、ご飯を 食べています。', hira:'いま、ごはんを たべています。', kata:'イマ、ゴハンヲ タベテイマス。', rom:'Ima, gohan wo tabete imasu.', mean:{zh:'現在正在吃飯。',en:'I am eating now.'} },
+        { ja:'田中さんは 日本語を 勉強しています。', hira:'たなかさんは にほんごを べんきょうしています。', kata:'タナカサンワ ニホンゴヲ ベンキョウシテイマス。', rom:'Tanaka-san wa Nihongo wo benkyō shite imasu.', mean:{zh:'田中先生正在學日語。',en:'Mr./Ms. Tanaka is studying Japanese.'} },
+        { ja:'雨が 降っています。', hira:'あめが ふっています。', kata:'アメガ フッテイマス。', rom:'Ame ga futte imasu.', mean:{zh:'正在下雨。',en:'It is raining.'} },
+        { ja:'彼は 今、働いています。', hira:'かれは いま、はたらいています。', kata:'カレワ イマ、ハタライテイマス。', rom:'Kare wa ima, hataraite imasu.', mean:{zh:'他現在正在工作。',en:'He is working now.'} },
+        { ja:'子どもたちは 公園で 走っています。', hira:'こどもたちは こうえんで はしっています。', kata:'コドモタチワ コウエンデ ハシッテイマス。', rom:'Kodomotachi wa kōen de hashitte imasu.', mean:{zh:'孩子們在公園跑步。',en:'The children are running in the park.'} },
+        { ja:'私は 東京に 住んでいます。', hira:'わたしは とうきょうに すんでいます。', kata:'ワタシワ トウキョウニ スンデイマス。', rom:'Watashi wa Tōkyō ni sunde imasu.', mean:{zh:'我住在東京。',en:'I live in Tokyo.'} },
+        { ja:'山田さんは 結婚しています。', hira:'やまださんは けっこんしています。', kata:'ヤマダサンワ ケッコンシテイマス。', rom:'Yamada-san wa kekkon shite imasu.', mean:{zh:'山田先生已婚。',en:'Mr./Ms. Yamada is married.'} },
+        { ja:'友達を 待っています。', hira:'ともだちを まっています。', kata:'トモダチヲ マッテイマス。', rom:'Tomodachi wo matte imasu.', mean:{zh:'正在等朋友。',en:'I am waiting for my friend.'} },
+        { ja:'その 単語を 知っています。', hira:'その たんごを しっています。', kata:'ソノ タンゴヲ シッテイマス。', rom:'Sono tango wo shitte imasu.', mean:{zh:'我知道那個單字。',en:'I know that word.'} },
+        { ja:'田中さんは 電話で 話しています。', hira:'たなかさんは でんわで はなしています。', kata:'タナカサンワ デンワデ ハナシテイマス。', rom:'Tanaka-san wa denwa de hanashite imasu.', mean:{zh:'田中先生正在講電話。',en:'Mr./Ms. Tanaka is talking on the phone.'} },
+        { ja:'白い シャツを 着ています。', hira:'しろい しゃつを きています。', kata:'シロイ シャツヲ キテイマス。', rom:'Shiroi shatsu wo kite imasu.', mean:{zh:'穿著白色的襯衫。',en:'I am wearing a white shirt.'} },
+        { ja:'学生たちは 図書館で 本を 読んでいます。', hira:'がくせいたちは としょかんで ほんを よんでいます。', kata:'ガクセイタチワ トショカンデ ホンヲ ヨンデイマス。', rom:'Gakuseitachi wa toshokan de hon wo yonde imasu.', mean:{zh:'學生們在圖書館看書。',en:'The students are reading books in the library.'} },
+        { ja:'兄は 東京で 仕事を しています。', hira:'あには とうきょうで しごとを しています。', kata:'アニワ トウキョウデ シゴトヲ シテイマス。', rom:'Ani wa Tōkyō de shigoto wo shite imasu.', mean:{zh:'哥哥在東京工作。',en:'My older brother is working in Tokyo.'} },
+        { ja:'彼女は 今 電話で 話しています。', hira:'かのじょは いま でんわで はなしています。', kata:'カノジョワ イマ デンワデ ハナシテイマス。', rom:'Kanojo wa ima denwa de hanashite imasu.', mean:{zh:'她現在在講電話。',en:'She is talking on the phone right now.'} },
+        { ja:'妹は ピアノを 弾いています。', hira:'いもうとは ぴあのを ひいています。', kata:'イモウトワ ピアノヲ ヒイテイマス。', rom:'Imōto wa piano wo hiite imasu.', mean:{zh:'妹妹在彈鋼琴。',en:'My younger sister is playing the piano.'} },
+        { ja:'このお店は 毎日 8時に 開いています。', hira:'このおみせは まいにち はちじに あいています。', kata:'コノオミセワ マイニチ ハチジニ アイテイマス。', rom:'Kono omise wa mainichi hachiji ni aite imasu.', mean:{zh:'這家店每天八點開門。',en:'This shop opens at 8 o\'clock every day.'} }
+      ],
+      neg: [
+        { ja:'今は ご飯を 食べていません。', hira:'いまは ごはんを たべていません。', kata:'イマワ ゴハンヲ タベテイマセン。', rom:'Ima wa gohan wo tabete imasen.', mean:{zh:'現在沒在吃飯。',en:'I am not eating now.'} },
+        { ja:'田中さんは まだ 勉強していません。', hira:'たなかさんは まだ べんきょうしていません。', kata:'タナカサンワ マダ ベンキョウシテイマセン。', rom:'Tanaka-san wa mada benkyō shite imasen.', mean:{zh:'田中先生還沒開始學習。',en:'Mr./Ms. Tanaka has not started studying yet.'} },
+        { ja:'雨は 降っていません。', hira:'あめは ふっていません。', kata:'アメワ フッテイマセン。', rom:'Ame wa futte imasen.', mean:{zh:'沒有在下雨。',en:'It is not raining.'} },
+        { ja:'彼は 今、働いていません。', hira:'かれは いま、はたらいていません。', kata:'カレワ イマ、ハタライテイマセン。', rom:'Kare wa ima, hataraite imasen.', mean:{zh:'他現在沒有在工作。',en:'He is not working now.'} },
+        { ja:'子どもたちは 今、走っていません。', hira:'こどもたちは いま、はしっていません。', kata:'コドモタチワ イマ、ハシッテイマセン。', rom:'Kodomotachi wa ima, hashitte imasen.', mean:{zh:'孩子們現在沒有在跑。',en:'The children are not running now.'} },
+        { ja:'私は 大阪に 住んでいません。', hira:'わたしは おおさかに すんでいません。', kata:'ワタシワ オオサカニ スンデイマセン。', rom:'Watashi wa Ōsaka ni sunde imasen.', mean:{zh:'我不住在大阪。',en:'I do not live in Osaka.'} },
+        { ja:'山田さんは 結婚していません。', hira:'やまださんは けっこんしていません。', kata:'ヤマダサンワ ケッコンシテイマセン。', rom:'Yamada-san wa kekkon shite imasen.', mean:{zh:'山田先生未婚。',en:'Mr./Ms. Yamada is not married.'} },
+        { ja:'友達を 待っていません。', hira:'ともだちを まっていません。', kata:'トモダチヲ マッテイマセン。', rom:'Tomodachi wo matte imasen.', mean:{zh:'沒有在等朋友。',en:'I am not waiting for my friend.'} },
+        { ja:'その 単語を 知っていません。', hira:'その たんごを しっていません。', kata:'ソノ タンゴヲ シッテイマセン。', rom:'Sono tango wo shitte imasen.', mean:{zh:'我不知道那個單字。',en:'I do not know that word.'} },
+        { ja:'田中さんは 電話で 話していません。', hira:'たなかさんは でんわで はなしていません。', kata:'タナカサンワ デンワデ ハナシテイマセン。', rom:'Tanaka-san wa denwa de hanashite imasen.', mean:{zh:'田中先生沒有在講電話。',en:'Mr./Ms. Tanaka is not talking on the phone.'} },
+        { ja:'今日は コートを 着ていません。', hira:'きょうは こーとを きていません。', kata:'キョウワ コートヲ キテイマセン。', rom:'Kyō wa kōto wo kite imasen.', mean:{zh:'今天沒有穿外套。',en:'I am not wearing a coat today.'} },
+        { ja:'図書館で 本を 読んでいません。', hira:'としょかんで ほんを よんでいません。', kata:'トショカンデ ホンヲ ヨンデイマセン。', rom:'Toshokan de hon wo yonde imasen.', mean:{zh:'沒有在圖書館看書。',en:'I am not reading books in the library.'} },
+        { ja:'兄は 今は 東京に 住んでいません。', hira:'あには いまは とうきょうに すんでいません。', kata:'アニワ イマワ トウキョウニ スンデイマセン。', rom:'Ani wa ima wa Tōkyō ni sunde imasen.', mean:{zh:'哥哥現在不住在東京。',en:'My older brother does not live in Tokyo now.'} },
+        { ja:'彼女は 今は 電話で 話していません。', hira:'かのじょは いまは でんわで はなしていません。', kata:'カノジョワ イマワ デンワデ ハナシテイマセン。', rom:'Kanojo wa ima wa denwa de hanashite imasen.', mean:{zh:'她現在沒在講電話。',en:'She is not talking on the phone now.'} },
+        { ja:'妹は 今日は ピアノを 弾いていません。', hira:'いもうとは きょうは ぴあのを ひいていません。', kata:'イモウトワ キョウワ ピアノヲ ヒイテイマセン。', rom:'Imōto wa kyō wa piano wo hiite imasen.', mean:{zh:'妹妹今天沒在彈鋼琴。',en:'My younger sister is not playing the piano today.'} },
+        { ja:'このお店は 今は 開いていません。', hira:'このおみせは いまは あいていません。', kata:'コノオミセワ イマワ アイテイマセン。', rom:'Kono omise wa ima wa aite imasen.', mean:{zh:'這家店現在沒開門。',en:'This shop is not open now.'} }
+      ]
+    }
+  },
+  // ----------------------------------------------------------------
+  // PARTICLES
+  // ----------------------------------------------------------------
+  {
+    id: 'particle',
+    icon: '🔗',
+    nameKey: 'particle',
+    pattern: {
+      aff: {
+        formula: '〔名詞〕＋〔助詞〕＋〔述語〕',
+        formulaEn: '[Noun] + [Particle] + [Predicate]',
+        note: { zh:'助詞附著在名詞或動詞後，標示語法關係（主題・主語・目的語・方向・場所等）。', en:'Particles attach to nouns or verbs to mark grammatical roles: topic, subject, object, direction, location, etc.' }
+      },
+      neg: {
+        formula: '〔名詞〕＋〔助詞〕＋〔述語の否定形〕',
+        formulaEn: '[Noun] + [Particle] + [Negative predicate]',
+        note: { zh:'助詞本身不變化；否定由述語（動詞・形容詞・です）的否定形來表示。', en:'Particles do not change form; negation is expressed by the negative form of the predicate (verb, adjective, or desu).' }
+      }
+    },
+    conj: {
+      headers: { zh:['助詞','讀法','功能','用法例'], en:['Particle','Reading','Function','Example usage'] },
+      rows: [
+        { zh:['は','wa','主題標記','私は 学生です'], en:['は','wa','Topic marker','Watashi wa gakusei desu'] },
+        { zh:['が','ga','主語標記','猫が います'], en:['が','ga','Subject marker','Neko ga imasu'] },
+        { zh:['を','wo','目的語標記','りんごを 食べます'], en:['を','wo','Object marker','Ringo wo tabemasu'] },
+        { zh:['に','ni','方向・場所・時間','学校に 行きます'], en:['に','ni','Direction/location/time','Gakkō ni ikimasu'] },
+        { zh:['で','de','動作場所・手段','電車で 行きます'], en:['で','de','Location of action/means','Densha de ikimasu'] },
+        { zh:['へ','e','方向（移動）','東京へ 行きます'], en:['へ','e','Direction (movement)','Tōkyō e ikimasu'] },
+        { zh:['と','to','一起・列舉','友達と 行きます'], en:['と','to','Together/listing','Tomodachi to ikimasu'] },
+        { zh:['も','mo','同樣・累加','私も 行きます'], en:['も','mo','Also/too','Watashi mo ikimasu'] },
+        { zh:['の','no','所有・說明','私の 本です'], en:['の','no','Possessive/descriptive','Watashi no hon desu'] },
+        { zh:['から','kara','起點','大阪から 来ます'], en:['から','kara','Starting point','Ōsaka kara kimasu'] },
+        { zh:['まで','made','終點','五時まで 働きます'], en:['まで','made','End point','Go-ji made hatarakimasu'] },
+        { zh:['より','yori','比較基準','電車より 安いです'], en:['より','yori','Comparison base','Densha yori yasui desu'] }
+      ]
+    },
+    vocab: [
+      { kanji:'は', hira:'は', kata:'ハ', rom:'wa', mean:{zh:'主題助詞', en:'Topic marker'} },
+      { kanji:'が', hira:'が', kata:'ガ', rom:'ga', mean:{zh:'主語助詞', en:'Subject marker'} },
+      { kanji:'を', hira:'を', kata:'ヲ', rom:'wo', mean:{zh:'目的語助詞', en:'Object marker'} },
+      { kanji:'に', hira:'に', kata:'ニ', rom:'ni', mean:{zh:'方向・場所・時間', en:'Direction / location / time'} },
+      { kanji:'で', hira:'で', kata:'デ', rom:'de', mean:{zh:'動作場所・手段', en:'Location of action / means'} },
+      { kanji:'へ', hira:'へ', kata:'ヘ', rom:'e', mean:{zh:'方向助詞（移動）', en:'Direction marker (movement)'} },
+      { kanji:'と', hira:'と', kata:'ト', rom:'to', mean:{zh:'一起・列舉', en:'With / and'} },
+      { kanji:'も', hira:'も', kata:'モ', rom:'mo', mean:{zh:'同樣・也', en:'Also / too'} },
+      { kanji:'の', hira:'の', kata:'ノ', rom:'no', mean:{zh:'所有・說明', en:'Possessive / descriptive'} },
+      { kanji:'から', hira:'から', kata:'カラ', rom:'kara', mean:{zh:'起點・從', en:'From / starting point'} },
+      { kanji:'まで', hira:'まで', kata:'マデ', rom:'made', mean:{zh:'終點・到', en:'Until / up to'} },
+      { kanji:'より', hira:'より', kata:'ヨリ', rom:'yori', mean:{zh:'比較基準・比', en:'Than / compared to'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'私は 学生です。', hira:'わたしは がくせいです。', kata:'ワタシワ ガクセイデス。', rom:'Watashi wa gakusei desu.', mean:{zh:'我是學生。（は：主題）',en:'I am a student. (wa: topic)'} },
+        { ja:'猫が 庭に います。', hira:'ねこが にわに います。', kata:'ネコガ ニワニ イマス。', rom:'Neko ga niwa ni imasu.', mean:{zh:'貓在庭院。（が：主語）',en:'A cat is in the garden. (ga: subject)'} },
+        { ja:'毎日 日本語を 勉強します。', hira:'まいにち にほんごを べんきょうします。', kata:'マイニチ ニホンゴヲ ベンキョウシマス。', rom:'Mainichi Nihongo wo benkyō shimasu.', mean:{zh:'每天學習日語。（を：目的語）',en:'I study Japanese every day. (wo: object)'} },
+        { ja:'学校に 行きます。', hira:'がっこうに いきます。', kata:'ガッコウニ イキマス。', rom:'Gakkō ni ikimasu.', mean:{zh:'去學校。（に：方向）',en:'I go to school. (ni: direction)'} },
+        { ja:'図書館で 本を 読みます。', hira:'としょかんで ほんを よみます。', kata:'トショカンデ ホンヲ ヨミマス。', rom:'Toshokan de hon wo yomimasu.', mean:{zh:'在圖書館看書。（で：動作場所）',en:'I read books at the library. (de: location of action)'} },
+        { ja:'東京へ 行きます。', hira:'とうきょうへ いきます。', kata:'トウキョウヘ イキマス。', rom:'Tōkyō e ikimasu.', mean:{zh:'去東京。（へ：方向）',en:'I go to Tokyo. (e: direction)'} },
+        { ja:'友達と 映画を 見ます。', hira:'ともだちと えいがを みます。', kata:'トモダチト エイガヲ ミマス。', rom:'Tomodachi to eiga wo mimasu.', mean:{zh:'和朋友看電影。（と：一起）',en:'I watch a movie with a friend. (to: with)'} },
+        { ja:'私も 行きます。', hira:'わたしも いきます。', kata:'ワタシモ イキマス。', rom:'Watashi mo ikimasu.', mean:{zh:'我也去。（も：同樣）',en:'I also go. (mo: also)'} },
+        { ja:'これは 私の 本です。', hira:'これは わたしの ほんです。', kata:'コレワ ワタシノ ホンデス。', rom:'Kore wa watashi no hon desu.', mean:{zh:'這是我的書。（の：所有）',en:'This is my book. (no: possessive)'} },
+        { ja:'大阪から 来ました。', hira:'おおさかから きました。', kata:'オオサカカラ キマシタ。', rom:'Ōsaka kara kimashita.', mean:{zh:'從大阪來。（から：起點）',en:'I came from Osaka. (kara: from)'} },
+        { ja:'五時まで 働きます。', hira:'ごじまで はたらきます。', kata:'ゴジマデ ハタラキマス。', rom:'Go-ji made hatarakimasu.', mean:{zh:'工作到五點。（まで：終點）',en:'I work until 5 o\'clock. (made: until)'} },
+        { ja:'電車より バスが 安いです。', hira:'でんしゃより バスが やすいです。', kata:'デンシャヨリ バスガ ヤスイデス。', rom:'Densha yori basu ga yasui desu.', mean:{zh:'巴士比電車便宜。（より：比較）',en:'The bus is cheaper than the train. (yori: than)'} },
+        { ja:'バスで 会社に 行きます。', hira:'バスで かいしゃに いきます。', kata:'バスデ カイシャニ イキマス。', rom:'Basu de kaisha ni ikimasu.', mean:{zh:'坐巴士去公司。（で：手段）',en:'I go to work by bus. (de: means)'} },
+        { ja:'私の 家は 東京に あります。', hira:'わたしの いえは とうきょうに あります。', kata:'ワタシノ イエワ トウキョウニ アリマス。', rom:'Watashi no ie wa Tōkyō ni arimasu.', mean:{zh:'我的家在東京。（に：場所）',en:'My house is in Tokyo. (ni: location)'} },
+        { ja:'母から 手紙が 来ました。', hira:'ははから てがみが きました。', kata:'ハハカラ テガミガ キマシタ。', rom:'Haha kara tegami ga kimashita.', mean:{zh:'媽媽寄來了信。（から：起點）',en:'A letter came from my mother. (kara: from)'} },
+        { ja:'山田さんは 田中さんより 背が 高いです。', hira:'やまださんは たなかさんより せが たかいです。', kata:'ヤマダサンワ タナカサンヨリ セガ タカイデス。', rom:'Yamada-san wa Tanaka-san yori se ga takai desu.', mean:{zh:'山田先生比田中先生個子高。（より：比較）',en:'Mr. Yamada is taller than Mr. Tanaka. (yori: than)'} }
+      ],
+      neg: [
+        { ja:'私は 先生では ありません。', hira:'わたしは せんせいでは ありません。', kata:'ワタシワ センセイデワ アリマセン。', rom:'Watashi wa sensei de wa arimasen.', mean:{zh:'我不是老師。（は：主題）',en:'I am not a teacher. (wa: topic)'} },
+        { ja:'猫が 庭に いません。', hira:'ねこが にわに いません。', kata:'ネコガ ニワニ イマセン。', rom:'Neko ga niwa ni imasen.', mean:{zh:'貓不在庭院。（が：主語）',en:'A cat is not in the garden. (ga: subject)'} },
+        { ja:'今日は 日本語を 勉強しません。', hira:'きょうは にほんごを べんきょうしません。', kata:'キョウワ ニホンゴヲ ベンキョウシマセン。', rom:'Kyō wa Nihongo wo benkyō shimasen.', mean:{zh:'今天不學習日語。（を：目的語）',en:'I do not study Japanese today. (wo: object)'} },
+        { ja:'今日は 学校に 行きません。', hira:'きょうは がっこうに いきません。', kata:'キョウワ ガッコウニ イキマセン。', rom:'Kyō wa gakkō ni ikimasen.', mean:{zh:'今天不去學校。（に：方向）',en:'I do not go to school today. (ni: direction)'} },
+        { ja:'家では 勉強しません。', hira:'いえでは べんきょうしません。', kata:'イエデワ ベンキョウシマセン。', rom:'Ie de wa benkyō shimasen.', mean:{zh:'不在家裡學習。（で：動作場所）',en:'I do not study at home. (de: location of action)'} },
+        { ja:'今日は 海へ 行きません。', hira:'きょうは うみへ いきません。', kata:'キョウワ ウミヘ イキマセン。', rom:'Kyō wa umi e ikimasen.', mean:{zh:'今天不去海邊。（へ：方向）',en:'I do not go to the sea today. (e: direction)'} },
+        { ja:'今日は 友達と 出かけません。', hira:'きょうは ともだちと でかけません。', kata:'キョウワ トモダチト デカケマセン。', rom:'Kyō wa tomodachi to dekakemasen.', mean:{zh:'今天不和朋友外出。（と：一起）',en:'I do not go out with a friend today. (to: with)'} },
+        { ja:'私は 行きません。田中さんも 行きません。', hira:'わたしは いきません。たなかさんも いきません。', kata:'ワタシワ イキマセン。タナカサンモ イキマセン。', rom:'Watashi wa ikimasen. Tanaka-san mo ikimasen.', mean:{zh:'我不去。田中先生也不去。（も：同樣）',en:'I am not going. Mr. Tanaka is not going either. (mo: also)'} },
+        { ja:'これは 私の 本では ありません。', hira:'これは わたしの ほんでは ありません。', kata:'コレワ ワタシノ ホンデワ アリマセン。', rom:'Kore wa watashi no hon de wa arimasen.', mean:{zh:'這不是我的書。（の：所有）',en:'This is not my book. (no: possessive)'} },
+        { ja:'東京から 来ませんでした。', hira:'とうきょうから きませんでした。', kata:'トウキョウカラ キマセンデシタ。', rom:'Tōkyō kara kimasendeshita.', mean:{zh:'沒有從東京來。（から：起點）',en:'I did not come from Tokyo. (kara: from)'} },
+        { ja:'六時まで 働きません。', hira:'ろくじまで はたらきません。', kata:'ロクジマデ ハタラキマセン。', rom:'Roku-ji made hatarakimasen.', mean:{zh:'不工作到六點。（まで：終點）',en:'I do not work until 6 o\'clock. (made: until)'} },
+        { ja:'地下鉄は バスより 安くないです。', hira:'ちかてつは バスより やすくないです。', kata:'チカテツワ バスヨリ ヤスクナイデス。', rom:'Chikatetsu wa basu yori yasuku nai desu.', mean:{zh:'地鐵不比巴士便宜。（より：比較）',en:'The subway is not cheaper than the bus. (yori: than)'} },
+        { ja:'今日は バスで 会社に 行きません。', hira:'きょうは バスで かいしゃに いきません。', kata:'キョウワ バスデ カイシャニ イキマセン。', rom:'Kyō wa basu de kaisha ni ikimasen.', mean:{zh:'今天不坐巴士去公司。（で：手段）',en:'I do not go to work by bus today. (de: means)'} },
+        { ja:'彼女の 家は 東京に ありません。', hira:'かのじょの いえは とうきょうに ありません。', kata:'カノジョノ イエワ トウキョウニ アリマセン。', rom:'Kanojo no ie wa Tōkyō ni arimasen.', mean:{zh:'她的家不在東京。（に：場所）',en:'Her house is not in Tokyo. (ni: location)'} },
+        { ja:'母から 手紙が 来ませんでした。', hira:'ははから てがみが きませんでした。', kata:'ハハカラ テガミガ キマセンデシタ。', rom:'Haha kara tegami ga kimasendeshita.', mean:{zh:'媽媽沒有寄信來。（から：起點）',en:'A letter did not come from my mother. (kara: from)'} },
+        { ja:'山田さんは 田中さんより 背が 高くないです。', hira:'やまださんは たなかさんより せが たかくないです。', kata:'ヤマダサンワ タナカサンヨリ セガ タカクナイデス。', rom:'Yamada-san wa Tanaka-san yori se ga takaku nai desu.', mean:{zh:'山田先生不比田中先生個子高。（より：比較）',en:'Mr. Yamada is not taller than Mr. Tanaka. (yori: than)'} }
+      ]
+    }
+  },
+  // ----------------------------------------------------------------
+  // COUNTERS
+  // ----------------------------------------------------------------
+  {
+    id: 'counter',
+    icon: '🔢',
+    nameKey: 'counter',
+    pattern: {
+      aff: {
+        formula: '〔Number〕＋〔助數詞〕＋〔Noun〕が あります／います',
+        formulaEn: '[Number] + [Counter] + [Noun] + ga arimasu/imasu',
+        note: { zh:'計數詞（助數詞）接在數字後面，依照計數對象不同而使用不同詞綴，且數字讀音可能因詞綴而變化。', en:'Counter suffixes follow numbers and change depending on what is being counted; the number\'s pronunciation may also change based on the counter.' }
+      },
+      neg: {
+        formula: '〔Noun〕が 〔Number〕〔助數詞〕も ありません／いません',
+        formulaEn: '[Noun] + ga + [Number] + [Counter] + mo + arimasen/imasen',
+        note: { zh:'否定時常用「〜も ありません／いません」強調「一個都沒有」；也可直接用 ありません／いません 否定存在。', en:'Negatives often use "〜mo arimasen/imasen" to emphasize "not even one"; or simply arimasen/imasen to deny existence.' }
+      }
+    },
+    conj: {
+      headers: { zh:['助數詞','用於計數','一','二','三','十'], en:['Counter','Used for','One','Two','Three','Ten'] },
+      rows: [
+        { zh:['〜本 (ほん)','長形物品（筆・瓶・木）','一本（いっぽん）','二本（にほん）','三本（さんぼん）','十本（じゅっぽん）'], en:['〜本 hon','Long objects (pens, bottles, trees)','ippon','nihon','sanbon','juppon'] },
+        { zh:['〜枚 (まい)','扁平物品（紙・盤子）','一枚（いちまい）','二枚（にまい）','三枚（さんまい）','十枚（じゅうまい）'], en:['〜枚 mai','Flat objects (paper, plates)','ichimai','nimai','sanmai','jūmai'] },
+        { zh:['〜冊 (さつ)','書籍・本子','一冊（いっさつ）','二冊（にさつ）','三冊（さんさつ）','十冊（じゅっさつ）'], en:['〜冊 satsu','Books and volumes','issatsu','nisatsu','sansatsu','jussatsu'] },
+        { zh:['〜台 (だい)','機器・車輛','一台（いちだい）','二台（にだい）','三台（さんだい）','十台（じゅうだい）'], en:['〜台 dai','Machines and vehicles','ichidai','nidai','sandai','jūdai'] },
+        { zh:['〜匹 (ひき)','小動物（貓・魚）','一匹（いっぴき）','二匹（にひき）','三匹（さんびき）','十匹（じゅっぴき）'], en:['〜匹 hiki','Small animals (cats, fish)','ippiki','nihiki','sanbiki','juppiki'] },
+        { zh:['〜人 (にん)','人數','一人（ひとり）','二人（ふたり）','三人（さんにん）','十人（じゅうにん）'], en:['〜人 nin','People','hitori','futari','sannin','jūnin'] },
+        { zh:['〜つ (つ)','通用（一〜九）','一つ（ひとつ）','二つ（ふたつ）','三つ（みっつ）','九つ（ここのつ）'], en:['〜つ tsu','General (1–9 only)','hitotsu','futatsu','mittsu','kokonotsu (9)'] }
+      ]
+    },
+    vocab: [
+      { kanji:'〜本', hira:'〜ほん', kata:'〜ホン', rom:'~hon', mean:{zh:'長形物品（筆・瓶・木）', en:'Long objects (pens, bottles, trees)'} },
+      { kanji:'〜枚', hira:'〜まい', kata:'〜マイ', rom:'~mai', mean:{zh:'扁平物品（紙・盤子・郵票）', en:'Flat objects (paper, plates, stamps)'} },
+      { kanji:'〜冊', hira:'〜さつ', kata:'〜サツ', rom:'~satsu', mean:{zh:'書籍・本子', en:'Books and volumes'} },
+      { kanji:'〜台', hira:'〜だい', kata:'〜ダイ', rom:'~dai', mean:{zh:'機器・車輛', en:'Machines and vehicles'} },
+      { kanji:'〜匹', hira:'〜ひき', kata:'〜ヒキ', rom:'~hiki', mean:{zh:'小動物（貓・狗・魚）', en:'Small animals (cats, dogs, fish)'} },
+      { kanji:'〜頭', hira:'〜とう', kata:'〜トウ', rom:'~tō', mean:{zh:'大動物（牛・象・馬）', en:'Large animals (cows, elephants, horses)'} },
+      { kanji:'〜個', hira:'〜こ', kata:'〜コ', rom:'~ko', mean:{zh:'小物品（橘子・球）', en:'Small items (oranges, balls)'} },
+      { kanji:'〜杯', hira:'〜はい', kata:'〜ハイ', rom:'~hai', mean:{zh:'杯・碗（飲料・食物）', en:'Cups and bowls (drinks, food)'} },
+      { kanji:'〜階', hira:'〜かい', kata:'〜カイ', rom:'~kai', mean:{zh:'樓層', en:'Floors of a building'} },
+      { kanji:'〜人', hira:'〜にん', kata:'〜ニン', rom:'~nin', mean:{zh:'人數（三人以上）', en:'Number of people (3+; 1=hitori, 2=futari)'} },
+      { kanji:'〜つ', hira:'〜つ', kata:'〜ツ', rom:'~tsu', mean:{zh:'通用計數（僅限一〜九）', en:'General counter (1–9 only)'} },
+      { kanji:'〜番', hira:'〜ばん', kata:'〜バン', rom:'~ban', mean:{zh:'順序・編號', en:'Order / number (ranking)'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'ペンが 三本 あります。', hira:'ペンが さんぼん あります。', kata:'ペンガ サンボン アリマス。', rom:'Pen ga sanbon arimasu.', mean:{zh:'有三支筆。',en:'There are three pens.'} },
+        { ja:'紙が 五枚 あります。', hira:'かみが ごまい あります。', kata:'カミガ ゴマイ アリマス。', rom:'Kami ga gomai arimasu.', mean:{zh:'有五張紙。',en:'There are five sheets of paper.'} },
+        { ja:'本棚に 本が 十冊 あります。', hira:'ほんだなに ほんが じゅっさつ あります。', kata:'ホンダナニ ホンガ ジュッサツ アリマス。', rom:'Hondana ni hon ga jussatsu arimasu.', mean:{zh:'書架上有十本書。',en:'There are ten books on the bookshelf.'} },
+        { ja:'駐車場に 車が 二台 あります。', hira:'ちゅうしゃじょうに くるまが にだい あります。', kata:'チュウシャジョウニ クルマガ ニダイ アリマス。', rom:'Chūshajō ni kuruma ga nidai arimasu.', mean:{zh:'停車場有兩輛車。',en:'There are two cars in the parking lot.'} },
+        { ja:'公園に 猫が 三匹 います。', hira:'こうえんに ねこが さんびき います。', kata:'コウエンニ ネコガ サンビキ イマス。', rom:'Kōen ni neko ga sanbiki imasu.', mean:{zh:'公園裡有三隻貓。',en:'There are three cats in the park.'} },
+        { ja:'動物園に 象が 一頭 います。', hira:'どうぶつえんに ぞうが いっとう います。', kata:'ドウブツエンニ ゾウガ イットウ イマス。', rom:'Dōbutsuen ni zō ga ittō imasu.', mean:{zh:'動物園裡有一頭大象。',en:'There is one elephant in the zoo.'} },
+        { ja:'みかんが 四個 あります。', hira:'みかんが よんこ あります。', kata:'ミカンガ ヨンコ アリマス。', rom:'Mikan ga yonko arimasu.', mean:{zh:'有四個橘子。',en:'There are four oranges.'} },
+        { ja:'コーヒーを 二杯 飲みます。', hira:'こーひーを にはい のみます。', kata:'コーヒーヲ ニハイ ノミマス。', rom:'Kōhī wo nihai nomimasu.', mean:{zh:'喝兩杯咖啡。',en:'I drink two cups of coffee.'} },
+        { ja:'ここは 三階です。', hira:'ここは さんかいです。', kata:'ココワ サンカイデス。', rom:'Koko wa sangai desu.', mean:{zh:'這裡是三樓。',en:'This is the third floor.'} },
+        { ja:'教室に 学生が 三十人 います。', hira:'きょうしつに がくせいが さんじゅうにん います。', kata:'キョウシツニ ガクセイガ サンジュウニン イマス。', rom:'Kyōshitsu ni gakusei ga sanjūnin imasu.', mean:{zh:'教室裡有三十名學生。',en:'There are thirty students in the classroom.'} },
+        { ja:'りんごが 三つ あります。', hira:'りんごが みっつ あります。', kata:'リンゴガ ミッツ アリマス。', rom:'Ringo ga mittsu arimasu.', mean:{zh:'有三個蘋果。',en:'There are three apples.'} },
+        { ja:'田中さんは クラスで 一番です。', hira:'たなかさんは クラスで いちばんです。', kata:'タナカサンワ クラスデ イチバンデス。', rom:'Tanaka-san wa kurasu de ichiban desu.', mean:{zh:'田中先生在班上是第一名。',en:'Mr./Ms. Tanaka is number one in the class.'} },
+        { ja:'鉛筆が 七本 あります。', hira:'えんぴつが ななほん あります。', kata:'エンピツガ ナナホン アリマス。', rom:'Enpitsu ga nanahon arimasu.', mean:{zh:'有七支鉛筆。',en:'There are seven pencils.'} },
+        { ja:'切手を 五枚 買いました。', hira:'きってを ごまい かいました。', kata:'キッテヲ ゴマイ カイマシタ。', rom:'Kitte wo gomai kaimashita.', mean:{zh:'買了五張郵票。',en:'I bought five stamps.'} },
+        { ja:'公園に 犬が 二匹 います。', hira:'こうえんに いぬが にひき います。', kata:'コウエンニ イヌガ ニヒキ イマス。', rom:'Kōen ni inu ga nihiki imasu.', mean:{zh:'公園裡有兩隻狗。',en:'There are two dogs in the park.'} },
+        { ja:'お茶を 一杯 ください。', hira:'おちゃを いっぱい ください。', kata:'オチャヲ イッパイ クダサイ。', rom:'Ocha wo ippai kudasai.', mean:{zh:'請給我一杯茶。',en:'Please give me one cup of tea.'} }
+      ],
+      neg: [
+        { ja:'ペンが 一本も ありません。', hira:'ペンが いっぽんも ありません。', kata:'ペンガ イッポンモ アリマセン。', rom:'Pen ga ippon mo arimasen.', mean:{zh:'一支筆都沒有。',en:'There is not even one pen.'} },
+        { ja:'紙が 一枚も ありません。', hira:'かみが いちまいも ありません。', kata:'カミガ イチマイモ アリマセン。', rom:'Kami ga ichimai mo arimasen.', mean:{zh:'一張紙都沒有。',en:'There is not even one sheet of paper.'} },
+        { ja:'今日は 本が 一冊も 読めません。', hira:'きょうは ほんが いっさつも よめません。', kata:'キョウワ ホンガ イッサツモ ヨメマセン。', rom:'Kyō wa hon ga issatsu mo yomemasen.', mean:{zh:'今天一本書都看不了。',en:'I cannot read even one book today.'} },
+        { ja:'駐車場に 車が 一台も ありません。', hira:'ちゅうしゃじょうに くるまが いちだいも ありません。', kata:'チュウシャジョウニ クルマガ イチダイモ アリマセン。', rom:'Chūshajō ni kuruma ga ichidai mo arimasen.', mean:{zh:'停車場一輛車都沒有。',en:'There is not even one car in the parking lot.'} },
+        { ja:'この 部屋には 猫が 一匹も いません。', hira:'この へやには ねこが いっぴきも いません。', kata:'コノ ヘヤニワ ネコガ イッピキモ イマセン。', rom:'Kono heya ni wa neko ga ippiki mo imasen.', mean:{zh:'這個房間一隻貓都沒有。',en:'There is not even one cat in this room.'} },
+        { ja:'その 動物園には 象が 一頭も いません。', hira:'その どうぶつえんには ぞうが いっとうも いません。', kata:'ソノ ドウブツエンニワ ゾウガ イットウモ イマセン。', rom:'Sono dōbutsuen ni wa zō ga ittō mo imasen.', mean:{zh:'那個動物園一頭大象都沒有。',en:'There is not even one elephant in that zoo.'} },
+        { ja:'冷蔵庫に みかんが 一個も ありません。', hira:'れいぞうこに みかんが いっこも ありません。', kata:'レイゾウコニ ミカンガ イッコモ アリマセン。', rom:'Reizōko ni mikan ga ikko mo arimasen.', mean:{zh:'冰箱裡一個橘子都沒有。',en:'There is not even one orange in the refrigerator.'} },
+        { ja:'今日は コーヒーを 一杯も 飲みません。', hira:'きょうは こーひーを いっぱいも のみません。', kata:'キョウワ コーヒーヲ イッパイモ ノミマセン。', rom:'Kyō wa kōhī wo ippai mo nomimasen.', mean:{zh:'今天一杯咖啡都不喝。',en:'I do not drink even one cup of coffee today.'} },
+        { ja:'四階には エレベーターが ありません。', hira:'よんかいには えれべーたーが ありません。', kata:'ヨンカイニワ エレベーターガ アリマセン。', rom:'Yonkai ni wa erebētā ga arimasen.', mean:{zh:'四樓沒有電梯。',en:'There is no elevator on the fourth floor.'} },
+        { ja:'今日は 学生が 一人も いません。', hira:'きょうは がくせいが ひとりも いません。', kata:'キョウワ ガクセイガ ヒトリモ イマセン。', rom:'Kyō wa gakusei ga hitori mo imasen.', mean:{zh:'今天一個學生都沒有。',en:'There is not even one student today.'} },
+        { ja:'りんごが 一つも ありません。', hira:'りんごが ひとつも ありません。', kata:'リンゴガ ヒトツモ アリマセン。', rom:'Ringo ga hitotsu mo arimasen.', mean:{zh:'一個蘋果都沒有。',en:'There is not even one apple.'} },
+        { ja:'田中さんは クラスで 一番では ありません。', hira:'たなかさんは クラスで いちばんでは ありません。', kata:'タナカサンワ クラスデ イチバンデワ アリマセン。', rom:'Tanaka-san wa kurasu de ichiban de wa arimasen.', mean:{zh:'田中先生在班上不是第一名。',en:'Mr./Ms. Tanaka is not number one in the class.'} },
+        { ja:'鉛筆が 一本も ありません。', hira:'えんぴつが いっぽんも ありません。', kata:'エンピツガ イッポンモ アリマセン。', rom:'Enpitsu ga ippon mo arimasen.', mean:{zh:'一支鉛筆都沒有。',en:'There is not even one pencil.'} },
+        { ja:'切手を 一枚も 買いませんでした。', hira:'きってを いちまいも かいませんでした。', kata:'キッテヲ イチマイモ カイマセンデシタ。', rom:'Kitte wo ichimai mo kaimasendeshita.', mean:{zh:'一張郵票都沒買。',en:'I did not buy even one stamp.'} },
+        { ja:'公園に 犬が 一匹も いません。', hira:'こうえんに いぬが いっぴきも いません。', kata:'コウエンニ イヌガ イッピキモ イマセン。', rom:'Kōen ni inu ga ippiki mo imasen.', mean:{zh:'公園裡一隻狗都沒有。',en:'There is not even one dog in the park.'} },
+        { ja:'今日は お茶を 一杯も 飲みませんでした。', hira:'きょうは おちゃを いっぱいも のみませんでした。', kata:'キョウワ オチャヲ イッパイモ ノミマセンデシタ。', rom:'Kyō wa ocha wo ippai mo nomimasendeshita.', mean:{zh:'今天一杯茶都沒喝。',en:'I did not drink even one cup of tea today.'} }
+      ]
+    }
+  }
+];
+
+// =====================================================================
+// App state
+// =====================================================================
+let lang = 'zh';
+let activeGroup = 'noun';
+let mode = 'tutor';   // 'tutor' | 'exercise'
+let sentType = 'aff'; // 'aff' | 'neg'
+let exerIdx = 0;
+let exerRevealed = false;
+
+function t(key) { return i18n[lang][key] || key; }
+function tm(obj) { return obj[lang] || obj.zh || ''; }
+
+// =====================================================================
+// Render helpers
+// =====================================================================
+function selectSentence(el) {
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 200);
+}
+
+function readingsRow(hira, kata, rom) {
+  return `<table class="readings-table">
+    <tr><td class="reading-label">${t('hiragana')}</td><td class="reading-value">${hira}</td></tr>
+    <tr><td class="reading-label">${t('katakana')}</td><td class="reading-value">${kata}</td></tr>
+    <tr><td class="reading-label">${t('romaji')}</td><td class="reading-value reading-romaji">${rom}</td></tr>
+  </table>`;
+}
+
+function sentenceCard(s, type) {
+  return `<div class="sentence-card ${type}">
+    <div class="sentence-ja" onclick="selectSentence(this)" title="Click to select">${s.ja}</div>
+    ${readingsRow(s.hira, s.kata, s.rom)}
+    <div class="sentence-meaning">${t('meaning')}：${tm(s.mean)}</div>
+  </div>`;
+}
+
+function patternBox(g, type) {
+  const p = g.pattern[type];
+  return `<div class="pattern-box ${type}">
+    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;opacity:.7">${type === 'aff' ? t('affLabel') : t('negLabel')}</div>
+    <div class="pattern-formula">${p.formula}</div>
+    <div class="pattern-formula-en">${p.formulaEn}</div>
+    <div class="pattern-note">${tm(p.note)}</div>
+  </div>`;
+}
+
+function conjTable(g) {
+  if (!g.conj) return '';
+  const hdrs = g.conj.headers[lang] || g.conj.headers.zh;
+  let rows = g.conj.rows.map(r => {
+    const cells = (r[lang] || r.zh).map(c => `<td>${c.replace(/　/g,'<br><small style="color:var(--text-muted)">') + '</small>'}</td>`).join('');
+    return `<tr>${cells}</tr>`;
+  }).join('');
+  const thCells = hdrs.map(h => `<th>${h}</th>`).join('');
+  return `<div class="section" style="margin-top:0">
+    <div class="section-header">${t('secConj')}</div>
+    <div class="section-body" style="padding:0;overflow-x:auto">
+      <table class="conj-table">
+        <thead><tr>${thCells}</tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// =====================================================================
+// Tutor render
+// =====================================================================
+function renderTutor(g) {
+  const vocabCards = g.vocab.map(v => `
+    <div class="vocab-card">
+      <div class="vocab-kanji">${v.kanji}</div>
+      <div class="vocab-reading">${v.hira}</div>
+      <div class="vocab-reading">${v.kata}</div>
+      <div class="vocab-romaji">${v.rom}</div>
+      <div class="vocab-meaning">${tm(v.mean)}</div>
+    </div>`).join('');
+
+  let sentCards, sectionTitle;
+  if (sentType === 'both') {
+    sentCards = g.sentences.aff.map((a, i) => {
+      const n = g.sentences.neg[i];
+      return `<div class="sentence-pair">${sentenceCard(a, 'aff')}${sentenceCard(n, 'neg')}</div>`;
+    }).join('');
+    sectionTitle = `${t('secExamples')} — ${t('typeAff')} / ${t('typeNeg')}`;
+  } else {
+    sentCards = g.sentences[sentType].map(s => sentenceCard(s, sentType)).join('');
+    sectionTitle = `${t('secExamples')} — ${sentType === 'aff' ? t('typeAff') : t('typeNeg')}`;
+  }
+
+  return `
+    <div class="section">
+      <div class="section-header">${t('secPattern')}</div>
+      <div class="section-body">
+        ${patternBox(g, 'aff')}
+        ${patternBox(g, 'neg')}
+      </div>
+    </div>
+    ${conjTable(g)}
+    <div class="section">
+      <div class="section-header">${t('secVocab')}</div>
+      <div class="section-body">
+        <div class="vocab-grid">${vocabCards}</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">${sectionTitle}</div>
+      <div class="section-body">${sentCards}</div>
+    </div>`;
+}
+
+// =====================================================================
+// Exercise render
+// =====================================================================
+function renderExercise(g) {
+  const items = g.vocab;
+  const total = items.length;
+  const item = items[exerIdx];
+  const stem = item.kanji.replace('する','').replace('くる','').replace('来る','');
+
+  const prompt = sentType === 'both' ? t('exerPromptBoth') : sentType === 'aff' ? t('exerPromptAff') : t('exerPromptNeg');
+  const badgeClass = sentType === 'both' ? 'both' : sentType;
+  const badgeLabel = sentType === 'both' ? t('typeBoth') : sentType === 'aff' ? t('typeAff') : t('typeNeg');
+  const pct = Math.round(((exerIdx + 1) / total) * 100);
+
+  function matchSent(arr) {
+    return arr.find(s => s.ja.includes(stem)) || arr[exerIdx % arr.length];
+  }
+
+  let answerHtml = '';
+  if (exerRevealed) {
+    if (sentType === 'both') {
+      const sa = matchSent(g.sentences.aff);
+      const sn = matchSent(g.sentences.neg);
+      answerHtml = `<div class="sentence-pair" style="margin-top:16px">
+        <div class="answer-box aff" style="border-radius:0;border:none;border-left:4px solid var(--aff);border-bottom:1px solid var(--border)">
+          <div class="answer-ja sentence-ja" onclick="selectSentence(this)" title="Click to select" style="color:var(--aff)">${sa.ja}</div>
+          ${readingsRow(sa.hira, sa.kata, sa.rom)}
+          <div class="sentence-meaning" style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.1)">${t('meaning')}：${tm(sa.mean)}</div>
+        </div>
+        <div class="answer-box neg" style="border-radius:0;border:none;border-left:4px solid var(--neg)">
+          <div class="answer-ja sentence-ja" onclick="selectSentence(this)" title="Click to select" style="color:var(--neg)">${sn.ja}</div>
+          ${readingsRow(sn.hira, sn.kata, sn.rom)}
+          <div class="sentence-meaning" style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.1)">${t('meaning')}：${tm(sn.mean)}</div>
+        </div>
+      </div>`;
+    } else {
+      const ms = matchSent(g.sentences[sentType]);
+      answerHtml = `<div class="answer-box ${sentType}">
+        <div class="answer-ja sentence-ja" onclick="selectSentence(this)" title="Click to select">${ms.ja}</div>
+        ${readingsRow(ms.hira, ms.kata, ms.rom)}
+        <div class="sentence-meaning" style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.1)">${t('meaning')}：${tm(ms.mean)}</div>
+      </div>`;
+    }
+  }
+
+  return `<div class="exercise-container">
+    <div class="exercise-progress">
+      <span class="exercise-count">${t('exerQ')} ${exerIdx + 1} / ${total}</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="exercise-card">
+      <span class="exercise-type-badge ${badgeClass}">${badgeLabel}</span>
+      <div class="exercise-vocab-ja">${item.kanji}</div>
+      <div class="exercise-vocab-reading">${item.hira}　${item.kata}</div>
+      <div class="exercise-vocab-romaji">${item.rom}</div>
+      <div class="exercise-vocab-meaning">${tm(item.mean)}</div>
+      <div class="exercise-prompt">${prompt}</div>
+      <button class="reveal-btn" onclick="toggleReveal()">${exerRevealed ? t('exerHide') : t('exerReveal')}</button>
+      ${answerHtml}
+    </div>
+    <div class="exercise-nav">
+      <button class="nav-btn" onclick="exerNav(-1)" ${exerIdx === 0 ? 'disabled' : ''}>${t('exerPrev')}</button>
+      <button class="nav-btn" onclick="exerNav(1)" ${exerIdx === total - 1 ? 'disabled' : ''}>${t('exerNext')}</button>
+    </div>
+  </div>`;
+}
+
+// =====================================================================
+// Main render
+// =====================================================================
+function render() {
+  const g = groups.find(x => x.id === activeGroup);
+  if (!g) return;
+  const content = mode === 'tutor' ? renderTutor(g) : renderExercise(g);
+  document.getElementById('main-content').innerHTML = content;
+}
+
+function renderGroupNav() {
+  const nav = document.getElementById('group-nav');
+  nav.innerHTML = groups.map(g => {
+    const hint = t('groupHint')[g.id] ? `<span style="font-size:.7rem;opacity:.65"> ${t('groupHint')[g.id]}</span>` : '';
+    return `<button class="group-tab ${g.id === activeGroup ? 'active' : ''}" onclick="setGroup('${g.id}')">
+      ${g.icon} ${t(g.nameKey)}${hint}
+    </button>`;
+  }).join('');
+}
+
+function renderHeader() {
+  document.getElementById('hdr-title').textContent = t('appTitle');
+  document.getElementById('hdr-subtitle').textContent = t('appSubtitle');
+  document.getElementById('lang-toggle-btn').textContent = t('langToggle');
+  document.getElementById('mode-tutor').textContent = t('modeTutor');
+  document.getElementById('mode-exercise').textContent = t('modeExercise');
+  document.getElementById('type-aff').textContent = t('typeAff');
+  document.getElementById('type-neg').textContent = t('typeNeg');
+  document.getElementById('type-both').textContent = t('typeBoth');
+  document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en';
+}
+
+function fullRender() {
+  renderHeader();
+  renderGroupNav();
+  render();
+}
+
+// =====================================================================
+// Actions
+// =====================================================================
+function toggleLang() {
+  lang = lang === 'zh' ? 'en' : 'zh';
+  fullRender();
+}
+
+function setGroup(id) {
+  activeGroup = id;
+  exerIdx = 0;
+  exerRevealed = false;
+  renderGroupNav();
+  render();
+}
+
+function setMode(m) {
+  mode = m;
+  exerIdx = 0;
+  exerRevealed = false;
+  document.getElementById('mode-tutor').classList.toggle('active', m === 'tutor');
+  document.getElementById('mode-exercise').classList.toggle('active', m === 'exercise');
+  render();
+}
+
+function setSentType(t) {
+  sentType = t;
+  exerIdx = 0;
+  exerRevealed = false;
+  document.getElementById('type-aff').classList.toggle('active', t === 'aff');
+  document.getElementById('type-neg').classList.toggle('active', t === 'neg');
+  document.getElementById('type-both').classList.toggle('active', t === 'both');
+  render();
+}
+
+function toggleReveal() {
+  exerRevealed = !exerRevealed;
+  render();
+}
+
+function exerNav(dir) {
+  const g = groups.find(x => x.id === activeGroup);
+  exerIdx = Math.max(0, Math.min(g.vocab.length - 1, exerIdx + dir));
+  exerRevealed = false;
+  render();
+}
+
+// =====================================================================
+// Init
+// =====================================================================
+fullRender();
+</script>
+</body>
+</html>
