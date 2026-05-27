@@ -676,7 +676,7 @@ const i18n = {
     verb2: '五段動詞',
     verb3: '不規則動詞',
     adverb: '副詞',
-    groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'（る動詞）', verb2:'（う動詞）', verb3:'（する・くる）', adverb:'', exist:'（ある・いる）', tai:'（〜たい）', teiru:'（〜ています）', particle:'（は・が・を・に・で）', counter:'（〜本・〜枚・〜冊）' },
+    groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'（る動詞）', verb2:'（う動詞）', verb3:'（する・くる）', adverb:'', exist:'（ある・いる）', tai:'（〜たい）', teiru:'（〜ています）', particle:'（は・が・を・に・で）', counter:'（〜本・〜枚・〜冊）', past:'（〜ました）', potential:'（〜できます）', request:'（〜てください）', experience:'（〜たことがある）', obligation:'（〜なければ）' },
     copied: 'コピーしました',
     helpBtn: '？ 說明',
     helpTitle: '使用說明',
@@ -702,7 +702,12 @@ const i18n = {
     tai: 'たい形',
     teiru: 'て形＋います',
     particle: '助詞',
-    counter: '助數詞'
+    counter: '助數詞',
+    past: '過去式',
+    potential: '可能形',
+    request: '〜てください',
+    experience: '〜たことがある',
+    obligation: '〜なければ'
   },
   en: {
     appTitle: 'Japanese Sentence Practice',
@@ -741,7 +746,7 @@ const i18n = {
     verb2: 'Group 2 Verbs',
     verb3: 'Irregular Verbs',
     adverb: 'Adverbs',
-    groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'(ru-verbs)', verb2:'(u-verbs)', verb3:'(suru・kuru)', adverb:'', exist:'(aru・iru)', tai:'(-tai)', teiru:'(-te imasu)', particle:'(wa/ga/wo/ni/de)', counter:'(hon/mai/satsu)' },
+    groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'(ru-verbs)', verb2:'(u-verbs)', verb3:'(suru・kuru)', adverb:'', exist:'(aru・iru)', tai:'(-tai)', teiru:'(-te imasu)', particle:'(wa/ga/wo/ni/de)', counter:'(hon/mai/satsu)', past:'(-mashita)', potential:'(-dekimasu)', request:'(-te kudasai)', experience:'(-ta koto ga aru)', obligation:'(-nakereba)' },
     copied: 'Copied!',
     helpBtn: '？ Help',
     helpTitle: 'How to Use',
@@ -767,7 +772,12 @@ const i18n = {
     tai: 'Desire Form',
     teiru: 'Te-form + imasu',
     particle: 'Particles',
-    counter: 'Counters'
+    counter: 'Counters',
+    past: 'Past Tense',
+    potential: 'Potential Form',
+    request: '~te kudasai',
+    experience: 'Past Experience',
+    obligation: 'Obligation'
   }
 };
 
@@ -1801,6 +1811,354 @@ const groups = [
         { ja:'切手を 一枚も 買いませんでした。', hira:'きってを いちまいも かいませんでした。', kata:'キッテヲ イチマイモ カイマセンデシタ。', rom:'Kitte wo ichimai mo kaimasendeshita.', mean:{zh:'一張郵票都沒買。',en:'I did not buy even one stamp.'} },
         { ja:'公園に 犬が 一匹も いません。', hira:'こうえんに いぬが いっぴきも いません。', kata:'コウエンニ イヌガ イッピキモ イマセン。', rom:'Kōen ni inu ga ippiki mo imasen.', mean:{zh:'公園裡一隻狗都沒有。',en:'There is not even one dog in the park.'} },
         { ja:'今日は お茶を 一杯も 飲みませんでした。', hira:'きょうは おちゃを いっぱいも のみませんでした。', kata:'キョウワ オチャヲ イッパイモ ノミマセンデシタ。', rom:'Kyō wa ocha wo ippai mo nomimasendeshita.', mean:{zh:'今天一杯茶都沒喝。',en:'I did not drink even one cup of tea today.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // PAST TENSE
+  // ----------------------------------------------------------------
+  {
+    id: 'past',
+    icon: '⏪',
+    nameKey: 'past',
+    pattern: {
+      aff: {
+        formula: '〔ます形語幹〕 ＋ ました',
+        formulaEn: '[masu stem] + mashita',
+        note: { zh: '動詞過去肯定：將「ます」換成「ました」。名詞・な形容詞：「です」→「でした」。い形容詞：去掉「い」加「かったです」。', en: 'Verb past affirmative: replace "masu" with "mashita". Noun/na-adj: "desu" → "deshita". I-adj: drop "i", add "katta desu".' }
+      },
+      neg: {
+        formula: '〔ます形語幹〕 ＋ ませんでした',
+        formulaEn: '[masu stem] + masendeshita',
+        note: { zh: '動詞過去否定：將「ます」換成「ませんでした」。名詞過去否定：加「ではありませんでした」。', en: 'Verb past negative: replace "masu" with "masendeshita". Noun past negative: add "dewa arimasendeshita".' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','現在（ます）','過去肯定（ました）','過去否定（ませんでした）'], en:['Dictionary','Present (masu)','Past Affirmative','Past Negative'] },
+      rows: [
+        { zh:['食べる　たべる','食べます','食べました','食べませんでした'], en:['taberu (eat)','tabemasu','tabemashita','tabemasen deshita'] },
+        { zh:['飲む　のむ','飲みます','飲みました','飲みませんでした'], en:['nomu (drink)','nomimasu','nomimashita','nomimasen deshita'] },
+        { zh:['行く　いく','行きます','行きました','行きませんでした'], en:['iku (go)','ikimasu','ikimashita','ikimasen deshita'] },
+        { zh:['する','します','しました','しませんでした'], en:['suru (do)','shimasu','shimashita','shimasen deshita'] }
+      ]
+    },
+    vocab: [
+      { kanji:'食べる', hira:'たべる', kata:'タベル', rom:'taberu', mean:{zh:'吃',en:'eat'} },
+      { kanji:'飲む', hira:'のむ', kata:'ノム', rom:'nomu', mean:{zh:'喝',en:'drink'} },
+      { kanji:'行く', hira:'いく', kata:'イク', rom:'iku', mean:{zh:'去',en:'go'} },
+      { kanji:'来る', hira:'くる', kata:'クル', rom:'kuru', mean:{zh:'來',en:'come'} },
+      { kanji:'見る', hira:'みる', kata:'ミル', rom:'miru', mean:{zh:'看',en:'see/watch'} },
+      { kanji:'買う', hira:'かう', kata:'カウ', rom:'kau', mean:{zh:'買',en:'buy'} },
+      { kanji:'読む', hira:'よむ', kata:'ヨム', rom:'yomu', mean:{zh:'讀',en:'read'} },
+      { kanji:'書く', hira:'かく', kata:'カク', rom:'kaku', mean:{zh:'寫',en:'write'} },
+      { kanji:'話す', hira:'はなす', kata:'ハナス', rom:'hanasu', mean:{zh:'說話',en:'speak'} },
+      { kanji:'帰る', hira:'かえる', kata:'カエル', rom:'kaeru', mean:{zh:'回去',en:'return/go home'} },
+      { kanji:'会う', hira:'あう', kata:'アウ', rom:'au', mean:{zh:'見面',en:'meet'} },
+      { kanji:'寝る', hira:'ねる', kata:'ネル', rom:'neru', mean:{zh:'睡覺',en:'sleep'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'昨日、すしを 食べました。', hira:'きのう、すしを たべました。', kata:'キノウ、スシヲ タベマシタ。', rom:'Kinō, sushi wo tabemashita.', mean:{zh:'昨天吃了壽司。',en:'I ate sushi yesterday.'} },
+        { ja:'朝、コーヒーを 飲みました。', hira:'あさ、こーひーを のみました。', kata:'アサ、コーヒーヲ ノミマシタ。', rom:'Asa, kōhī wo nomimashita.', mean:{zh:'早上喝了咖啡。',en:'I drank coffee in the morning.'} },
+        { ja:'先週、東京に 行きました。', hira:'せんしゅう、とうきょうに いきました。', kata:'センシュウ、トウキョウニ イキマシタ。', rom:'Senshū, Tōkyō ni ikimashita.', mean:{zh:'上週去了東京。',en:'I went to Tokyo last week.'} },
+        { ja:'友達が 昨日 来ました。', hira:'ともだちが きのう きました。', kata:'トモダチガ キノウ キマシタ。', rom:'Tomodachi ga kinō kimashita.', mean:{zh:'朋友昨天來了。',en:'My friend came yesterday.'} },
+        { ja:'その 映画を 見ました。', hira:'その えいがを みました。', kata:'ソノ エイガヲ ミマシタ。', rom:'Sono eiga wo mimashita.', mean:{zh:'看了那部電影。',en:'I watched that movie.'} },
+        { ja:'スーパーで 野菜を 買いました。', hira:'すーぱーで やさいを かいました。', kata:'スーパーデ ヤサイヲ カイマシタ。', rom:'Sūpā de yasai wo kaimashita.', mean:{zh:'在超市買了蔬菜。',en:'I bought vegetables at the supermarket.'} },
+        { ja:'昨夜、本を 読みました。', hira:'ゆうべ、ほんを よみました。', kata:'ユウベ、ホンヲ ヨミマシタ。', rom:'Yūbe, hon wo yomimashita.', mean:{zh:'昨晚讀了書。',en:'I read a book last night.'} },
+        { ja:'田中さんに 手紙を 書きました。', hira:'たなかさんに てがみを かきました。', kata:'タナカサンニ テガミヲ カキマシタ。', rom:'Tanaka-san ni tegami wo kakimashita.', mean:{zh:'寫了信給田中先生。',en:'I wrote a letter to Mr./Ms. Tanaka.'} },
+        { ja:'昨日、駅で 友達に 会いました。', hira:'きのう、えきで ともだちに あいました。', kata:'キノウ、エキデ トモダチニ アイマシタ。', rom:'Kinō, eki de tomodachi ni aimashita.', mean:{zh:'昨天在車站遇到朋友了。',en:'I met my friend at the station yesterday.'} },
+        { ja:'疲れたので 早く 寝ました。', hira:'つかれたので はやく ねました。', kata:'ツカレタノデ ハヤク ネマシタ。', rom:'Tsukareta node hayaku nemashita.', mean:{zh:'因為累了所以早點睡了。',en:'I went to sleep early because I was tired.'} },
+        { ja:'先生と 日本語で 話しました。', hira:'せんせいと にほんごで はなしました。', kata:'センセイト ニホンゴデ ハナシマシタ。', rom:'Sensei to Nihongo de hanashimashita.', mean:{zh:'用日語和老師說話了。',en:'I spoke Japanese with my teacher.'} },
+        { ja:'早く 家に 帰りました。', hira:'はやく うちに かえりました。', kata:'ハヤク ウチニ カエリマシタ。', rom:'Hayaku uchi ni kaerimashita.', mean:{zh:'早早回家了。',en:'I returned home early.'} }
+      ],
+      neg: [
+        { ja:'昨日は すしを 食べませんでした。', hira:'きのうは すしを たべませんでした。', kata:'キノウワ スシヲ タベマセンデシタ。', rom:'Kinō wa sushi wo tabemasen deshita.', mean:{zh:'昨天沒有吃壽司。',en:'I did not eat sushi yesterday.'} },
+        { ja:'今朝は コーヒーを 飲みませんでした。', hira:'けさは こーひーを のみませんでした。', kata:'ケサワ コーヒーヲ ノミマセンデシタ。', rom:'Kesa wa kōhī wo nomimasen deshita.', mean:{zh:'今早沒有喝咖啡。',en:'I did not drink coffee this morning.'} },
+        { ja:'先週は 東京に 行きませんでした。', hira:'せんしゅうは とうきょうに いきませんでした。', kata:'センシュウワ トウキョウニ イキマセンデシタ。', rom:'Senshū wa Tōkyō ni ikimasen deshita.', mean:{zh:'上週沒有去東京。',en:'I did not go to Tokyo last week.'} },
+        { ja:'田中さんは 昨日 来ませんでした。', hira:'たなかさんは きのう きませんでした。', kata:'タナカサンワ キノウ キマセンデシタ。', rom:'Tanaka-san wa kinō kimasen deshita.', mean:{zh:'田中先生昨天沒有來。',en:'Mr./Ms. Tanaka did not come yesterday.'} },
+        { ja:'その 映画は 見ませんでした。', hira:'その えいがは みませんでした。', kata:'ソノ エイガワ ミマセンデシタ。', rom:'Sono eiga wa mimasen deshita.', mean:{zh:'沒有看那部電影。',en:'I did not watch that movie.'} },
+        { ja:'昨日は 野菜を 買いませんでした。', hira:'きのうは やさいを かいませんでした。', kata:'キノウワ ヤサイヲ カイマセンデシタ。', rom:'Kinō wa yasai wo kaimasen deshita.', mean:{zh:'昨天沒有買蔬菜。',en:'I did not buy vegetables yesterday.'} },
+        { ja:'昨夜は 本を 読みませんでした。', hira:'ゆうべは ほんを よみませんでした。', kata:'ユウベワ ホンヲ ヨミマセンデシタ。', rom:'Yūbe wa hon wo yomimasen deshita.', mean:{zh:'昨晚沒有讀書。',en:'I did not read a book last night.'} },
+        { ja:'手紙を 書きませんでした。', hira:'てがみを かきませんでした。', kata:'テガミヲ カキマセンデシタ。', rom:'Tegami wo kakimasen deshita.', mean:{zh:'沒有寫信。',en:'I did not write a letter.'} },
+        { ja:'昨日は 友達に 会いませんでした。', hira:'きのうは ともだちに あいませんでした。', kata:'キノウワ トモダチニ アイマセンデシタ。', rom:'Kinō wa tomodachi ni aimasen deshita.', mean:{zh:'昨天沒有和朋友見面。',en:'I did not meet my friend yesterday.'} },
+        { ja:'昨夜は 早く 寝ませんでした。', hira:'ゆうべは はやく ねませんでした。', kata:'ユウベワ ハヤク ネマセンデシタ。', rom:'Yūbe wa hayaku nemasen deshita.', mean:{zh:'昨晚沒有早睡。',en:'I did not go to sleep early last night.'} },
+        { ja:'先生と 日本語で 話しませんでした。', hira:'せんせいと にほんごで はなしませんでした。', kata:'センセイト ニホンゴデ ハナシマセンデシタ。', rom:'Sensei to Nihongo de hanashimasen deshita.', mean:{zh:'沒有用日語和老師說話。',en:'I did not speak Japanese with my teacher.'} },
+        { ja:'昨日は 早く 家に 帰りませんでした。', hira:'きのうは はやく うちに かえりませんでした。', kata:'キノウワ ハヤク ウチニ カエリマセンデシタ。', rom:'Kinō wa hayaku uchi ni kaerimasen deshita.', mean:{zh:'昨天沒有早早回家。',en:'I did not return home early yesterday.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // POTENTIAL FORM
+  // ----------------------------------------------------------------
+  {
+    id: 'potential',
+    icon: '💪',
+    nameKey: 'potential',
+    pattern: {
+      aff: {
+        formula: '〔一段〕語幹＋られます　〔五段〕え段＋ます　できます',
+        formulaEn: '[ru-verb stem]+raremasu  [u-verb e-row]+masu  dekimasu',
+        note: { zh: '表達「能做…」。一段動詞去掉「る」加「られます」；五段動詞詞尾換為え段加「ます」；する→できます。', en: 'Expresses ability. Ru-verbs: drop "ru", add "raremasu". U-verbs: change ending to e-row + "masu". suru → dekimasu.' }
+      },
+      neg: {
+        formula: '〔一段〕語幹＋られません　〔五段〕え段＋ません　できません',
+        formulaEn: '[ru-verb stem]+raremasen  [u-verb e-row]+masen  dekimasen',
+        note: { zh: '表達「不能做…」。將可能形的「ます」換成「ません」。', en: 'Expresses inability. Change the potential "masu" to "masen".' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','可能肯定','可能否定'], en:['Dictionary','Potential Affirmative','Potential Negative'] },
+      rows: [
+        { zh:['食べる　たべる','食べられます','食べられません'], en:['taberu (eat)','taberaremasu','taberare masen'] },
+        { zh:['見る　みる','見られます','見られません'], en:['miru (see)','miraremasu','mirarenmasen'] },
+        { zh:['書く　かく','書けます','書けません'], en:['kaku (write)','kakemasu','kakemasen'] },
+        { zh:['飲む　のむ','飲めます','飲めません'], en:['nomu (drink)','nomemasu','nomemasen'] },
+        { zh:['話す　はなす','話せます','話せません'], en:['hanasu (speak)','hanasemasu','hanasemasen'] },
+        { zh:['する','できます','できません'], en:['suru (do)','dekimasu','dekimasen'] }
+      ]
+    },
+    vocab: [
+      { kanji:'食べる', hira:'たべる', kata:'タベル', rom:'taberu', mean:{zh:'吃',en:'eat'} },
+      { kanji:'飲む', hira:'のむ', kata:'ノム', rom:'nomu', mean:{zh:'喝',en:'drink'} },
+      { kanji:'読む', hira:'よむ', kata:'ヨム', rom:'yomu', mean:{zh:'讀',en:'read'} },
+      { kanji:'書く', hira:'かく', kata:'カク', rom:'kaku', mean:{zh:'寫',en:'write'} },
+      { kanji:'話す', hira:'はなす', kata:'ハナス', rom:'hanasu', mean:{zh:'說話',en:'speak'} },
+      { kanji:'泳ぐ', hira:'およぐ', kata:'オヨグ', rom:'oyogu', mean:{zh:'游泳',en:'swim'} },
+      { kanji:'歌う', hira:'うたう', kata:'ウタウ', rom:'utau', mean:{zh:'唱歌',en:'sing'} },
+      { kanji:'運転する', hira:'うんてんする', kata:'ウンテンスル', rom:'unten suru', mean:{zh:'開車',en:'drive'} },
+      { kanji:'料理する', hira:'りょうりする', kata:'リョウリスル', rom:'ryōri suru', mean:{zh:'做料理',en:'cook'} },
+      { kanji:'弾く', hira:'ひく', kata:'ヒク', rom:'hiku', mean:{zh:'彈奏',en:'play (instrument)'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'私は 日本語が 話せます。', hira:'わたしは にほんごが はなせます。', kata:'ワタシワ ニホンゴガ ハナセマス。', rom:'Watashi wa Nihongo ga hanasemasu.', mean:{zh:'我會說日語。',en:'I can speak Japanese.'} },
+        { ja:'田中さんは 車が 運転できます。', hira:'たなかさんは くるまが うんてんできます。', kata:'タナカサンワ クルマガ ウンテンデキマス。', rom:'Tanaka-san wa kuruma ga unten dekimasu.', mean:{zh:'田中先生會開車。',en:'Mr./Ms. Tanaka can drive a car.'} },
+        { ja:'私は 漢字が 読めます。', hira:'わたしは かんじが よめます。', kata:'ワタシワ カンジガ ヨメマス。', rom:'Watashi wa kanji ga yomemasu.', mean:{zh:'我能讀漢字。',en:'I can read kanji.'} },
+        { ja:'ここで 泳げます。', hira:'ここで およげます。', kata:'ここデ オヨゲマス。', rom:'Koko de oyogemasu.', mean:{zh:'這裡可以游泳。',en:'You can swim here.'} },
+        { ja:'このピアノを 弾けます。', hira:'このぴあのを ひけます。', kata:'コノピアノヲ ヒケマス。', rom:'Kono piano wo hikemasu.', mean:{zh:'我能彈這台鋼琴。',en:'I can play this piano.'} },
+        { ja:'私は 料理が できます。', hira:'わたしは りょうりが できます。', kata:'ワタシワ リョウリガ デキマス。', rom:'Watashi wa ryōri ga dekimasu.', mean:{zh:'我會做料理。',en:'I can cook.'} },
+        { ja:'この 歌が 歌えます。', hira:'この うたが うたえます。', kata:'コノ ウタガ ウタエマス。', rom:'Kono uta ga utaemasu.', mean:{zh:'我能唱這首歌。',en:'I can sing this song.'} },
+        { ja:'ひらがなが 書けます。', hira:'ひらがなが かけます。', kata:'ヒラガナガ カケマス。', rom:'Hiragana ga kakemasu.', mean:{zh:'我會寫平假名。',en:'I can write hiragana.'} },
+        { ja:'この 魚は 生で 食べられます。', hira:'この さかなは なまで たべられます。', kata:'コノ サカナワ ナマデ タベラレマス。', rom:'Kono sakana wa nama de taberaremasu.', mean:{zh:'這條魚可以生吃。',en:'This fish can be eaten raw.'} },
+        { ja:'私は お酒が 飲めます。', hira:'わたしは おさけが のめます。', kata:'ワタシワ オサケガ ノメマス。', rom:'Watashi wa osake ga nomemasu.', mean:{zh:'我能喝酒。',en:'I can drink alcohol.'} }
+      ],
+      neg: [
+        { ja:'私は 日本語が あまり 話せません。', hira:'わたしは にほんごが あまり はなせません。', kata:'ワタシワ ニホンゴガ アマリ ハナセマセン。', rom:'Watashi wa Nihongo ga amari hanasemasen.', mean:{zh:'我日語說得不太好。',en:'I cannot speak Japanese very well.'} },
+        { ja:'田中さんは まだ 車が 運転できません。', hira:'たなかさんは まだ くるまが うんてんできません。', kata:'タナカサンワ マダ クルマガ ウンテンデキマセン。', rom:'Tanaka-san wa mada kuruma ga unten dekimasen.', mean:{zh:'田中先生還不會開車。',en:'Mr./Ms. Tanaka cannot drive a car yet.'} },
+        { ja:'この 漢字が 読めません。', hira:'この かんじが よめません。', kata:'コノ カンジガ ヨメマセン。', rom:'Kono kanji ga yomemasen.', mean:{zh:'我不會讀這個漢字。',en:'I cannot read this kanji.'} },
+        { ja:'ここでは 泳げません。', hira:'ここでは およげません。', kata:'ここデワ オヨゲマセン。', rom:'Koko de wa oyogemasen.', mean:{zh:'這裡不能游泳。',en:'You cannot swim here.'} },
+        { ja:'ピアノは 弾けません。', hira:'ぴあのは ひけません。', kata:'ピアノワ ヒケマセン。', rom:'Piano wa hikemasen.', mean:{zh:'我不會彈鋼琴。',en:'I cannot play the piano.'} },
+        { ja:'忙しくて 料理が できません。', hira:'いそがしくて りょうりが できません。', kata:'イソガシクテ リョウリガ デキマセン。', rom:'Isogashikute ryōri ga dekimasen.', mean:{zh:'太忙了，沒辦法做料理。',en:'I am too busy to cook.'} },
+        { ja:'その 歌は 高くて 歌えません。', hira:'その うたは たかくて うたえません。', kata:'ソノ ウタワ タカクテ ウタエマセン。', rom:'Sono uta wa takakute utaemasen.', mean:{zh:'那首歌音太高，唱不了。',en:'That song is too high-pitched for me to sing.'} },
+        { ja:'漢字が まだ 書けません。', hira:'かんじが まだ かけません。', kata:'カンジガ マダ カケマセン。', rom:'Kanji ga mada kakemasen.', mean:{zh:'漢字還寫不了。',en:'I still cannot write kanji.'} },
+        { ja:'私は 辛い 物が 食べられません。', hira:'わたしは からい ものが たべられません。', kata:'ワタシワ カライ モノガ タベラレマセン。', rom:'Watashi wa karai mono ga taberare masen.', mean:{zh:'我不能吃辣的東西。',en:'I cannot eat spicy food.'} },
+        { ja:'お酒が あまり 飲めません。', hira:'おさけが あまり のめません。', kata:'オサケガ アマリ ノメマセン。', rom:'Osake ga amari nomemasen.', mean:{zh:'我不太能喝酒。',en:'I cannot drink much alcohol.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // REQUESTS (〜てください / 〜ないでください)
+  // ----------------------------------------------------------------
+  {
+    id: 'request',
+    icon: '🙏',
+    nameKey: 'request',
+    pattern: {
+      aff: {
+        formula: '〔動詞て形〕 ＋ ください',
+        formulaEn: '[te-form] + kudasai',
+        note: { zh: '用て形加「ください」，禮貌地請求對方做某事。例：書いてください、来てください、待ってください。', en: 'Use the te-form + "kudasai" to politely ask someone to do something. Ex: kaite kudasai, kite kudasai, matte kudasai.' }
+      },
+      neg: {
+        formula: '〔動詞ない形〕 ＋ でください',
+        formulaEn: '[nai-form] + de kudasai',
+        note: { zh: '用ない形加「でください」，禮貌地請求對方不要做某事。例：食べないでください、話さないでください。', en: 'Use the nai-form + "de kudasai" to politely ask someone not to do something. Ex: tabenai de kudasai, hanasanai de kudasai.' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','て形','〜てください','ない形','〜ないでください'], en:['Dictionary','Te-form','Please do','Nai-form','Please don\'t'] },
+      rows: [
+        { zh:['食べる','食べて','食べてください','食べない','食べないでください'], en:['taberu','tabete','tabete kudasai','tabenai','tabenai de kudasai'] },
+        { zh:['書く','書いて','書いてください','書かない','書かないでください'], en:['kaku','kaite','kaite kudasai','kakanai','kakanai de kudasai'] },
+        { zh:['話す','話して','話してください','話さない','話さないでください'], en:['hanasu','hanashite','hanashite kudasai','hanasanai','hanasanai de kudasai'] },
+        { zh:['来る','来て','来てください','来ない','来ないでください'], en:['kuru','kite','kite kudasai','konai','konai de kudasai'] }
+      ]
+    },
+    vocab: [
+      { kanji:'書く', hira:'かく', kata:'カク', rom:'kaku', mean:{zh:'寫',en:'write'} },
+      { kanji:'話す', hira:'はなす', kata:'ハナス', rom:'hanasu', mean:{zh:'說話',en:'speak'} },
+      { kanji:'待つ', hira:'まつ', kata:'マツ', rom:'matsu', mean:{zh:'等待',en:'wait'} },
+      { kanji:'来る', hira:'くる', kata:'クル', rom:'kuru', mean:{zh:'來',en:'come'} },
+      { kanji:'読む', hira:'よむ', kata:'ヨム', rom:'yomu', mean:{zh:'讀',en:'read'} },
+      { kanji:'見る', hira:'みる', kata:'ミル', rom:'miru', mean:{zh:'看',en:'look/watch'} },
+      { kanji:'開ける', hira:'あける', kata:'アケル', rom:'akeru', mean:{zh:'打開',en:'open'} },
+      { kanji:'閉める', hira:'しめる', kata:'シメル', rom:'shimeru', mean:{zh:'關閉',en:'close'} },
+      { kanji:'食べる', hira:'たべる', kata:'タベル', rom:'taberu', mean:{zh:'吃',en:'eat'} },
+      { kanji:'飲む', hira:'のむ', kata:'ノム', rom:'nomu', mean:{zh:'喝',en:'drink'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'ここに 名前を 書いてください。', hira:'ここに なまえを かいてください。', kata:'ここニ ナマエヲ カイテクダサイ。', rom:'Koko ni namae wo kaite kudasai.', mean:{zh:'請在這裡寫上名字。',en:'Please write your name here.'} },
+        { ja:'もう少し ゆっくり 話してください。', hira:'もうすこし ゆっくり はなしてください。', kata:'モウスコシ ユックリ ハナシテクダサイ。', rom:'Mō sukoshi yukkuri hanashite kudasai.', mean:{zh:'請說慢一點。',en:'Please speak a little more slowly.'} },
+        { ja:'ちょっと 待ってください。', hira:'ちょっと まってください。', kata:'チョット マッテクダサイ。', rom:'Chotto matte kudasai.', mean:{zh:'請稍等一下。',en:'Please wait a moment.'} },
+        { ja:'明日、早く 来てください。', hira:'あした、はやく きてください。', kata:'アシタ、ハヤク キテクダサイ。', rom:'Ashita, hayaku kite kudasai.', mean:{zh:'請明天早點來。',en:'Please come early tomorrow.'} },
+        { ja:'この 本を 読んでください。', hira:'この ほんを よんでください。', kata:'コノ ホンヲ ヨンデクダサイ。', rom:'Kono hon wo yonde kudasai.', mean:{zh:'請讀這本書。',en:'Please read this book.'} },
+        { ja:'窓を 開けてください。', hira:'まどを あけてください。', kata:'マドヲ アケテクダサイ。', rom:'Mado wo akete kudasai.', mean:{zh:'請打開窗戶。',en:'Please open the window.'} },
+        { ja:'野菜を 食べてください。', hira:'やさいを たべてください。', kata:'ヤサイヲ タベテクダサイ。', rom:'Yasai wo tabete kudasai.', mean:{zh:'請吃蔬菜。',en:'Please eat your vegetables.'} },
+        { ja:'水を 飲んでください。', hira:'みずを のんでください。', kata:'ミズヲ ノンデクダサイ。', rom:'Mizu wo nonde kudasai.', mean:{zh:'請喝水。',en:'Please drink some water.'} },
+        { ja:'ドアを 閉めてください。', hira:'どあを しめてください。', kata:'ドアヲ シメテクダサイ。', rom:'Doa wo shimete kudasai.', mean:{zh:'請關門。',en:'Please close the door.'} },
+        { ja:'こちらを 見てください。', hira:'こちらを みてください。', kata:'コチラヲ ミテクダサイ。', rom:'Kochira wo mite kudasai.', mean:{zh:'請看這邊。',en:'Please look this way.'} }
+      ],
+      neg: [
+        { ja:'ここで 食べないでください。', hira:'ここで たべないでください。', kata:'ここデ タベナイデクダサイ。', rom:'Koko de tabenai de kudasai.', mean:{zh:'請不要在這裡吃東西。',en:'Please do not eat here.'} },
+        { ja:'ここで 写真を 撮らないでください。', hira:'ここで しゃしんを とらないでください。', kata:'ここデ シャシンヲ トラナイデクダサイ。', rom:'Koko de shashin wo toranai de kudasai.', mean:{zh:'請不要在這裡拍照。',en:'Please do not take photos here.'} },
+        { ja:'授業中は 話さないでください。', hira:'じゅぎょうちゅうは はなさないでください。', kata:'ジュギョウチュウワ ハナサナイデクダサイ。', rom:'Jugyōchū wa hanasanai de kudasai.', mean:{zh:'上課中請不要說話。',en:'Please do not talk during class.'} },
+        { ja:'窓を 開けないでください。', hira:'まどを あけないでください。', kata:'マドヲ アケナイデクダサイ。', rom:'Mado wo akenai de kudasai.', mean:{zh:'請不要打開窗戶。',en:'Please do not open the window.'} },
+        { ja:'遅刻しないでください。', hira:'ちこくしないでください。', kata:'チコクシナイデクダサイ。', rom:'Chikoku shinai de kudasai.', mean:{zh:'請不要遲到。',en:'Please do not be late.'} },
+        { ja:'ここに 来ないでください。', hira:'ここに こないでください。', kata:'ここニ コナイデクダサイ。', rom:'Koko ni konai de kudasai.', mean:{zh:'請不要來這裡。',en:'Please do not come here.'} },
+        { ja:'お酒を 飲まないでください。', hira:'おさけを のまないでください。', kata:'オサケヲ ノマナイデクダサイ。', rom:'Osake wo nomanai de kudasai.', mean:{zh:'請不要喝酒。',en:'Please do not drink alcohol.'} },
+        { ja:'廊下で 走らないでください。', hira:'ろうかで はしらないでください。', kata:'ロウカデ ハシラナイデクダサイ。', rom:'Rōka de hashiranai de kudasai.', mean:{zh:'請不要在走廊跑步。',en:'Please do not run in the hallway.'} },
+        { ja:'スマホを 使わないでください。', hira:'すまほを つかわないでください。', kata:'スマホヲ ツカワナイデクダサイ。', rom:'Sumaho wo tsukawanai de kudasai.', mean:{zh:'請不要使用手機。',en:'Please do not use your smartphone.'} },
+        { ja:'ドアを 閉めないでください。', hira:'どあを しめないでください。', kata:'ドアヲ シメナイデクダサイ。', rom:'Doa wo shimenai de kudasai.', mean:{zh:'請不要關門。',en:'Please do not close the door.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // PAST EXPERIENCE (〜たことがある)
+  // ----------------------------------------------------------------
+  {
+    id: 'experience',
+    icon: '📚',
+    nameKey: 'experience',
+    pattern: {
+      aff: {
+        formula: '〔動詞た形〕 ＋ ことが あります',
+        formulaEn: '[ta-form] + koto ga arimasu',
+        note: { zh: '表示「曾經做過…」。用動詞た形加「ことがあります」。例：食べたことがあります（曾吃過）、行ったことがあります（曾去過）。', en: 'Express past experience "have ever done ...". Use verb ta-form + "koto ga arimasu". Ex: tabeta koto ga arimasu (have eaten), itta koto ga arimasu (have been).' }
+      },
+      neg: {
+        formula: '〔動詞た形〕 ＋ ことが ありません',
+        formulaEn: '[ta-form] + koto ga arimasen',
+        note: { zh: '表示「從未做過…」。用動詞た形加「ことがありません」。例：食べたことがありません（從未吃過）。', en: 'Express "have never done ...". Use verb ta-form + "koto ga arimasen". Ex: tabeta koto ga arimasen (have never eaten).' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','た形','〜たことがあります','〜たことがありません'], en:['Dictionary','Ta-form','Have done','Have never done'] },
+      rows: [
+        { zh:['食べる','食べた','食べたことがあります','食べたことがありません'], en:['taberu','tabeta','tabeta koto ga arimasu','tabeta koto ga arimasen'] },
+        { zh:['行く','行った','行ったことがあります','行ったことがありません'], en:['iku','itta','itta koto ga arimasu','itta koto ga arimasen'] },
+        { zh:['見る','見た','見たことがあります','見たことがありません'], en:['miru','mita','mita koto ga arimasu','mita koto ga arimasen'] },
+        { zh:['する','した','したことがあります','したことがありません'], en:['suru','shita','shita koto ga arimasu','shita koto ga arimasen'] }
+      ]
+    },
+    vocab: [
+      { kanji:'行く', hira:'いく', kata:'イク', rom:'iku', mean:{zh:'去',en:'go'} },
+      { kanji:'食べる', hira:'たべる', kata:'タベル', rom:'taberu', mean:{zh:'吃',en:'eat'} },
+      { kanji:'見る', hira:'みる', kata:'ミル', rom:'miru', mean:{zh:'看',en:'see'} },
+      { kanji:'乗る', hira:'のる', kata:'ノル', rom:'noru', mean:{zh:'乘坐',en:'ride'} },
+      { kanji:'登る', hira:'のぼる', kata:'ノボル', rom:'noboru', mean:{zh:'攀登',en:'climb'} },
+      { kanji:'泳ぐ', hira:'およぐ', kata:'オヨグ', rom:'oyogu', mean:{zh:'游泳',en:'swim'} },
+      { kanji:'作る', hira:'つくる', kata:'ツクル', rom:'tsukuru', mean:{zh:'製作',en:'make'} },
+      { kanji:'会う', hira:'あう', kata:'アウ', rom:'au', mean:{zh:'見面',en:'meet'} },
+      { kanji:'住む', hira:'すむ', kata:'スム', rom:'sumu', mean:{zh:'居住',en:'live'} },
+      { kanji:'話す', hira:'はなす', kata:'ハナス', rom:'hanasu', mean:{zh:'說話',en:'speak'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'日本に 行ったことが あります。', hira:'にほんに いったことが あります。', kata:'ニホンニ イッタコトガ アリマス。', rom:'Nihon ni itta koto ga arimasu.', mean:{zh:'我曾去過日本。',en:'I have been to Japan before.'} },
+        { ja:'寿司を 食べたことが あります。', hira:'すしを たべたことが あります。', kata:'スシヲ タベタコトガ アリマス。', rom:'Sushi wo tabeta koto ga arimasu.', mean:{zh:'我曾吃過壽司。',en:'I have eaten sushi before.'} },
+        { ja:'富士山に 登ったことが あります。', hira:'ふじさんに のぼったことが あります。', kata:'フジサンニ ノボッタコトガ アリマス。', rom:'Fujisan ni nobotta koto ga arimasu.', mean:{zh:'我曾爬過富士山。',en:'I have climbed Mt. Fuji before.'} },
+        { ja:'新幹線に 乗ったことが あります。', hira:'しんかんせんに のったことが あります。', kata:'シンカンセンニ ノッタコトガ アリマス。', rom:'Shinkansen ni notta koto ga arimasu.', mean:{zh:'我曾搭過新幹線。',en:'I have ridden the Shinkansen before.'} },
+        { ja:'田中さんに 会ったことが あります。', hira:'たなかさんに あったことが あります。', kata:'タナカサンニ アッタコトガ アリマス。', rom:'Tanaka-san ni atta koto ga arimasu.', mean:{zh:'我曾和田中先生見過面。',en:'I have met Mr./Ms. Tanaka before.'} },
+        { ja:'この 映画を 見たことが あります。', hira:'この えいがを みたことが あります。', kata:'コノ エイガヲ ミタコトガ アリマス。', rom:'Kono eiga wo mita koto ga arimasu.', mean:{zh:'我曾看過這部電影。',en:'I have seen this movie before.'} },
+        { ja:'海で 泳いだことが あります。', hira:'うみで およいだことが あります。', kata:'ウミデ オヨイダコトガ アリマス。', rom:'Umi de oyoida koto ga arimasu.', mean:{zh:'我曾在海裡游過泳。',en:'I have swum in the ocean before.'} },
+        { ja:'日本語で 手紙を 書いたことが あります。', hira:'にほんごで てがみを かいたことが あります。', kata:'ニホンゴデ テガミヲ カイタコトガ アリマス。', rom:'Nihongo de tegami wo kaita koto ga arimasu.', mean:{zh:'我曾用日語寫過信。',en:'I have written a letter in Japanese before.'} },
+        { ja:'外国に 住んだことが あります。', hira:'がいこくに すんだことが あります。', kata:'ガイコクニ スンダコトガ アリマス。', rom:'Gaikoku ni sunda koto ga arimasu.', mean:{zh:'我曾在國外住過。',en:'I have lived abroad before.'} },
+        { ja:'日本人と 日本語で 話したことが あります。', hira:'にほんじんと にほんごで はなしたことが あります。', kata:'ニホンジントニホンゴデ ハナシタコトガ アリマス。', rom:'Nihonjin to Nihongo de hanashita koto ga arimasu.', mean:{zh:'我曾和日本人用日語交談過。',en:'I have spoken Japanese with a Japanese person before.'} }
+      ],
+      neg: [
+        { ja:'日本に 行ったことが ありません。', hira:'にほんに いったことが ありません。', kata:'ニホンニ イッタコトガ アリマセン。', rom:'Nihon ni itta koto ga arimasen.', mean:{zh:'我從未去過日本。',en:'I have never been to Japan.'} },
+        { ja:'寿司を 食べたことが ありません。', hira:'すしを たべたことが ありません。', kata:'スシヲ タベタコトガ アリマセン。', rom:'Sushi wo tabeta koto ga arimasen.', mean:{zh:'我從未吃過壽司。',en:'I have never eaten sushi.'} },
+        { ja:'富士山に 登ったことが ありません。', hira:'ふじさんに のぼったことが ありません。', kata:'フジサンニ ノボッタコトガ アリマセン。', rom:'Fujisan ni nobotta koto ga arimasen.', mean:{zh:'我從未爬過富士山。',en:'I have never climbed Mt. Fuji.'} },
+        { ja:'新幹線に 乗ったことが ありません。', hira:'しんかんせんに のったことが ありません。', kata:'シンカンセンニ ノッタコトガ アリマセン。', rom:'Shinkansen ni notta koto ga arimasen.', mean:{zh:'我從未搭過新幹線。',en:'I have never ridden the Shinkansen.'} },
+        { ja:'田中さんに 会ったことが ありません。', hira:'たなかさんに あったことが ありません。', kata:'タナカサンニ アッタコトガ アリマセン。', rom:'Tanaka-san ni atta koto ga arimasen.', mean:{zh:'我從未和田中先生見過面。',en:'I have never met Mr./Ms. Tanaka.'} },
+        { ja:'この 映画を 見たことが ありません。', hira:'この えいがを みたことが ありません。', kata:'コノ エイガヲ ミタコトガ アリマセン。', rom:'Kono eiga wo mita koto ga arimasen.', mean:{zh:'我從未看過這部電影。',en:'I have never seen this movie.'} },
+        { ja:'海で 泳いだことが ありません。', hira:'うみで およいだことが ありません。', kata:'ウミデ オヨイダコトガ アリマセン。', rom:'Umi de oyoida koto ga arimasen.', mean:{zh:'我從未在海裡游過泳。',en:'I have never swum in the ocean.'} },
+        { ja:'日本語で 手紙を 書いたことが ありません。', hira:'にほんごで てがみを かいたことが ありません。', kata:'ニホンゴデ テガミヲ カイタコトガ アリマセン。', rom:'Nihongo de tegami wo kaita koto ga arimasen.', mean:{zh:'我從未用日語寫過信。',en:'I have never written a letter in Japanese.'} },
+        { ja:'外国に 住んだことが ありません。', hira:'がいこくに すんだことが ありません。', kata:'ガイコクニ スンダコトガ アリマセン。', rom:'Gaikoku ni sunda koto ga arimasen.', mean:{zh:'我從未在國外住過。',en:'I have never lived abroad.'} },
+        { ja:'日本人と 日本語で 話したことが ありません。', hira:'にほんじんと にほんごで はなしたことが ありません。', kata:'ニホンジントニホンゴデ ハナシタコトガ アリマセン。', rom:'Nihonjin to Nihongo de hanashita koto ga arimasen.', mean:{zh:'我從未和日本人用日語交談過。',en:'I have never spoken Japanese with a Japanese person.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // OBLIGATION (〜なければならない / 〜なくてもいい)
+  // ----------------------------------------------------------------
+  {
+    id: 'obligation',
+    icon: '📋',
+    nameKey: 'obligation',
+    pattern: {
+      aff: {
+        formula: '〔ない形語幹〕 ＋ なければ なりません',
+        formulaEn: '[nai-stem] + nakereba narimasen',
+        note: { zh: '表示「必須做…」。ない形去掉「ない」加「なければなりません」（正式）。口語常用「〜なきゃ（いけない）」。', en: 'Expresses "must do ...". Drop "nai" from the nai-form and add "nakereba narimasen" (formal). Informal: "-nakya (ikenai)".' }
+      },
+      neg: {
+        formula: '〔ない形語幹〕 ＋ なくても いいです',
+        formulaEn: '[nai-stem] + nakute mo ii desu',
+        note: { zh: '表示「不必做…」。ない形去掉「ない」加「なくてもいいです」。注意：「しなくてもいいです」（不必做）≠「してはいけません」（不可以做）。', en: 'Expresses "don\'t have to ...". Drop "nai" and add "nakute mo ii desu". Note: "shinakute mo ii" (don\'t have to) ≠ "shite wa ikemai" (must not).' }
+      }
+    },
+    conj: {
+      headers: { zh:['辭書形','ない形','〜なければなりません','〜なくてもいいです'], en:['Dictionary','Nai-form','Must do','Don\'t have to'] },
+      rows: [
+        { zh:['食べる','食べない','食べなければなりません','食べなくてもいいです'], en:['taberu','tabenai','tabenakereba narimasen','tabenakute mo ii desu'] },
+        { zh:['行く','行かない','行かなければなりません','行かなくてもいいです'], en:['iku','ikanai','ikanakereba narimasen','ikanakute mo ii desu'] },
+        { zh:['する','しない','しなければなりません','しなくてもいいです'], en:['suru','shinai','shinakereba narimasen','shinakute mo ii desu'] },
+        { zh:['来る','来ない','来なければなりません','来なくてもいいです'], en:['kuru','konai','konakereba narimasen','konakute mo ii desu'] }
+      ]
+    },
+    vocab: [
+      { kanji:'食べる', hira:'たべる', kata:'タベル', rom:'taberu', mean:{zh:'吃',en:'eat'} },
+      { kanji:'飲む', hira:'のむ', kata:'ノム', rom:'nomu', mean:{zh:'喝',en:'drink'} },
+      { kanji:'行く', hira:'いく', kata:'イク', rom:'iku', mean:{zh:'去',en:'go'} },
+      { kanji:'来る', hira:'くる', kata:'クル', rom:'kuru', mean:{zh:'來',en:'come'} },
+      { kanji:'起きる', hira:'おきる', kata:'オキル', rom:'okiru', mean:{zh:'起床',en:'wake up'} },
+      { kanji:'寝る', hira:'ねる', kata:'ネル', rom:'neru', mean:{zh:'睡覺',en:'sleep'} },
+      { kanji:'勉強する', hira:'べんきょうする', kata:'ベンキョウスル', rom:'benkyō suru', mean:{zh:'學習',en:'study'} },
+      { kanji:'運動する', hira:'うんどうする', kata:'ウンドウスル', rom:'undō suru', mean:{zh:'運動',en:'exercise'} },
+      { kanji:'働く', hira:'はたらく', kata:'ハタラク', rom:'hataraku', mean:{zh:'工作',en:'work'} },
+      { kanji:'休む', hira:'やすむ', kata:'ヤスム', rom:'yasumu', mean:{zh:'休息',en:'rest'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'毎日、薬を 飲まなければ なりません。', hira:'まいにち、くすりを のまなければ なりません。', kata:'マイニチ、クスリヲ ノマナケレバ ナリマセン。', rom:'Mainichi, kusuri wo nomanakereba narimasen.', mean:{zh:'每天必須吃藥。',en:'I must take medicine every day.'} },
+        { ja:'明日は 早く 起きなければ なりません。', hira:'あしたは はやく おきなければ なりません。', kata:'アシタワ ハヤク オキナケレバ ナリマセン。', rom:'Ashita wa hayaku okinakereba narimasen.', mean:{zh:'明天必須早起。',en:'I must wake up early tomorrow.'} },
+        { ja:'試験の 前に 勉強しなければ なりません。', hira:'しけんの まえに べんきょうしなければ なりません。', kata:'シケンノ マエニ ベンキョウシナケレバ ナリマセン。', rom:'Shiken no mae ni benkyō shinakereba narimasen.', mean:{zh:'考試前必須好好學習。',en:'I must study before the exam.'} },
+        { ja:'会議に 来なければ なりません。', hira:'かいぎに こなければ なりません。', kata:'カイギニ コナケレバ ナリマセン。', rom:'Kaigi ni konakereba narimasen.', mean:{zh:'必須來開會。',en:'I must come to the meeting.'} },
+        { ja:'レポートを 出さなければ なりません。', hira:'れぽーとを ださなければ なりません。', kata:'レポートヲ ダサナケレバ ナリマセン。', rom:'Repōto wo dasanakereba narimasen.', mean:{zh:'必須交出報告。',en:'I must submit the report.'} },
+        { ja:'健康のために 運動しなければ なりません。', hira:'けんこうのために うんどうしなければ なりません。', kata:'ケンコウノタメニ ウンドウシナケレバ ナリマセン。', rom:'Kenkō no tame ni undō shinakereba narimasen.', mean:{zh:'為了健康必須運動。',en:'I must exercise for my health.'} },
+        { ja:'野菜を 食べなければ なりません。', hira:'やさいを たべなければ なりません。', kata:'ヤサイヲ タベナケレバ ナリマセン。', rom:'Yasai wo tabenakereba narimasen.', mean:{zh:'必須吃蔬菜。',en:'I must eat vegetables.'} },
+        { ja:'明日までに 返事しなければ なりません。', hira:'あしたまでに へんじしなければ なりません。', kata:'アシタマデニ ヘンジシナケレバ ナリマセン。', rom:'Ashita made ni henji shinakereba narimasen.', mean:{zh:'必須在明天之前回覆。',en:'I must reply by tomorrow.'} },
+        { ja:'夜は 早く 寝なければ なりません。', hira:'よるは はやく ねなければ なりません。', kata:'ヨルワ ハヤク ネナケレバ ナリマセン。', rom:'Yoru wa hayaku nenakereba narimasen.', mean:{zh:'晚上必須早點睡。',en:'I must go to sleep early at night.'} },
+        { ja:'毎日 働かなければ なりません。', hira:'まいにち はたらかなければ なりません。', kata:'マイニチ ハタラカナケレバ ナリマセン。', rom:'Mainichi hatarakanakereba narimasen.', mean:{zh:'必須每天工作。',en:'I must work every day.'} }
+      ],
+      neg: [
+        { ja:'今日は 早く 起きなくても いいです。', hira:'きょうは はやく おきなくても いいです。', kata:'キョウワ ハヤク オキナクテモ イイデス。', rom:'Kyō wa hayaku okinakute mo ii desu.', mean:{zh:'今天不必早起。',en:'You don\'t have to wake up early today.'} },
+        { ja:'薬は 毎日 飲まなくても いいです。', hira:'くすりは まいにち のまなくても いいです。', kata:'クスリワ マイニチ ノマナクテモ イイデス。', rom:'Kusuri wa mainichi nomanakute mo ii desu.', mean:{zh:'藥不必每天吃。',en:'You don\'t have to take medicine every day.'} },
+        { ja:'明日は 会議に 来なくても いいです。', hira:'あしたは かいぎに こなくても いいです。', kata:'アシタワ カイギニ コナクテモ イイデス。', rom:'Ashita wa kaigi ni konakute mo ii desu.', mean:{zh:'明天不必來開會。',en:'You don\'t have to come to the meeting tomorrow.'} },
+        { ja:'今日は 残業しなくても いいです。', hira:'きょうは ざんぎょうしなくても いいです。', kata:'キョウワ ザンギョウシナクテモ イイデス。', rom:'Kyō wa zangyō shinakute mo ii desu.', mean:{zh:'今天不必加班。',en:'You don\'t have to work overtime today.'} },
+        { ja:'週末は 勉強しなくても いいです。', hira:'しゅうまつは べんきょうしなくても いいです。', kata:'シュウマツワ ベンキョウシナクテモ イイデス。', rom:'Shūmatsu wa benkyō shinakute mo ii desu.', mean:{zh:'週末不必學習。',en:'You don\'t have to study on weekends.'} },
+        { ja:'この 野菜は 食べなくても いいです。', hira:'この やさいは たべなくても いいです。', kata:'コノ ヤサイワ タベナクテモ イイデス。', rom:'Kono yasai wa tabenakute mo ii desu.', mean:{zh:'這個蔬菜不必吃。',en:'You don\'t have to eat this vegetable.'} },
+        { ja:'今日は 運動しなくても いいです。', hira:'きょうは うんどうしなくても いいです。', kata:'キョウワ ウンドウシナクテモ イイデス。', rom:'Kyō wa undō shinakute mo ii desu.', mean:{zh:'今天不必運動。',en:'You don\'t have to exercise today.'} },
+        { ja:'今夜は 早く 寝なくても いいです。', hira:'こんやは はやく ねなくても いいです。', kata:'コンヤワ ハヤク ネナクテモ イイデス。', rom:'Konya wa hayaku nenakute mo ii desu.', mean:{zh:'今晚不必早睡。',en:'You don\'t have to go to sleep early tonight.'} },
+        { ja:'レポートは 明日まで 出さなくても いいです。', hira:'れぽーとは あしたまで ださなくても いいです。', kata:'レポートワ アシタマデ ダサナクテモ イイデス。', rom:'Repōto wa ashita made dasanakute mo ii desu.', mean:{zh:'報告不必到明天之前交。',en:'You don\'t have to submit the report by tomorrow.'} },
+        { ja:'今日は 仕事を 休んでも いいです。', hira:'きょうは しごとを やすんでも いいです。', kata:'キョウワ シゴトヲ ヤスンデモ イイデス。', rom:'Kyō wa shigoto wo yasunde mo ii desu.', mean:{zh:'今天可以休息不工作。',en:'You can take the day off from work today.'} }
       ]
     }
   }
