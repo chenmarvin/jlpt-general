@@ -508,6 +508,80 @@ main { max-width: 900px; margin: 0 auto; padding: 24px; }
   transition: opacity 0.3s;
 }
 
+/* Help modal */
+.help-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 24px 16px;
+}
+.help-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+.help-modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  max-width: 560px;
+  width: 100%;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  margin: auto;
+}
+.help-modal-header {
+  background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+  color: white;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.help-modal-header h2 { font-size: 1.1rem; font-weight: 700; }
+.help-close-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.help-close-btn:hover { background: rgba(255,255,255,0.35); }
+.help-modal-body { padding: 24px; }
+.help-section { margin-bottom: 24px; }
+.help-section:last-child { margin-bottom: 0; }
+.help-section h3 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--primary-faint);
+}
+.help-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  align-items: flex-start;
+}
+.help-item:last-child { margin-bottom: 0; }
+.help-icon {
+  font-size: 1.1rem;
+  width: 28px;
+  flex-shrink: 0;
+  text-align: center;
+  margin-top: 1px;
+}
+.help-item-text { font-size: 0.875rem; line-height: 1.55; color: var(--text); }
+.help-item-text strong { color: var(--text); font-weight: 700; }
+
 /* Responsive */
 @media (max-width: 600px) {
   header { padding: 16px; }
@@ -527,8 +601,21 @@ main { max-width: 900px; margin: 0 auto; padding: 24px; }
     <h1 id="hdr-title">日語句型練習</h1>
     <p id="hdr-subtitle">肯定句與否定句</p>
   </div>
-  <button class="lang-btn" id="lang-toggle-btn" onclick="toggleLang()">English</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="lang-btn" onclick="toggleHelp()" id="help-btn">？ Help</button>
+    <button class="lang-btn" id="lang-toggle-btn" onclick="toggleLang()">English</button>
+  </div>
 </header>
+
+<div class="help-overlay" id="help-overlay" onclick="closeHelpOnBg(event)">
+  <div class="help-modal" id="help-modal">
+    <div class="help-modal-header">
+      <h2 id="help-title">使用說明</h2>
+      <button class="help-close-btn" onclick="toggleHelp()">✕</button>
+    </div>
+    <div class="help-modal-body" id="help-body"></div>
+  </div>
+</div>
 
 <nav class="group-nav" id="group-nav"></nav>
 
@@ -591,6 +678,25 @@ const i18n = {
     adverb: '副詞',
     groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'（る動詞）', verb2:'（う動詞）', verb3:'（する・くる）', adverb:'', exist:'（ある・いる）', tai:'（〜たい）', teiru:'（〜ています）', particle:'（は・が・を・に・で）', counter:'（〜本・〜枚・〜冊）' },
     copied: 'コピーしました',
+    helpBtn: '？ 說明',
+    helpTitle: '使用說明',
+    helpContent: [
+      { heading: '學習模式', items: [
+        { icon: '📖', text: '<strong>學習模式</strong>：瀏覽句型說明、活用變化、詞彙表與例句。' },
+        { icon: '🔀', text: '<strong>句型分類</strong>：點選頂部標籤切換名詞、形容詞、動詞等不同句型。' },
+        { icon: '🟢🔴', text: '<strong>肯定句 / 否定句 / 兩者對照</strong>：切換顯示肯定句、否定句或同時並排顯示。' },
+      ]},
+      { heading: '練習模式', items: [
+        { icon: '🧠', text: '<strong>練習模式</strong>：看到詞彙後，試著自己組成句子，再按「顯示答案」確認。' },
+        { icon: '⬅️➡️', text: '<strong>上一題 / 下一題</strong>：用底部按鈕切換題目。' },
+      ]},
+      { heading: '複製句子', items: [
+        { icon: '👆', text: '<strong>點擊 / 輕觸例句</strong>：單擊或點一下粗體日文句子，即可將其複製到剪貼簿。畫面底部會出現「コピーしました」提示。' },
+      ]},
+      { heading: '其他設定', items: [
+        { icon: '🌐', text: '<strong>語言切換</strong>：點選右上角按鈕，在中文與英文介面之間切換。' },
+      ]},
+    ],
     informalNote: '（口語）',
     exist: '存在動詞',
     tai: 'たい形',
@@ -637,6 +743,25 @@ const i18n = {
     adverb: 'Adverbs',
     groupHint: { noun:'', iAdj:'', naAdj:'', verb1:'(ru-verbs)', verb2:'(u-verbs)', verb3:'(suru・kuru)', adverb:'', exist:'(aru・iru)', tai:'(-tai)', teiru:'(-te imasu)', particle:'(wa/ga/wo/ni/de)', counter:'(hon/mai/satsu)' },
     copied: 'Copied!',
+    helpBtn: '？ Help',
+    helpTitle: 'How to Use',
+    helpContent: [
+      { heading: 'Tutor Mode', items: [
+        { icon: '📖', text: '<strong>Tutor Mode</strong>: Browse pattern explanations, conjugation tables, vocabulary, and example sentences.' },
+        { icon: '🔀', text: '<strong>Sentence Groups</strong>: Tap the tabs at the top to switch between nouns, adjectives, verbs, and more.' },
+        { icon: '🟢🔴', text: '<strong>Affirmative / Negative / Both</strong>: Toggle to show affirmative sentences, negative sentences, or both side by side.' },
+      ]},
+      { heading: 'Exercise Mode', items: [
+        { icon: '🧠', text: '<strong>Exercise Mode</strong>: A vocabulary word is shown — try to form the sentence yourself, then tap "Reveal Answer" to check.' },
+        { icon: '⬅️➡️', text: '<strong>Previous / Next</strong>: Use the buttons at the bottom to navigate between questions.' },
+      ]},
+      { heading: 'Copying Sentences', items: [
+        { icon: '👆', text: '<strong>Tap / Click a sentence</strong>: Tap any bold Japanese sentence once to copy it to your clipboard. A "Copied!" toast appears at the bottom to confirm.' },
+      ]},
+      { heading: 'Other', items: [
+        { icon: '🌐', text: '<strong>Language</strong>: Tap the button in the top-right corner to switch between Chinese and English.' },
+      ]},
+    ],
     informalNote: '(informal)',
     exist: 'Existence Verbs',
     tai: 'Desire Form',
@@ -1913,6 +2038,9 @@ function renderHeader() {
   document.getElementById('hdr-title').textContent = t('appTitle');
   document.getElementById('hdr-subtitle').textContent = t('appSubtitle');
   document.getElementById('lang-toggle-btn').textContent = t('langToggle');
+  document.getElementById('help-btn').textContent = t('helpBtn');
+  const overlay = document.getElementById('help-overlay');
+  if (overlay.classList.contains('open')) renderHelp();
   document.getElementById('mode-tutor').textContent = t('modeTutor');
   document.getElementById('mode-exercise').textContent = t('modeExercise');
   document.getElementById('type-aff').textContent = t('typeAff');
@@ -1930,6 +2058,28 @@ function fullRender() {
 // =====================================================================
 // Actions
 // =====================================================================
+function toggleHelp() {
+  const overlay = document.getElementById('help-overlay');
+  overlay.classList.toggle('open');
+  if (overlay.classList.contains('open')) renderHelp();
+}
+
+function closeHelpOnBg(e) {
+  if (e.target === document.getElementById('help-overlay')) toggleHelp();
+}
+
+function renderHelp() {
+  document.getElementById('help-title').textContent = t('helpTitle');
+  document.getElementById('help-btn').textContent = t('helpBtn');
+  const sections = t('helpContent').map(sec => {
+    const items = sec.items.map(item =>
+      `<div class="help-item"><div class="help-icon">${item.icon}</div><div class="help-item-text">${item.text}</div></div>`
+    ).join('');
+    return `<div class="help-section"><h3>${sec.heading}</h3>${items}</div>`;
+  }).join('');
+  document.getElementById('help-body').innerHTML = sections;
+}
+
 function toggleLang() {
   lang = lang === 'zh' ? 'en' : 'zh';
   fullRender();
