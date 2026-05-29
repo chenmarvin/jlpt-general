@@ -359,8 +359,10 @@ Do not include any markdown styling or extra text outside the JSON structure.`;
             if (data.error) throw new Error(data.error.message);
 
             let rawText = data.candidates[0].content.parts[0].text.trim();
-            rawText = rawText.replace(/^```json\s*/i, "").replace(/\s*```$/, "");
-            return JSON.parse(rawText);
+            // Extract the JSON object even if Gemini wraps it in prose or code fences
+            const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) throw new Error("No JSON object found in response");
+            return JSON.parse(jsonMatch[0]);
         }
 
         function speakText(text) {
