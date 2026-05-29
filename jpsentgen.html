@@ -56,6 +56,10 @@
                         </div>
                     </div>
 
+                    <div id="correctionNotice" class="hidden bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-2 text-sm text-yellow-800">
+                        ✏️ Corrected: <span id="correctionOriginal" class="font-mono line-through text-gray-500"></span> → <span id="correctionFixed" class="font-mono font-bold text-indigo-700"></span>
+                    </div>
+
                     <div class="grid grid-cols-1 gap-2 border-t border-gray-100 pt-4 font-mono text-sm">
                         <div class="flex items-start">
                             <span class="w-20 font-bold text-gray-500 shrink-0">hiragan:</span>
@@ -177,6 +181,16 @@
             inputEl.classList.add('border-gray-300');
         }
 
+        function showCorrectionNotice(original, corrected) {
+            document.getElementById('correctionOriginal').textContent = original;
+            document.getElementById('correctionFixed').textContent = corrected;
+            document.getElementById('correctionNotice').classList.remove('hidden');
+        }
+
+        function hideCorrectionNotice() {
+            document.getElementById('correctionNotice').classList.add('hidden');
+        }
+
         function clearInputPhrase() {
             const phraseInput = document.getElementById('phraseInput');
             phraseInput.value = "";
@@ -264,19 +278,31 @@
             btn.disabled = true;
             btn.textContent = "Thinking...";
 
-            const prompt = `Make a meaningful, natural short sentence using the phrase "${input}".
-Return the response ONLY as a valid JSON object with the keys "hiragana", "katakana", "roman", and "cn".
-Rules:
-- "hiragana": the complete sentence in pure hiragana (no kanji).
-- "katakana": the complete sentence in pure katakana.
-- "roman": the complete sentence in lowercase Romanization with normal spaces between words.
-- "cn": the complete sentence translated into Traditional Chinese.
+            const prompt = `The user wants a Japanese sentence using the phrase: "${input}".
+
+Step 1 — Spell-check: Decide if "${input}" is correctly written Japanese. Only mark it invalid if it is a clear misspelling that does not form a real word or phrase (e.g. さもい instead of さむい). Do NOT flag valid but uncommon words.
+
+Step 2 — Generate: Create a natural, short Japanese sentence using the corrected phrase (or the original if it was already correct).
+
+Return ONLY a valid JSON object with these keys:
+- "inputValid": true if the original input is correct, false if it was corrected
+- "correctedInput": the corrected spelling when inputValid is false; otherwise repeat the original input exactly
+- "hiragana": the complete sentence in pure hiragana (no kanji)
+- "katakana": the complete sentence in pure katakana
+- "roman": the complete sentence in lowercase Romanization with normal spaces between words
+- "cn": the complete sentence translated into Traditional Chinese
 Do not include any markdown styling or extra text outside the JSON structure.`;
 
             try {
                 const result = await fetchFromGemini(prompt);
-                updateOutputDisplay(result.hiragana, result.katakana, result.roman, result.cn, input);
-                saveToHistory(input, result);
+                const effectiveInput = (!result.inputValid && result.correctedInput) ? result.correctedInput : input;
+                if (!result.inputValid && result.correctedInput && result.correctedInput !== input) {
+                    showCorrectionNotice(input, result.correctedInput);
+                } else {
+                    hideCorrectionNotice();
+                }
+                updateOutputDisplay(result.hiragana, result.katakana, result.roman, result.cn, effectiveInput);
+                saveToHistory(effectiveInput, result);
             } catch (error) {
                 console.error(error);
                 alert("Failed to generate sentence. Please try again.");
@@ -307,6 +333,7 @@ Rules:
 Do not include any markdown styling or extra text outside the JSON structure.`;
 
             try {
+                hideCorrectionNotice();
                 const result = await fetchFromGemini(prompt);
                 const trackingLabel = `${currentInputPhrase} (Negative)`;
                 updateOutputDisplay(result.hiragana, result.katakana, result.roman, result.cn, trackingLabel);
