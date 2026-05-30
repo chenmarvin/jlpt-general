@@ -582,6 +582,44 @@ main { max-width: 900px; margin: 0 auto; padding: 24px; }
 .help-item-text { font-size: 0.875rem; line-height: 1.55; color: var(--text); }
 .help-item-text strong { color: var(--text); font-weight: 700; }
 
+/* Seen count */
+.seen-count {
+  font-size: 0.8rem;
+  color: var(--aff);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Exercise controls (shuffle / kbd hint / reset) */
+.exercise-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.exer-ctrl-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.exer-ctrl-btn:hover { border-color: var(--primary); color: var(--primary); }
+.exer-ctrl-btn.active { border-color: var(--primary); color: var(--primary); background: var(--primary-faint); }
+.exer-ctrl-btn.danger:hover { border-color: var(--neg); color: var(--neg); }
+.kbd-hint {
+  font-size: 0.72rem;
+  color: var(--text-light);
+  text-align: center;
+  flex: 1;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   header { padding: 16px; }
@@ -711,7 +749,11 @@ const i18n = {
     demonstrative: '指示代名詞',
     location: '位置・方向',
     weather: '天気表現',
-    body: '体・健康'
+    body: '体・健康',
+    exerShuffle: '🔀 隨機',
+    exerReset: '重置進度',
+    exerSeen: '已看 {n}/{total}',
+    kbdHint: 'Space＝顯示答案　← →＝切換題目'
   },
   en: {
     appTitle: 'Japanese Sentence Practice',
@@ -785,7 +827,11 @@ const i18n = {
     demonstrative: 'Demonstratives',
     location: 'Locations & Directions',
     weather: 'Weather',
-    body: 'Body & Health'
+    body: 'Body & Health',
+    exerShuffle: '🔀 Shuffle',
+    exerReset: 'Reset',
+    exerSeen: 'Seen {n}/{total}',
+    kbdHint: 'Space = Reveal answer　　← → = Navigate'
   }
 };
 
@@ -2457,9 +2503,52 @@ let mode = 'tutor';   // 'tutor' | 'exercise'
 let sentType = 'aff'; // 'aff' | 'neg'
 let exerIdx = 0;
 let exerRevealed = false;
+let isShuffled = false;
+let shuffleOrder = [];
 
 function t(key) { return i18n[lang][key] || key; }
 function tm(obj) { return obj[lang] || obj.zh || ''; }
+
+// =====================================================================
+// Shuffle helpers
+// =====================================================================
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function toggleShuffle() {
+  const g = groups.find(x => x.id === activeGroup);
+  isShuffled = !isShuffled;
+  shuffleOrder = isShuffled
+    ? shuffleArray(g.vocab.map((_, i) => i))
+    : g.vocab.map((_, i) => i);
+  exerIdx = 0;
+  exerRevealed = false;
+  render();
+}
+
+// =====================================================================
+// Progress tracking (localStorage)
+// =====================================================================
+function seenKey(id) { return 'jlpt-seen-' + id; }
+function loadSeen(id) {
+  try { return new Set(JSON.parse(localStorage.getItem(seenKey(id)) || '[]')); }
+  catch { return new Set(); }
+}
+function markSeen(id, idx) {
+  const seen = loadSeen(id);
+  seen.add(idx);
+  localStorage.setItem(seenKey(id), JSON.stringify([...seen]));
+}
+function resetProgress() {
+  localStorage.removeItem(seenKey(activeGroup));
+  render();
+}
 
 // =====================================================================
 // Render helpers
@@ -2595,16 +2684,19 @@ function renderTutor(g) {
 function renderExercise(g) {
   const items = g.vocab;
   const total = items.length;
-  const item = items[exerIdx];
+  const actualIdx = isShuffled ? shuffleOrder[exerIdx] : exerIdx;
+  const item = items[actualIdx];
   const stem = item.kanji.replace('する','').replace('くる','').replace('来る','');
 
   const prompt = sentType === 'both' ? t('exerPromptBoth') : sentType === 'aff' ? t('exerPromptAff') : t('exerPromptNeg');
   const badgeClass = sentType === 'both' ? 'both' : sentType;
   const badgeLabel = sentType === 'both' ? t('typeBoth') : sentType === 'aff' ? t('typeAff') : t('typeNeg');
   const pct = Math.round(((exerIdx + 1) / total) * 100);
+  const seen = loadSeen(g.id);
+  const seenCount = seen.size;
 
   function matchSent(arr) {
-    return arr.find(s => s.ja.includes(stem)) || arr[exerIdx % arr.length];
+    return arr.find(s => s.ja.includes(stem)) || arr[actualIdx % arr.length];
   }
 
   let answerHtml = '';
@@ -2652,6 +2744,12 @@ function renderExercise(g) {
     <div class="exercise-nav">
       <button class="nav-btn" onclick="exerNav(-1)" ${exerIdx === 0 ? 'disabled' : ''}>${t('exerPrev')}</button>
       <button class="nav-btn" onclick="exerNav(1)" ${exerIdx === total - 1 ? 'disabled' : ''}>${t('exerNext')}</button>
+    </div>
+    <div class="exercise-controls">
+      <button class="exer-ctrl-btn ${isShuffled ? 'active' : ''}" onclick="toggleShuffle()">${t('exerShuffle')}</button>
+      <span class="kbd-hint">${t('kbdHint')}</span>
+      <span class="seen-count">${t('exerSeen').replace('{n}', seenCount).replace('{total}', total)}</span>
+      <button class="exer-ctrl-btn danger" onclick="resetProgress()">${t('exerReset')}</button>
     </div>
   </div>`;
 }
@@ -2731,6 +2829,8 @@ function setGroup(id) {
   activeGroup = id;
   exerIdx = 0;
   exerRevealed = false;
+  isShuffled = false;
+  shuffleOrder = [];
   renderGroupNav();
   render();
 }
@@ -2739,6 +2839,8 @@ function setMode(m) {
   mode = m;
   exerIdx = 0;
   exerRevealed = false;
+  isShuffled = false;
+  shuffleOrder = [];
   document.getElementById('mode-tutor').classList.toggle('active', m === 'tutor');
   document.getElementById('mode-exercise').classList.toggle('active', m === 'exercise');
   render();
@@ -2755,6 +2857,11 @@ function setSentType(type) {
 }
 
 function toggleReveal() {
+  if (!exerRevealed) {
+    const g = groups.find(x => x.id === activeGroup);
+    const actualIdx = isShuffled ? shuffleOrder[exerIdx] : exerIdx;
+    markSeen(activeGroup, actualIdx);
+  }
   exerRevealed = !exerRevealed;
   render();
 }
@@ -2765,6 +2872,17 @@ function exerNav(dir) {
   exerRevealed = false;
   render();
 }
+
+// =====================================================================
+// Keyboard shortcuts
+// =====================================================================
+document.addEventListener('keydown', e => {
+  if (mode !== 'exercise') return;
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === ' ') { e.preventDefault(); toggleReveal(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); exerNav(-1); }
+  if (e.key === 'ArrowRight') { e.preventDefault(); exerNav(1); }
+});
 
 // =====================================================================
 // Init
