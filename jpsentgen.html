@@ -323,7 +323,7 @@ Do not include any markdown styling or extra text outside the JSON structure.`;
                 saveToHistory(effectiveInput, result);
             } catch (error) {
                 console.error(error);
-                alert("Failed to generate sentence. Please try again.");
+                alert(`Failed to generate sentence: ${error.message}`);
             } finally {
                 btn.disabled = false;
                 btn.textContent = "Generate";
@@ -358,7 +358,7 @@ Do not include any markdown styling or extra text outside the JSON structure.`;
                 saveToHistory(trackingLabel, result);
             } catch (error) {
                 console.error(error);
-                alert("Failed to negate the sentence.");
+                alert(`Failed to negate the sentence: ${error.message}`);
             } finally {
                 btn.disabled = false;
                 btn.textContent = "🚫 Negate";
@@ -416,7 +416,8 @@ Do not include any markdown styling or extra text outside the JSON structure.`;
                 })
             });
             const data = await response.json();
-            if (data.type === 'error') throw new Error(data.error.message);
+            if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
+            if (!data.content?.[0]?.text) throw new Error(`Unexpected Claude response: ${JSON.stringify(data)}`);
             return extractJSON(data.content[0].text.trim());
         }
 
