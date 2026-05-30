@@ -30,7 +30,7 @@
                 <button onclick="loadKeyFile()" class="bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded-lg font-medium transition-colors">
                     📁 Select Key File
                 </button>
-                <span id="keyStatus" class="text-xs text-amber-700 italic">No file selected (Please select a .txt file containing your API key)</span>
+                <span id="keyStatus" class="text-xs text-amber-700 italic">No file selected — load your Gemini API key (.txt)</span>
             </div>
         </div>
 
@@ -120,10 +120,15 @@
         let currentSentenceText = "";
         let currentInputPhrase = "";
 
+        const KEY_HINTS = {
+            gemini: "No file selected — load your Gemini API key (.txt)",
+            claude: "No file selected — load your Anthropic API key (.txt, starts with sk-ant-)"
+        };
+
         function setProvider(value) {
             provider = value;
             apiKey = "";
-            document.getElementById('keyStatus').textContent = "No file selected (Please select a .txt file containing your API key)";
+            document.getElementById('keyStatus').textContent = KEY_HINTS[value];
             document.getElementById('keyStatus').className = "text-xs text-amber-700 italic";
         }
         let historyData = [];
@@ -274,8 +279,14 @@
                 // zero-width spaces, and any other invisible non-ASCII bytes.
                 apiKey = text.replace(/[^\x21-\x7E]/g, "");
 
-                document.getElementById('keyStatus').textContent = `Loaded: ${file.name}`;
-                document.getElementById('keyStatus').className = "text-xs text-green-600 font-medium";
+                // Warn if the key looks like it belongs to the other provider
+                if (provider === 'claude' && !apiKey.startsWith('sk-ant-')) {
+                    document.getElementById('keyStatus').textContent = `⚠️ ${file.name} — key doesn't start with sk-ant-, may be wrong key`;
+                    document.getElementById('keyStatus').className = "text-xs text-red-600 font-medium";
+                } else {
+                    document.getElementById('keyStatus').textContent = `✓ Loaded: ${file.name}`;
+                    document.getElementById('keyStatus').className = "text-xs text-green-600 font-medium";
+                }
             } catch (err) {
                 if (err.name !== 'AbortError') alert("Failed to read key file.");
             }
