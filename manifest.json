@@ -1,0 +1,27 @@
+{
+  "name": "JLPT N5 日語練習",
+  "short_name": "JLPT N5",
+  "description": "JLPT N5 vocabulary and grammar study app",
+  "start_url": "./jlpt-n5-study.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#3730a3",
+  "theme_color": "#3730a3",
+  "lang": "zh-TW",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
