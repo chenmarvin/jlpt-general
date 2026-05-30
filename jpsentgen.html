@@ -269,7 +269,10 @@
 
                 const file = await fileHandle.getFile();
                 const text = await file.text();
-                apiKey = text.trim().replace(/[\r\n\t\s]/g, "");
+                // Keep only printable ASCII (0x21–0x7E) so the key is safe
+                // as an HTTP header value. This strips BOM, soft hyphens,
+                // zero-width spaces, and any other invisible non-ASCII bytes.
+                apiKey = text.replace(/[^\x21-\x7E]/g, "");
 
                 document.getElementById('keyStatus').textContent = `Loaded: ${file.name}`;
                 document.getElementById('keyStatus').className = "text-xs text-green-600 font-medium";
