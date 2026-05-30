@@ -2169,6 +2169,282 @@ const groups = [
         { ja:'毎日 働かなくても いいです。', hira:'まいにち はたらかなくても いいです。', kata:'マイニチ ハタラカナクテモ イイデス。', rom:'Mainichi hatarakanakute mo ii desu.', mean:{zh:'不必每天工作。',en:'You don\'t have to work every day.'} }
       ]
     }
+  },
+
+  // ----------------------------------------------------------------
+  // DEMONSTRATIVES (指示代名詞)
+  // ----------------------------------------------------------------
+  {
+    id: 'demonstrative',
+    icon: '👉',
+    nameKey: 'demonstrative',
+    pattern: {
+      aff: {
+        formula: '〔指示詞〕は 〔名詞〕です',
+        formulaEn: '[Demonstrative] + wa + [Noun] + desu',
+        note: { zh: '用「これ/それ/あれ」指稱事物，「ここ/そこ/あそこ」指稱場所，加「です」表示肯定。', en: 'Use "kore/sore/are" for things and "koko/soko/asoko" for places, followed by "desu" for affirmative.' }
+      },
+      neg: {
+        formula: '〔指示詞〕は 〔名詞〕では ありません',
+        formulaEn: '[Demonstrative] + wa + [Noun] + dewa arimasen',
+        note: { zh: '否定形加「ではありません」（正式）或「じゃありません」（口語）。', en: 'Use "dewa arimasen" (formal) or "ja arimasen" (informal) for negation.' }
+      }
+    },
+    conj: null,
+    vocab: [
+      { kanji:'これ', hira:'これ', kata:'コレ', rom:'kore', mean:{zh:'這個',en:'this'} },
+      { kanji:'それ', hira:'それ', kata:'ソレ', rom:'sore', mean:{zh:'那個',en:'that'} },
+      { kanji:'あれ', hira:'あれ', kata:'アレ', rom:'are', mean:{zh:'那個(遠)',en:'that over there'} },
+      { kanji:'どれ', hira:'どれ', kata:'ドレ', rom:'dore', mean:{zh:'哪個',en:'which one'} },
+      { kanji:'ここ', hira:'ここ', kata:'ここ', rom:'koko', mean:{zh:'這裡',en:'here'} },
+      { kanji:'そこ', hira:'そこ', kata:'ソコ', rom:'soko', mean:{zh:'那裡',en:'there'} },
+      { kanji:'あそこ', hira:'あそこ', kata:'アソコ', rom:'asoko', mean:{zh:'那裡(遠)',en:'over there'} },
+      { kanji:'どこ', hira:'どこ', kata:'ドコ', rom:'doko', mean:{zh:'哪裡',en:'where'} },
+      { kanji:'こちら', hira:'こちら', kata:'コチラ', rom:'kochira', mean:{zh:'這邊(禮貌)',en:'this way'} },
+      { kanji:'そちら', hira:'そちら', kata:'ソチラ', rom:'sochira', mean:{zh:'那邊(禮貌)',en:'that way'} },
+      { kanji:'あちら', hira:'あちら', kata:'アチラ', rom:'achira', mean:{zh:'那邊(遠禮貌)',en:'that way over there'} },
+      { kanji:'どちら', hira:'どちら', kata:'ドチラ', rom:'dochira', mean:{zh:'哪邊',en:'which way'} },
+      { kanji:'この', hira:'この', kata:'コノ', rom:'kono', mean:{zh:'這個(修飾)',en:'this'} },
+      { kanji:'その', hira:'その', kata:'ソノ', rom:'sono', mean:{zh:'那個(修飾)',en:'that'} },
+      { kanji:'あの', hira:'あの', kata:'アノ', rom:'ano', mean:{zh:'那個(遠修飾)',en:'that over there'} },
+      { kanji:'どの', hira:'どの', kata:'ドノ', rom:'dono', mean:{zh:'哪個(修飾)',en:'which'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'これは 雑誌 です。', hira:'これは ざっし です。', kata:'コレワ ザッシ デス。', rom:'Kore wa zasshi desu.', mean:{zh:'這是雜誌。',en:'This is a magazine.'} },
+        { ja:'それは 私の 傘 です。', hira:'それは わたしの かさ です。', kata:'ソレワ ワタシノ カサ デス。', rom:'Sore wa watashi no kasa desu.', mean:{zh:'那是我的傘。',en:'That is my umbrella.'} },
+        { ja:'あれは 学校 です。', hira:'あれは がっこう です。', kata:'アレワ ガッコウ デス。', rom:'Are wa gakkō desu.', mean:{zh:'那是學校。',en:'That over there is a school.'} },
+        { ja:'ここは 図書館 です。', hira:'ここは としょかん です。', kata:'ここワ トショカン デス。', rom:'Koko wa toshokan desu.', mean:{zh:'這裡是圖書館。',en:'This is the library.'} },
+        { ja:'そこは 私の 部屋 です。', hira:'そこは わたしの へや です。', kata:'ソコワ ワタシノ ヘヤ デス。', rom:'Soko wa watashi no heya desu.', mean:{zh:'那裡是我的房間。',en:'That is my room.'} },
+        { ja:'あそこは 駅 です。', hira:'あそこは えき です。', kata:'アソコワ エキ デス。', rom:'Asoko wa eki desu.', mean:{zh:'那裡是車站。',en:'That over there is the station.'} },
+        { ja:'これは 田中さんの かばん です。', hira:'これは たなかさんの かばん です。', kata:'コレワ タナカサンノ カバン デス。', rom:'Kore wa Tanaka-san no kaban desu.', mean:{zh:'這是田中先生的包包。',en:'This is Mr./Ms. Tanaka\'s bag.'} },
+        { ja:'この かばんは 新しい です。', hira:'この かばんは あたらしい です。', kata:'コノ カバンワ アタラシイ デス。', rom:'Kono kaban wa atarashii desu.', mean:{zh:'這個包包是新的。',en:'This bag is new.'} },
+        { ja:'あの 人は 先生 です。', hira:'あの ひとは せんせい です。', kata:'アノ ヒトワ センセイ デス。', rom:'Ano hito wa sensei desu.', mean:{zh:'那個人是老師。',en:'That person is a teacher.'} },
+        { ja:'こちらは 山田さん です。', hira:'こちらは やまださん です。', kata:'コチラワ ヤマダサン デス。', rom:'Kochira wa Yamada-san desu.', mean:{zh:'這位是山田先生。',en:'This is Mr./Ms. Yamada.'} },
+        { ja:'そちらは 受付 です。', hira:'そちらは うけつけ です。', kata:'ソチラワ ウケツケ デス。', rom:'Sochira wa uketsuke desu.', mean:{zh:'那邊是服務台。',en:'That is the reception desk.'} },
+        { ja:'この 映画は 新しい です。', hira:'この えいがは あたらしい です。', kata:'コノ エイガワ アタラシイ デス。', rom:'Kono eiga wa atarashii desu.', mean:{zh:'這部電影是新的。',en:'This movie is new.'} },
+        { ja:'あちらが 出口 です。', hira:'あちらが でぐち です。', kata:'アチラガ デグチ デス。', rom:'Achira ga deguchi desu.', mean:{zh:'那邊是出口。',en:'That way is the exit.'} },
+        { ja:'どれが あなたの かばん ですか。', hira:'どれが あなたの かばん ですか。', kata:'ドレガ アナタノ カバン デスカ。', rom:'Dore ga anata no kaban desu ka.', mean:{zh:'哪一個是你的包包？',en:'Which one is your bag?'} },
+        { ja:'その レストランは 有名 です。', hira:'その れすとらんは ゆうめい です。', kata:'ソノ レストランワ ユウメイ デス。', rom:'Sono resutoran wa yūmei desu.', mean:{zh:'那家餐廳很有名。',en:'That restaurant is famous.'} },
+        { ja:'どこが 田中さんの 学校 ですか。', hira:'どこが たなかさんの がっこう ですか。', kata:'ドコガ タナカサンノ ガッコウ デスカ。', rom:'Doko ga Tanaka-san no gakkō desu ka.', mean:{zh:'哪裡是田中先生的學校？',en:'Where is Mr./Ms. Tanaka\'s school?'} }
+      ],
+      neg: [
+        { ja:'これは 雑誌 では ありません。', hira:'これは ざっし では ありません。', kata:'コレワ ザッシ デワ アリマセン。', rom:'Kore wa zasshi dewa arimasen.', mean:{zh:'這不是雜誌。',en:'This is not a magazine.'} },
+        { ja:'それは 私の 傘 では ありません。', hira:'それは わたしの かさ では ありません。', kata:'ソレワ ワタシノ カサ デワ アリマセン。', rom:'Sore wa watashi no kasa dewa arimasen.', mean:{zh:'那不是我的傘。',en:'That is not my umbrella.'} },
+        { ja:'あれは 学校 では ありません。', hira:'あれは がっこう では ありません。', kata:'アレワ ガッコウ デワ アリマセン。', rom:'Are wa gakkō dewa arimasen.', mean:{zh:'那不是學校。',en:'That over there is not a school.'} },
+        { ja:'ここは 図書館 では ありません。', hira:'ここは としょかん では ありません。', kata:'ここワ トショカン デワ アリマセン。', rom:'Koko wa toshokan dewa arimasen.', mean:{zh:'這裡不是圖書館。',en:'This is not the library.'} },
+        { ja:'そこは 私の 部屋 では ありません。', hira:'そこは わたしの へや では ありません。', kata:'ソコワ ワタシノ ヘヤ デワ アリマセン。', rom:'Soko wa watashi no heya dewa arimasen.', mean:{zh:'那裡不是我的房間。',en:'That is not my room.'} },
+        { ja:'あそこは 駅 では ありません。', hira:'あそこは えき では ありません。', kata:'アソコワ エキ デワ アリマセン。', rom:'Asoko wa eki dewa arimasen.', mean:{zh:'那裡不是車站。',en:'That over there is not the station.'} },
+        { ja:'これは 田中さんの かばん では ありません。', hira:'これは たなかさんの かばん では ありません。', kata:'コレワ タナカサンノ カバン デワ アリマセン。', rom:'Kore wa Tanaka-san no kaban dewa arimasen.', mean:{zh:'這不是田中先生的包包。',en:'This is not Mr./Ms. Tanaka\'s bag.'} },
+        { ja:'この かばんは 新しくない です。', hira:'この かばんは あたらしくない です。', kata:'コノ カバンワ アタラシクナイ デス。', rom:'Kono kaban wa atarashiku nai desu.', mean:{zh:'這個包包不是新的。',en:'This bag is not new.'} },
+        { ja:'あの 人は 先生 では ありません。', hira:'あの ひとは せんせい では ありません。', kata:'アノ ヒトワ センセイ デワ アリマセン。', rom:'Ano hito wa sensei dewa arimasen.', mean:{zh:'那個人不是老師。',en:'That person is not a teacher.'} },
+        { ja:'こちらは 山田さん では ありません。', hira:'こちらは やまださん では ありません。', kata:'コチラワ ヤマダサン デワ アリマセン。', rom:'Kochira wa Yamada-san dewa arimasen.', mean:{zh:'這位不是山田先生。',en:'This is not Mr./Ms. Yamada.'} },
+        { ja:'そちらは 受付 では ありません。', hira:'そちらは うけつけ では ありません。', kata:'ソチラワ ウケツケ デワ アリマセン。', rom:'Sochira wa uketsuke dewa arimasen.', mean:{zh:'那邊不是服務台。',en:'That is not the reception desk.'} },
+        { ja:'この 映画は 新しくない です。', hira:'この えいがは あたらしくない です。', kata:'コノ エイガワ アタラシクナイ デス。', rom:'Kono eiga wa atarashiku nai desu.', mean:{zh:'這部電影不是新的。',en:'This movie is not new.'} },
+        { ja:'あちらは 出口 では ありません。', hira:'あちらは でぐち では ありません。', kata:'アチラワ デグチ デワ アリマセン。', rom:'Achira wa deguchi dewa arimasen.', mean:{zh:'那邊不是出口。',en:'That way is not the exit.'} },
+        { ja:'それは 私の かばん では ありません。', hira:'それは わたしの かばん では ありません。', kata:'ソレワ ワタシノ カバン デワ アリマセン。', rom:'Sore wa watashi no kaban dewa arimasen.', mean:{zh:'那不是我的包包。',en:'That is not my bag.'} },
+        { ja:'その レストランは 有名 では ありません。', hira:'その れすとらんは ゆうめい では ありません。', kata:'ソノ レストランワ ユウメイ デワ アリマセン。', rom:'Sono resutoran wa yūmei dewa arimasen.', mean:{zh:'那家餐廳不有名。',en:'That restaurant is not famous.'} },
+        { ja:'どこも 田中さんの 学校 では ありません。', hira:'どこも たなかさんの がっこう では ありません。', kata:'ドコモ タナカサンノ ガッコウ デワ アリマセン。', rom:'Doko mo Tanaka-san no gakkō dewa arimasen.', mean:{zh:'哪裡都不是田中先生的學校。',en:'Nowhere is Mr./Ms. Tanaka\'s school.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // LOCATION (位置・方向)
+  // ----------------------------------------------------------------
+  {
+    id: 'location',
+    icon: '📍',
+    nameKey: 'location',
+    pattern: {
+      aff: {
+        formula: '〔名詞〕の〔方位〕に あります／います',
+        formulaEn: '[Noun] + no + [direction] + ni + arimasu/imasu',
+        note: { zh: '「の」表示所屬，「に」表示存在位置。事物用「あります」，人或動物用「います」。', en: '"no" shows possession/relation; "ni" marks location. Use "arimasu" for objects, "imasu" for people/animals.' }
+      },
+      neg: {
+        formula: '〔名詞〕の〔方位〕に ありません／いません',
+        formulaEn: '[Noun] + no + [direction] + ni + arimasen/imasen',
+        note: { zh: '否定形將「あります」→「ありません」，「います」→「いません」。', en: 'Replace "arimasu" with "arimasen", "imasu" with "imasen" for the negative.' }
+      }
+    },
+    conj: null,
+    vocab: [
+      { kanji:'上', hira:'うえ', kata:'ウエ', rom:'ue', mean:{zh:'上面',en:'above; on top'} },
+      { kanji:'下', hira:'した', kata:'シタ', rom:'shita', mean:{zh:'下面',en:'below; under'} },
+      { kanji:'前', hira:'まえ', kata:'マエ', rom:'mae', mean:{zh:'前面',en:'in front'} },
+      { kanji:'後ろ', hira:'うしろ', kata:'ウシロ', rom:'ushiro', mean:{zh:'後面',en:'behind'} },
+      { kanji:'右', hira:'みぎ', kata:'ミギ', rom:'migi', mean:{zh:'右邊',en:'right'} },
+      { kanji:'左', hira:'ひだり', kata:'ヒダリ', rom:'hidari', mean:{zh:'左邊',en:'left'} },
+      { kanji:'中', hira:'なか', kata:'ナカ', rom:'naka', mean:{zh:'裡面；中間',en:'inside; middle'} },
+      { kanji:'外', hira:'そと', kata:'ソト', rom:'soto', mean:{zh:'外面',en:'outside'} },
+      { kanji:'隣', hira:'となり', kata:'トナリ', rom:'tonari', mean:{zh:'旁邊；隔壁',en:'next to; next door'} },
+      { kanji:'近く', hira:'ちかく', kata:'チカク', rom:'chikaku', mean:{zh:'附近',en:'nearby'} },
+      { kanji:'間', hira:'あいだ', kata:'アイダ', rom:'aida', mean:{zh:'之間',en:'between'} },
+      { kanji:'向かい', hira:'むかい', kata:'ムカイ', rom:'mukai', mean:{zh:'對面',en:'across from; opposite'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'机の 上に 本が あります。', hira:'つくえの うえに ほんが あります。', kata:'ツクエノ ウエニ ホンガ アリマス。', rom:'Tsukue no ue ni hon ga arimasu.', mean:{zh:'桌子上有書。',en:'There is a book on the desk.'} },
+        { ja:'いすの 下に ねこが います。', hira:'いすの したに ねこが います。', kata:'イスノ シタニ ネコガ イマス。', rom:'Isu no shita ni neko ga imasu.', mean:{zh:'椅子下有貓。',en:'There is a cat under the chair.'} },
+        { ja:'学校の 前に 公園が あります。', hira:'がっこうの まえに こうえんが あります。', kata:'ガッコウノ マエニ コウエンガ アリマス。', rom:'Gakkō no mae ni kōen ga arimasu.', mean:{zh:'學校前面有公園。',en:'There is a park in front of the school.'} },
+        { ja:'私の 後ろに 山田さんが います。', hira:'わたしの うしろに やまださんが います。', kata:'ワタシノ ウシロニ ヤマダサンガ イマス。', rom:'Watashi no ushiro ni Yamada-san ga imasu.', mean:{zh:'我的後面有山田先生。',en:'Mr./Ms. Yamada is behind me.'} },
+        { ja:'銀行の 右に 病院が あります。', hira:'ぎんこうの みぎに びょういんが あります。', kata:'ギンコウノ ミギニ ビョウインガ アリマス。', rom:'Ginkō no migi ni byōin ga arimasu.', mean:{zh:'銀行右邊有醫院。',en:'There is a hospital to the right of the bank.'} },
+        { ja:'駅の 左に コンビニが あります。', hira:'えきの ひだりに こんびにが あります。', kata:'エキノ ヒダリニ コンビニガ アリマス。', rom:'Eki no hidari ni konbini ga arimasu.', mean:{zh:'車站左邊有便利商店。',en:'There is a convenience store to the left of the station.'} },
+        { ja:'かばんの 中に 財布が あります。', hira:'かばんの なかに さいふが あります。', kata:'カバンノ ナカニ サイフガ アリマス。', rom:'Kaban no naka ni saifu ga arimasu.', mean:{zh:'包包裡有錢包。',en:'There is a wallet inside the bag.'} },
+        { ja:'家の 外に 犬が います。', hira:'いえの そとに いぬが います。', kata:'イエノ ソトニ イヌガ イマス。', rom:'Ie no soto ni inu ga imasu.', mean:{zh:'家外面有狗。',en:'There is a dog outside the house.'} },
+        { ja:'私の 隣に 先生が います。', hira:'わたしの となりに せんせいが います。', kata:'ワタシノ トナリニ センセイガ イマス。', rom:'Watashi no tonari ni sensei ga imasu.', mean:{zh:'我旁邊有老師。',en:'The teacher is next to me.'} },
+        { ja:'駅の 近くに スーパーが あります。', hira:'えきの ちかくに すーぱーが あります。', kata:'エキノ チカクニ スーパーガ アリマス。', rom:'Eki no chikaku ni sūpā ga arimasu.', mean:{zh:'車站附近有超市。',en:'There is a supermarket near the station.'} },
+        { ja:'学校と 公園の 間に 川が あります。', hira:'がっこうと こうえんの あいだに かわが あります。', kata:'ガッコウト コウエンノ アイダニ カワガ アリマス。', rom:'Gakkō to kōen no aida ni kawa ga arimasu.', mean:{zh:'學校和公園之間有河。',en:'There is a river between the school and the park.'} },
+        { ja:'郵便局の 向かいに 図書館が あります。', hira:'ゆうびんきょくの むかいに としょかんが あります。', kata:'ユウビンキョクノ ムカイニ トショカンガ アリマス。', rom:'Yūbinkyoku no mukai ni toshokan ga arimasu.', mean:{zh:'郵局對面有圖書館。',en:'There is a library across from the post office.'} }
+      ],
+      neg: [
+        { ja:'机の 上に 本が ありません。', hira:'つくえの うえに ほんが ありません。', kata:'ツクエノ ウエニ ホンガ アリマセン。', rom:'Tsukue no ue ni hon ga arimasen.', mean:{zh:'桌子上沒有書。',en:'There is no book on the desk.'} },
+        { ja:'いすの 下に ねこが いません。', hira:'いすの したに ねこが いません。', kata:'イスノ シタニ ネコガ イマセン。', rom:'Isu no shita ni neko ga imasen.', mean:{zh:'椅子下沒有貓。',en:'There is no cat under the chair.'} },
+        { ja:'学校の 前に 公園が ありません。', hira:'がっこうの まえに こうえんが ありません。', kata:'ガッコウノ マエニ コウエンガ アリマセン。', rom:'Gakkō no mae ni kōen ga arimasen.', mean:{zh:'學校前面沒有公園。',en:'There is no park in front of the school.'} },
+        { ja:'私の 後ろに 山田さんが いません。', hira:'わたしの うしろに やまださんが いません。', kata:'ワタシノ ウシロニ ヤマダサンガ イマセン。', rom:'Watashi no ushiro ni Yamada-san ga imasen.', mean:{zh:'我的後面沒有山田先生。',en:'Mr./Ms. Yamada is not behind me.'} },
+        { ja:'銀行の 右に 病院が ありません。', hira:'ぎんこうの みぎに びょういんが ありません。', kata:'ギンコウノ ミギニ ビョウインガ アリマセン。', rom:'Ginkō no migi ni byōin ga arimasen.', mean:{zh:'銀行右邊沒有醫院。',en:'There is no hospital to the right of the bank.'} },
+        { ja:'駅の 左に コンビニが ありません。', hira:'えきの ひだりに こんびにが ありません。', kata:'エキノ ヒダリニ コンビニガ アリマセン。', rom:'Eki no hidari ni konbini ga arimasen.', mean:{zh:'車站左邊沒有便利商店。',en:'There is no convenience store to the left of the station.'} },
+        { ja:'かばんの 中に 財布が ありません。', hira:'かばんの なかに さいふが ありません。', kata:'カバンノ ナカニ サイフガ アリマセン。', rom:'Kaban no naka ni saifu ga arimasen.', mean:{zh:'包包裡沒有錢包。',en:'There is no wallet inside the bag.'} },
+        { ja:'家の 外に 犬が いません。', hira:'いえの そとに いぬが いません。', kata:'イエノ ソトニ イヌガ イマセン。', rom:'Ie no soto ni inu ga imasen.', mean:{zh:'家外面沒有狗。',en:'There is no dog outside the house.'} },
+        { ja:'私の 隣に 先生が いません。', hira:'わたしの となりに せんせいが いません。', kata:'ワタシノ トナリニ センセイガ イマセン。', rom:'Watashi no tonari ni sensei ga imasen.', mean:{zh:'我旁邊沒有老師。',en:'The teacher is not next to me.'} },
+        { ja:'駅の 近くに スーパーが ありません。', hira:'えきの ちかくに すーぱーが ありません。', kata:'エキノ チカクニ スーパーガ アリマセン。', rom:'Eki no chikaku ni sūpā ga arimasen.', mean:{zh:'車站附近沒有超市。',en:'There is no supermarket near the station.'} },
+        { ja:'学校と 公園の 間に 川が ありません。', hira:'がっこうと こうえんの あいだに かわが ありません。', kata:'ガッコウト コウエンノ アイダニ カワガ アリマセン。', rom:'Gakkō to kōen no aida ni kawa ga arimasen.', mean:{zh:'學校和公園之間沒有河。',en:'There is no river between the school and the park.'} },
+        { ja:'郵便局の 向かいに 図書館が ありません。', hira:'ゆうびんきょくの むかいに としょかんが ありません。', kata:'ユウビンキョクノ ムカイニ トショカンガ アリマセン。', rom:'Yūbinkyoku no mukai ni toshokan ga arimasen.', mean:{zh:'郵局對面沒有圖書館。',en:'There is no library across from the post office.'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // WEATHER (天気表現)
+  // ----------------------------------------------------------------
+  {
+    id: 'weather',
+    icon: '🌤',
+    nameKey: 'weather',
+    pattern: {
+      aff: {
+        formula: '今日は〔天気〕です ／ 〔気候〕が〔形容詞〕です',
+        formulaEn: 'Kyō wa [weather] desu / [climate] ga [adj] desu',
+        note: { zh: '描述天氣用「は〜です」，形容詞也可直接搭配天氣詞彙。', en: 'Describe weather with "wa ~ desu". Adjectives can directly modify weather nouns.' }
+      },
+      neg: {
+        formula: '今日は〔天気〕では ありません ／ 〔形容詞〕くない です',
+        formulaEn: 'Kyō wa [weather] dewa arimasen / [adj-stem] + ku nai desu',
+        note: { zh: '名詞天氣詞加「ではありません」，形容詞天氣詞用「くないです」否定。', en: 'Negate noun-weather with "dewa arimasen"; negate i-adj weather with "ku nai desu".' }
+      }
+    },
+    conj: null,
+    vocab: [
+      { kanji:'晴れ', hira:'はれ', kata:'ハレ', rom:'hare', mean:{zh:'晴天',en:'sunny'} },
+      { kanji:'曇り', hira:'くもり', kata:'クモリ', rom:'kumori', mean:{zh:'陰天',en:'cloudy'} },
+      { kanji:'雨', hira:'あめ', kata:'アメ', rom:'ame', mean:{zh:'雨',en:'rain'} },
+      { kanji:'雪', hira:'ゆき', kata:'ユキ', rom:'yuki', mean:{zh:'雪',en:'snow'} },
+      { kanji:'風', hira:'かぜ', kata:'カゼ', rom:'kaze', mean:{zh:'風',en:'wind'} },
+      { kanji:'天気', hira:'てんき', kata:'テンキ', rom:'tenki', mean:{zh:'天氣',en:'weather'} },
+      { kanji:'春', hira:'はる', kata:'ハル', rom:'haru', mean:{zh:'春天',en:'spring'} },
+      { kanji:'夏', hira:'なつ', kata:'ナツ', rom:'natsu', mean:{zh:'夏天',en:'summer'} },
+      { kanji:'秋', hira:'あき', kata:'アキ', rom:'aki', mean:{zh:'秋天',en:'autumn'} },
+      { kanji:'冬', hira:'ふゆ', kata:'フユ', rom:'fuyu', mean:{zh:'冬天',en:'winter'} },
+      { kanji:'暖かい', hira:'あたたかい', kata:'アタタカイ', rom:'atatakai', mean:{zh:'溫暖的',en:'warm'} },
+      { kanji:'涼しい', hira:'すずしい', kata:'スズシイ', rom:'suzushii', mean:{zh:'涼爽的',en:'cool'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'今日は 晴れ です。', hira:'きょうは はれ です。', kata:'キョウワ ハレ デス。', rom:'Kyō wa hare desu.', mean:{zh:'今天是晴天。',en:'Today is sunny.'} },
+        { ja:'明日は 雨 です。', hira:'あしたは あめ です。', kata:'アシタワ アメ デス。', rom:'Ashita wa ame desu.', mean:{zh:'明天有雨。',en:'Tomorrow it will rain.'} },
+        { ja:'今日は 曇り です。', hira:'きょうは くもり です。', kata:'キョウワ クモリ デス。', rom:'Kyō wa kumori desu.', mean:{zh:'今天是陰天。',en:'Today is cloudy.'} },
+        { ja:'冬は 雪が 降ります。', hira:'ふゆは ゆきが ふります。', kata:'フユワ ユキガ フリマス。', rom:'Fuyu wa yuki ga furimasu.', mean:{zh:'冬天下雪。',en:'It snows in winter.'} },
+        { ja:'今日は 風が 強い です。', hira:'きょうは かぜが つよい です。', kata:'キョウワ カゼガ ツヨイ デス。', rom:'Kyō wa kaze ga tsuyoi desu.', mean:{zh:'今天風很強。',en:'The wind is strong today.'} },
+        { ja:'夏は 暑い です。', hira:'なつは あつい です。', kata:'ナツワ アツイ デス。', rom:'Natsu wa atsui desu.', mean:{zh:'夏天很熱。',en:'Summer is hot.'} },
+        { ja:'冬は 寒い です。', hira:'ふゆは さむい です。', kata:'フユワ サムイ デス。', rom:'Fuyu wa samui desu.', mean:{zh:'冬天很冷。',en:'Winter is cold.'} },
+        { ja:'春は 暖かい です。', hira:'はるは あたたかい です。', kata:'ハルワ アタタカイ デス。', rom:'Haru wa atatakai desu.', mean:{zh:'春天很溫暖。',en:'Spring is warm.'} },
+        { ja:'秋は 涼しい です。', hira:'あきは すずしい です。', kata:'アキワ スズシイ デス。', rom:'Aki wa suzushii desu.', mean:{zh:'秋天很涼爽。',en:'Autumn is cool.'} },
+        { ja:'今日は いい 天気 です。', hira:'きょうは いい てんき です。', kata:'キョウワ イイ テンキ デス。', rom:'Kyō wa ii tenki desu.', mean:{zh:'今天天氣很好。',en:'The weather is nice today.'} },
+        { ja:'今朝は 寒い です。', hira:'けさは さむい です。', kata:'ケサワ サムイ デス。', rom:'Kesa wa samui desu.', mean:{zh:'今天早上很冷。',en:'It is cold this morning.'} },
+        { ja:'今年の 夏は 暑い です。', hira:'ことしの なつは あつい です。', kata:'コトシノ ナツワ アツイ デス。', rom:'Kotoshi no natsu wa atsui desu.', mean:{zh:'今年的夏天很熱。',en:'This year\'s summer is hot.'} }
+      ],
+      neg: [
+        { ja:'今日は 晴れ では ありません。', hira:'きょうは はれ では ありません。', kata:'キョウワ ハレ デワ アリマセン。', rom:'Kyō wa hare dewa arimasen.', mean:{zh:'今天不是晴天。',en:'Today is not sunny.'} },
+        { ja:'明日は 雨 では ありません。', hira:'あしたは あめ では ありません。', kata:'アシタワ アメ デワ アリマセン。', rom:'Ashita wa ame dewa arimasen.', mean:{zh:'明天不下雨。',en:'Tomorrow it will not rain.'} },
+        { ja:'今日は 曇り では ありません。', hira:'きょうは くもり では ありません。', kata:'キョウワ クモリ デワ アリマセン。', rom:'Kyō wa kumori dewa arimasen.', mean:{zh:'今天不是陰天。',en:'Today is not cloudy.'} },
+        { ja:'冬は 雪が 降りません。', hira:'ふゆは ゆきが ふりません。', kata:'フユワ ユキガ フリマセン。', rom:'Fuyu wa yuki ga furimasen.', mean:{zh:'冬天不下雪。',en:'It does not snow in winter.'} },
+        { ja:'今日は 風が 強くない です。', hira:'きょうは かぜが つよくない です。', kata:'キョウワ カゼガ ツヨクナイ デス。', rom:'Kyō wa kaze ga tsuyoku nai desu.', mean:{zh:'今天風不強。',en:'The wind is not strong today.'} },
+        { ja:'夏は 暑くない です。', hira:'なつは あつくない です。', kata:'ナツワ アツクナイ デス。', rom:'Natsu wa atsuku nai desu.', mean:{zh:'夏天不熱。',en:'Summer is not hot.'} },
+        { ja:'冬は 寒くない です。', hira:'ふゆは さむくない です。', kata:'フユワ サムクナイ デス。', rom:'Fuyu wa samuku nai desu.', mean:{zh:'冬天不冷。',en:'Winter is not cold.'} },
+        { ja:'春は 暖かくない です。', hira:'はるは あたたかくない です。', kata:'ハルワ アタタカクナイ デス。', rom:'Haru wa atatakaku nai desu.', mean:{zh:'春天不溫暖。',en:'Spring is not warm.'} },
+        { ja:'秋は 涼しくない です。', hira:'あきは すずしくない です。', kata:'アキワ スズシクナイ デス。', rom:'Aki wa suzushiku nai desu.', mean:{zh:'秋天不涼爽。',en:'Autumn is not cool.'} },
+        { ja:'今日は いい 天気 では ありません。', hira:'きょうは いい てんき では ありません。', kata:'キョウワ イイ テンキ デワ アリマセン。', rom:'Kyō wa ii tenki dewa arimasen.', mean:{zh:'今天天氣不好。',en:'The weather is not nice today.'} },
+        { ja:'今朝は 寒くない です。', hira:'けさは さむくない です。', kata:'ケサワ サムクナイ デス。', rom:'Kesa wa samuku nai desu.', mean:{zh:'今天早上不冷。',en:'It is not cold this morning.'} },
+        { ja:'今年の 夏は 暑くない です。', hira:'ことしの なつは あつくない です。', kata:'コトシノ ナツワ アツクナイ デス。', rom:'Kotoshi no natsu wa atsuku nai desu.', mean:{zh:'今年的夏天不熱。（練習用）',en:'This year\'s summer is not hot. (practice sentence)'} }
+      ]
+    }
+  },
+
+  // ----------------------------------------------------------------
+  // BODY (体・健康)
+  // ----------------------------------------------------------------
+  {
+    id: 'body',
+    icon: '🧑‍⚕️',
+    nameKey: 'body',
+    pattern: {
+      aff: {
+        formula: '〔体の部位〕が 痛い です ／ 〔病気の表現〕',
+        formulaEn: '[body part] + ga + itai desu / illness expressions',
+        note: { zh: '用「が痛いです」表示某部位疼痛，也可用「風邪を引きます」等表達生病。', en: 'Use "[body part] ga itai desu" for pain. Use "kaze wo hikimasu" (catch a cold) etc. for illness.' }
+      },
+      neg: {
+        formula: '〔体の部位〕は 痛くない です ／ 〔病気表現〕否定',
+        formulaEn: '[body part] + wa + itaku nai desu',
+        note: { zh: '否定形：「痛い」→「痛くないです」。「元気です」的否定為「元気では ありません」。', en: 'Negate "itai" → "itaku nai desu". Negate "genki desu" → "genki dewa arimasen".' }
+      }
+    },
+    conj: null,
+    vocab: [
+      { kanji:'頭', hira:'あたま', kata:'アタマ', rom:'atama', mean:{zh:'頭',en:'head'} },
+      { kanji:'目', hira:'め', kata:'メ', rom:'me', mean:{zh:'眼睛',en:'eyes'} },
+      { kanji:'耳', hira:'みみ', kata:'ミミ', rom:'mimi', mean:{zh:'耳朵',en:'ears'} },
+      { kanji:'口', hira:'くち', kata:'クチ', rom:'kuchi', mean:{zh:'嘴巴',en:'mouth'} },
+      { kanji:'鼻', hira:'はな', kata:'ハナ', rom:'hana', mean:{zh:'鼻子',en:'nose'} },
+      { kanji:'手', hira:'て', kata:'テ', rom:'te', mean:{zh:'手',en:'hand'} },
+      { kanji:'足', hira:'あし', kata:'アシ', rom:'ashi', mean:{zh:'腳；腿',en:'foot; leg'} },
+      { kanji:'お腹', hira:'おなか', kata:'オナカ', rom:'onaka', mean:{zh:'肚子',en:'stomach'} },
+      { kanji:'喉', hira:'のど', kata:'ノド', rom:'nodo', mean:{zh:'喉嚨',en:'throat'} },
+      { kanji:'体', hira:'からだ', kata:'カラダ', rom:'karada', mean:{zh:'身體',en:'body'} },
+      { kanji:'風邪', hira:'かぜ', kata:'カゼ', rom:'kaze', mean:{zh:'感冒',en:'cold'} },
+      { kanji:'薬', hira:'くすり', kata:'クスリ', rom:'kusuri', mean:{zh:'藥',en:'medicine'} }
+    ],
+    sentences: {
+      aff: [
+        { ja:'頭が 痛い です。', hira:'あたまが いたい です。', kata:'アタマガ イタイ デス。', rom:'Atama ga itai desu.', mean:{zh:'頭痛。',en:'I have a headache.'} },
+        { ja:'喉が 痛い です。', hira:'のどが いたい です。', kata:'ノドガ イタイ デス。', rom:'Nodo ga itai desu.', mean:{zh:'喉嚨痛。',en:'My throat hurts.'} },
+        { ja:'お腹が 痛い です。', hira:'おなかが いたい です。', kata:'オナカガ イタイ デス。', rom:'Onaka ga itai desu.', mean:{zh:'肚子痛。',en:'I have a stomachache.'} },
+        { ja:'風邪を 引きました。', hira:'かぜを ひきました。', kata:'カゼヲ ヒキマシタ。', rom:'Kaze wo hikimashita.', mean:{zh:'感冒了。',en:'I caught a cold.'} },
+        { ja:'薬を 飲みます。', hira:'くすりを のみます。', kata:'クスリヲ ノミマス。', rom:'Kusuri wo nomimasu.', mean:{zh:'吃藥。',en:'I take medicine.'} },
+        { ja:'目が 疲れました。', hira:'めが つかれました。', kata:'メガ ツカレマシタ。', rom:'Me ga tsukaremashita.', mean:{zh:'眼睛疲勞了。',en:'My eyes are tired.'} },
+        { ja:'足が 痛い です。', hira:'あしが いたい です。', kata:'アシガ イタイ デス。', rom:'Ashi ga itai desu.', mean:{zh:'腳很痛。',en:'My foot/leg hurts.'} },
+        { ja:'体が だるい です。', hira:'からだが だるい です。', kata:'カラダガ ダルイ デス。', rom:'Karada ga darui desu.', mean:{zh:'身體很沉重。',en:'My body feels heavy/sluggish.'} },
+        { ja:'手が 冷たい です。', hira:'てが つめたい です。', kata:'テガ ツメタイ デス。', rom:'Te ga tsumetai desu.', mean:{zh:'手很冰。',en:'My hands are cold.'} },
+        { ja:'鼻が 詰まります。', hira:'はなが つまります。', kata:'ハナガ ツマリマス。', rom:'Hana ga tsumarimasu.', mean:{zh:'鼻子塞住了。',en:'My nose is congested.'} },
+        { ja:'耳が 痛い です。', hira:'みみが いたい です。', kata:'ミミガ イタイ デス。', rom:'Mimi ga itai desu.', mean:{zh:'耳朵痛。',en:'My ears hurt.'} },
+        { ja:'今日は 元気 です。', hira:'きょうは げんき です。', kata:'キョウワ ゲンキ デス。', rom:'Kyō wa genki desu.', mean:{zh:'今天很有精神。',en:'I feel well today.'} }
+      ],
+      neg: [
+        { ja:'頭は 痛くない です。', hira:'あたまは いたくない です。', kata:'アタマワ イタクナイ デス。', rom:'Atama wa itaku nai desu.', mean:{zh:'頭不痛。',en:'I don\'t have a headache.'} },
+        { ja:'喉は 痛くない です。', hira:'のどは いたくない です。', kata:'ノドワ イタクナイ デス。', rom:'Nodo wa itaku nai desu.', mean:{zh:'喉嚨不痛。',en:'My throat doesn\'t hurt.'} },
+        { ja:'お腹は 痛くない です。', hira:'おなかは いたくない です。', kata:'オナカワ イタクナイ デス。', rom:'Onaka wa itaku nai desu.', mean:{zh:'肚子不痛。',en:'I don\'t have a stomachache.'} },
+        { ja:'風邪を 引きませんでした。', hira:'かぜを ひきませんでした。', kata:'カゼヲ ヒキマセンデシタ。', rom:'Kaze wo hikimasen deshita.', mean:{zh:'沒有感冒。',en:'I did not catch a cold.'} },
+        { ja:'薬を 飲みません。', hira:'くすりを のみません。', kata:'クスリヲ ノミマセン。', rom:'Kusuri wo nomimasen.', mean:{zh:'不吃藥。',en:'I don\'t take medicine.'} },
+        { ja:'目は 疲れていません。', hira:'めは つかれていません。', kata:'メワ ツカレテイマセン。', rom:'Me wa tsukarete imasen.', mean:{zh:'眼睛沒有疲勞。',en:'My eyes are not tired.'} },
+        { ja:'足は 痛くない です。', hira:'あしは いたくない です。', kata:'アシワ イタクナイ デス。', rom:'Ashi wa itaku nai desu.', mean:{zh:'腳不痛。',en:'My foot/leg doesn\'t hurt.'} },
+        { ja:'体は だるくない です。', hira:'からだは だるくない です。', kata:'カラダワ ダルクナイ デス。', rom:'Karada wa daruku nai desu.', mean:{zh:'身體不沉重。',en:'My body doesn\'t feel heavy.'} },
+        { ja:'手は 冷たくない です。', hira:'ては つめたくない です。', kata:'テワ ツメタクナイ デス。', rom:'Te wa tsumetaku nai desu.', mean:{zh:'手不冰。',en:'My hands are not cold.'} },
+        { ja:'鼻は 詰まりません。', hira:'はなは つまりません。', kata:'ハナワ ツマリマセン。', rom:'Hana wa tsumarimasen.', mean:{zh:'鼻子沒有塞住。',en:'My nose is not congested.'} },
+        { ja:'耳は 痛くない です。', hira:'みみは いたくない です。', kata:'ミミワ イタクナイ デス。', rom:'Mimi wa itaku nai desu.', mean:{zh:'耳朵不痛。',en:'My ears don\'t hurt.'} },
+        { ja:'今日は 元気 では ありません。', hira:'きょうは げんき では ありません。', kata:'キョウワ ゲンキ デワ アリマセン。', rom:'Kyō wa genki dewa arimasen.', mean:{zh:'今天沒有精神。',en:'I don\'t feel well today.'} }
+      ]
+    }
   }
 ];
 
