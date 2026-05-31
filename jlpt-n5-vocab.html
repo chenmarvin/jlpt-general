@@ -311,7 +311,8 @@ function speak(txt) {
     speechSynthesis.speak(u);
   } catch(e) {}
 }
-function speakNow() { if (exWords[exIdx]) speak(exWords[exIdx].word); }
+function primaryReading(r) { return r.split('/')[0].trim(); }
+function speakNow() { if (exWords[exIdx]) speak(primaryReading(exWords[exIdx].reading)); }
 
 function goSelect(mode) {
   isMix = (mode === 'mix');
@@ -448,7 +449,7 @@ function showCard() {
   inp.value = ''; inp.disabled = false;
   document.getElementById('confirm-btn').style.display = 'block';
   document.getElementById('judge-row').classList.remove('vis');
-  setTimeout(function() { speak(w.word); }, 350);
+  setTimeout(function() { speak(primaryReading(w.reading)); }, 350);
   setTimeout(function() { try { inp.focus(); } catch(e) {} }, 450);
 }
 
@@ -468,7 +469,7 @@ function doFlip() {
   document.getElementById('ans-in').disabled = true;
   document.getElementById('confirm-btn').style.display = 'none';
   document.getElementById('judge-row').classList.add('vis');
-  setTimeout(function() { speak(w.word); }, 600);
+  setTimeout(function() { speak(primaryReading(w.reading)); }, 600);
 }
 
 function judge(ok) {
