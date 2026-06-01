@@ -162,6 +162,9 @@ body{font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;backgro
     <button class="mode-btn" onclick="startSeq()"><div class="m-icon">📝</div><div class="m-label">按順序練習</div><div class="m-desc">全部 1–800 順序</div></button>
     <button class="mode-btn" onclick="startRandom()"><div class="m-icon">🔀</div><div class="m-label">隨機練習</div><div class="m-desc">全部隨機打亂</div></button>
   </div>
+  <div id="resume-row" style="display:none;margin-bottom:4px">
+    <button id="resume-btn" onclick="resumeSession()" style="width:100%;background:var(--grn);color:white;border:none;border-radius:12px;padding:14px;font-size:.92rem;font-weight:700;cursor:pointer;box-shadow:var(--shd)">&#9654; 繼續上次練習</button>
+  </div>
   <div class="sec-row">
     <button class="sec-btn" onclick="nav('screen-word-list');initWL()">📚 瀏覽單字表</button>
     <button class="sec-btn" onclick="nav('screen-scores');renderScores()">🏆 查看成績</button>
@@ -234,7 +237,7 @@ body{font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;backgro
   <div class="res-bd" id="r-bd" style="display:none"><h3>各分類成績</h3><div id="r-bd-rows"></div></div>
   <div class="res-btns">
     <button class="res-btn pri" onclick="doRestart()">再練一次</button>
-    <button class="res-btn" onclick="nav('screen-home');updateHomeScore()">返回首頁</button>
+    <button class="res-btn" onclick="nav('screen-home');updateHomeScore();checkResume()">返回首頁</button>
   </div>
 </div>
 
@@ -289,6 +292,54 @@ function saveS(catId, ok) {
   try { localStorage.setItem(SK, JSON.stringify(s)); } catch(e) {}
 }
 function clearS() { try { localStorage.removeItem(SK); } catch(e) {} }
+
+function saveSession() {
+  var s = getS();
+  s.sess = {
+    ids: exWords.map(function(w) { return w.id; }),
+    idx: exIdx,
+    res: exResults.map(function(r) { return {cid: r.catId, cn: r.catName, ok: r.ok}; })
+  };
+  try { localStorage.setItem(SK, JSON.stringify(s)); } catch(e) {}
+}
+function clearSession() {
+  var s = getS();
+  if (!s.sess) return;
+  delete s.sess;
+  try { localStorage.setItem(SK, JSON.stringify(s)); } catch(e) {}
+}
+function restoreSession() {
+  var s = getS();
+  if (!s.sess || !s.sess.ids || !s.sess.ids.length) return false;
+  var idx = s.sess.idx || 0;
+  if (idx >= s.sess.ids.length) return false;
+  var wordMap = {};
+  for (var i = 0; i < ALL_WORDS.length; i++) wordMap[ALL_WORDS[i].id] = ALL_WORDS[i];
+  var words = [];
+  for (var i = 0; i < s.sess.ids.length; i++) {
+    var w = wordMap[s.sess.ids[i]];
+    if (w) words.push(Object.assign({}, w));
+  }
+  if (!words.length) return false;
+  exWords = words;
+  exIdx = idx;
+  exResults = (s.sess.res || []).map(function(r) { return {catId: r.cid, catName: r.cn, ok: r.ok}; });
+  return true;
+}
+function checkResume() {
+  var s = getS();
+  var row = document.getElementById('resume-row');
+  var btn = document.getElementById('resume-btn');
+  if (!s.sess || !s.sess.ids || !s.sess.ids.length || (s.sess.idx || 0) >= s.sess.ids.length) {
+    row.style.display = 'none'; return;
+  }
+  var remaining = s.sess.ids.length - (s.sess.idx || 0);
+  btn.textContent = '▶ 繼續上次練習（剩餘 ' + remaining + ' / ' + s.sess.ids.length + ' 題）';
+  row.style.display = 'block';
+}
+function resumeSession() {
+  if (restoreSession()) { nav('screen-exercise'); showCard(); }
+}
 
 function nav(id) {
   var screens = document.querySelectorAll('.screen');
@@ -493,6 +544,7 @@ function startRandom() {
 
 function beginEx(words) {
   exWords = words; exIdx = 0; exResults = [];
+  clearSession();
   nav('screen-exercise');
   showCard();
 }
@@ -545,8 +597,10 @@ function judge(ok) {
   exIdx++;
   if (exIdx >= exWords.length) {
     try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch(e) {}
+    clearSession();
     showResults();
   } else {
+    saveSession();
     flipped = false;
     document.getElementById('flip-card').classList.remove('flipped');
     setTimeout(showCard, 280);
@@ -556,8 +610,10 @@ function judge(ok) {
 function quitEx() {
   if (confirm('確定要結束練習嗎？')) {
     try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch(e) {}
+    clearSession();
     nav('screen-home');
     updateHomeScore();
+    checkResume();
   }
 }
 function doRestart() {
@@ -653,7 +709,7 @@ function renderScores() {
 }
 
 function doClearScores() {
-  if (confirm("確定清除所有成績嗎？")) { clearS(); renderScores(); updateHomeScore(); }
+  if (confirm("確定清除所有成績嗎？")) { clearS(); renderScores(); updateHomeScore(); checkResume(); }
 }
 
 document.getElementById('ans-in').addEventListener('keydown', function(e) {
@@ -661,6 +717,7 @@ document.getElementById('ans-in').addEventListener('keydown', function(e) {
 });
 
 updateHomeScore();
+checkResume();
 var _ok = document.getElementById('js-ok');
 if (_ok) _ok.style.background = '#6b7280';
 </script>
