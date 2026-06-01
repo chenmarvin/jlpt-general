@@ -141,6 +141,8 @@ body{font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;backgro
 .sc-name{font-weight:600;font-size:.88rem;}
 .sc-pct{font-weight:700;color:var(--red);font-size:.95rem;}
 .sc-nums{font-size:.74rem;color:var(--text2);margin-top:4px;}
+.bp-romaji{font-size:.82rem;color:var(--text2);font-style:italic;margin-bottom:6px;}
+.wrom{font-size:.7rem;color:#bbb;font-style:italic;}
 
 @media(max-width:400px){.fp-meaning{font-size:1.4rem;}.bp-word{font-size:2.2rem;}.mode-btn{padding:14px 8px;}}
 </style>
@@ -206,6 +208,7 @@ body{font-family:-apple-system,'Hiragino Sans','Noto Sans JP',sans-serif;backgro
       <div class="card-face cb">
         <div class="bp-word" id="bp-word">---</div>
         <div class="bp-reading" id="bp-reading"></div>
+        <div class="bp-romaji" id="bp-romaji"></div>
         <div class="bp-meaning" id="bp-meaning">---</div>
         <div class="bp-ua" id="bp-ua" style="display:none"></div>
       </div>
@@ -312,6 +315,68 @@ function speak(txt) {
   } catch(e) {}
 }
 function primaryReading(r) { return r.split('/')[0].trim(); }
+function toRomaji(hira) {
+  var D = {
+    'きゃ':'kya','きゅ':'kyu','きょ':'kyo','しゃ':'sha','しゅ':'shu','しょ':'sho',
+    'ちゃ':'cha','ちゅ':'chu','ちょ':'cho','にゃ':'nya','にゅ':'nyu','にょ':'nyo',
+    'ひゃ':'hya','ひゅ':'hyu','ひょ':'hyo','みゃ':'mya','みゅ':'myu','みょ':'myo',
+    'りゃ':'rya','りゅ':'ryu','りょ':'ryo','ぎゃ':'gya','ぎゅ':'gyu','ぎょ':'gyo',
+    'じゃ':'ja','じゅ':'ju','じょ':'jo','びゃ':'bya','びゅ':'byu','びょ':'byo',
+    'ぴゃ':'pya','ぴゅ':'pyu','ぴょ':'pyo',
+    'ふぁ':'fa','ふぃ':'fi','ふぇ':'fe','ふぉ':'fo','てぃ':'ti','でぃ':'di'
+  };
+  var S = {
+    'あ':'a','い':'i','う':'u','え':'e','お':'o',
+    'か':'ka','き':'ki','く':'ku','け':'ke','こ':'ko',
+    'さ':'sa','し':'shi','す':'su','せ':'se','そ':'so',
+    'た':'ta','ち':'chi','つ':'tsu','て':'te','と':'to',
+    'な':'na','に':'ni','ぬ':'nu','ね':'ne','の':'no',
+    'は':'ha','ひ':'hi','ふ':'fu','へ':'he','ほ':'ho',
+    'ま':'ma','み':'mi','む':'mu','め':'me','も':'mo',
+    'や':'ya','ゆ':'yu','よ':'yo',
+    'ら':'ra','り':'ri','る':'ru','れ':'re','ろ':'ro',
+    'わ':'wa','を':'wo','ん':'n',
+    'が':'ga','ぎ':'gi','ぐ':'gu','げ':'ge','ご':'go',
+    'ざ':'za','じ':'ji','ず':'zu','ぜ':'ze','ぞ':'zo',
+    'だ':'da','ぢ':'ji','づ':'zu','で':'de','ど':'do',
+    'ば':'ba','び':'bi','ぶ':'bu','べ':'be','ぼ':'bo',
+    'ぱ':'pa','ぴ':'pi','ぷ':'pu','ぺ':'pe','ぽ':'po',
+    'ぁ':'a','ぃ':'i','ぅ':'u','ぇ':'e','ぉ':'o'
+  };
+  var MK = {'a':'ā','i':'ī','u':'ū','e':'ē','o':'ō'};
+  var out = '', i = 0;
+  while (i < hira.length) {
+    var c = hira[i];
+    if (c === 'ー') {
+      var j = out.length - 1;
+      while (j >= 0 && !/[aeiou]/.test(out[j])) j--;
+      if (j >= 0 && MK[out[j]]) out = out.slice(0,j) + MK[out[j]] + out.slice(j+1);
+      i++; continue;
+    }
+    if (c === 'っ') {
+      var nxt = hira[i+1] || '', nxt2 = hira[i+2] || '';
+      var nr = D[nxt+nxt2] || S[nxt] || '';
+      out += nr ? nr[0] : 't'; i++; continue;
+    }
+    if (c === 'ん') {
+      out += 'n';
+      if (/[あいうえおやゆよ]/.test(hira[i+1] || '')) out += "'";
+      i++; continue;
+    }
+    // う after o-ending → ō; う after u-ending → ū (Hepburn long vowel)
+    if (c === 'う') {
+      var j = out.length - 1;
+      while (j >= 0 && !/[aeiouāīūēō]/.test(out[j])) j--;
+      if (j >= 0 && out[j] === 'o') { out = out.slice(0,j)+'ō'+out.slice(j+1); i++; continue; }
+      if (j >= 0 && out[j] === 'u') { out = out.slice(0,j)+'ū'+out.slice(j+1); i++; continue; }
+    }
+    var n2 = i+1 < hira.length ? hira[i+1] : '';
+    if (n2 && D[c+n2]) { out += D[c+n2]; i += 2; continue; }
+    if (S[c]) { out += S[c]; i++; continue; }
+    out += c === ' ' ? ' ' : c; i++;
+  }
+  return out;
+}
 function speakNow() { if (exWords[exIdx]) speak(primaryReading(exWords[exIdx].reading)); }
 
 function goSelect(mode) {
@@ -442,6 +507,7 @@ function showCard() {
   document.getElementById('fp-meaning').textContent = w.meaning;
   document.getElementById('bp-word').textContent = w.word;
   document.getElementById('bp-reading').textContent = w.reading !== w.word ? '（' + w.reading + '）' : '';
+  document.getElementById('bp-romaji').textContent = toRomaji(primaryReading(w.reading));
   document.getElementById('bp-meaning').textContent = w.meaning;
   var ua = document.getElementById('bp-ua');
   ua.style.display = 'none'; ua.innerHTML = '';
@@ -555,9 +621,10 @@ function renderWLWords(cat) {
   for (var i = 0; i < cat.words.length; i++) {
     var w = cat.words[i];
     var rdg = w.reading !== w.word ? '<div class="wrd">' + w.reading + '</div>' : '';
+    var rom = '<div class="wrom">' + toRomaji(primaryReading(w.reading)) + '</div>';
     var sw = w.word.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     html += '<div class="word-row"><div class="wid">' + w.id + '</div>' +
-      '<div style="flex:1;min-width:0"><div class="wjp">' + w.word + '</div>' + rdg + '</div>' +
+      '<div style="flex:1;min-width:0"><div class="wjp">' + w.word + '</div>' + rdg + rom + '</div>' +
       '<div class="wmean">' + w.meaning + '</div>' +
       '<button class="speak-sm" onclick="speak(\'' + sw + '\')">&#128266;</button></div>';
   }
