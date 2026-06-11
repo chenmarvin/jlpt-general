@@ -223,6 +223,30 @@ textarea:focus { outline: 2px solid var(--primary-light); outline-offset: -1px; 
 .answer-input.correct { border-color: var(--ok-border); background: var(--ok-light); color: var(--ok); }
 .answer-input.incorrect { border-color: var(--bad-border); background: var(--bad-light); color: var(--bad); }
 
+.answer-input-pair {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.answer-field {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.answer-field .answer-input { max-width: none; }
+.answer-field-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-align: center;
+}
+
 .feedback {
   margin-top: 18px;
   padding: 14px 18px;
@@ -347,6 +371,17 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
 
           <input type="text" class="answer-input" id="answer-input" autocomplete="off" autocapitalize="off" spellcheck="false">
 
+          <div class="answer-input-pair" id="answer-input-pair" style="display:none">
+            <div class="answer-field">
+              <label class="answer-field-label" data-i18n="labelWord">單字</label>
+              <input type="text" class="answer-input" id="answer-input-word" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="answer-field" id="answer-field-reading">
+              <label class="answer-field-label" data-i18n="labelReading">讀音</label>
+              <input type="text" class="answer-input" id="answer-input-reading" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </div>
+          </div>
+
           <div class="feedback" id="feedback">
             <div id="feedback-text"></div>
             <div class="answer-detail" id="feedback-answer"></div>
@@ -410,7 +445,9 @@ const i18n = {
     parseCount: (n) => `已偵測到 ${n} 個單字。`,
     parseEmpty: '尚未偵測到任何單字，請確認格式。',
     qLabelJp: '請輸入意思',
-    qLabelMean: '請輸入單字（漢字或讀音皆可）',
+    qLabelMean: '請輸入單字與讀音',
+    labelWord: '單字',
+    labelReading: '讀音',
     correct: '✓ 答對了！',
     incorrect: '✗ 答錯了',
     yourAnswer: '你的答案',
@@ -461,7 +498,9 @@ const i18n = {
     parseCount: (n) => `Detected ${n} vocabulary entries.`,
     parseEmpty: 'No entries detected yet. Please check the format.',
     qLabelJp: 'Type the meaning',
-    qLabelMean: 'Type the word (kanji or reading)',
+    qLabelMean: 'Type the word and its reading',
+    labelWord: 'Word',
+    labelReading: 'Reading',
     correct: '✓ Correct!',
     incorrect: '✗ Incorrect',
     yourAnswer: 'Your answer',
@@ -590,13 +629,16 @@ function clearInput() {
 document.addEventListener('DOMContentLoaded', () => {
   applyI18n();
   document.getElementById('notes-input').addEventListener('input', updateParseStatus);
-  document.getElementById('answer-input').addEventListener('keydown', (e) => {
+  const onEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       if (!answered) checkAnswer();
       else nextQuestion();
     }
-  });
+  };
+  document.getElementById('answer-input').addEventListener('keydown', onEnter);
+  document.getElementById('answer-input-word').addEventListener('keydown', onEnter);
+  document.getElementById('answer-input-reading').addEventListener('keydown', onEnter);
 });
 
 function updateParseStatus() {
@@ -699,57 +741,115 @@ function renderQuestion() {
   const readingEl = document.getElementById('quiz-reading');
   const tagEl = document.getElementById('direction-tag');
 
+  const input = document.getElementById('answer-input');
+  const pair = document.getElementById('answer-input-pair');
+  const wordInput = document.getElementById('answer-input-word');
+  const readingInput = document.getElementById('answer-input-reading');
+  const readingField = document.getElementById('answer-field-reading');
+
   if (dir === 'jp2mean') {
     promptEl.textContent = card.word;
     readingEl.textContent = card.reading || '';
     tagEl.textContent = t('qLabelJp');
+
+    input.style.display = '';
+    pair.style.display = 'none';
+    input.value = '';
+    input.className = 'answer-input';
+    input.disabled = false;
+    input.focus();
   } else {
     promptEl.textContent = card.meaning;
     readingEl.textContent = '';
     tagEl.textContent = t('qLabelMean');
-  }
 
-  const input = document.getElementById('answer-input');
-  input.value = '';
-  input.className = 'answer-input';
-  input.disabled = false;
+    input.style.display = 'none';
+    pair.style.display = 'flex';
+    readingField.style.display = card.reading ? '' : 'none';
+    wordInput.value = '';
+    wordInput.className = 'answer-input';
+    wordInput.disabled = false;
+    readingInput.value = '';
+    readingInput.className = 'answer-input';
+    readingInput.disabled = false;
+    wordInput.focus();
+  }
 
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('check-btn').style.display = '';
   document.getElementById('reveal-btn').style.display = '';
   document.getElementById('next-btn').style.display = 'none';
-
-  input.focus();
 }
 
 function checkAnswer() {
   if (answered) return;
   const item = quizQueue[quizIdx];
-  const input = document.getElementById('answer-input');
-  const userVal = input.value;
-  const userNorm = normalize(userVal);
-  const acceptable = getAcceptableAnswers(item);
-  const isCorrect = acceptable.includes(userNorm) && userNorm !== '';
 
-  finishAnswer(isCorrect, userVal);
+  if (item.dir === 'jp2mean') {
+    const input = document.getElementById('answer-input');
+    const userVal = input.value;
+    const userNorm = normalize(userVal);
+    const acceptable = getAcceptableAnswers(item);
+    const isCorrect = acceptable.includes(userNorm) && userNorm !== '';
+    finishAnswer(isCorrect, userVal);
+  } else {
+    const wordInput = document.getElementById('answer-input-word');
+    const readingInput = document.getElementById('answer-input-reading');
+    const wordVal = wordInput.value;
+    const readingVal = readingInput.value;
+
+    const wordCorrect = wordVal.trim() !== '' && normalize(wordVal) === normalize(item.card.word);
+    const readingCorrect = !item.card.reading
+      || (readingVal.trim() !== '' && normalize(readingVal) === normalize(item.card.reading));
+    const isCorrect = wordCorrect && readingCorrect;
+
+    const userVal = item.card.reading
+      ? `${wordVal.trim() || '—'} / ${readingVal.trim() || '—'}`
+      : (wordVal.trim() || '—');
+
+    finishAnswer(isCorrect, userVal, false, { wordCorrect, readingCorrect });
+  }
 }
 
 function revealAnswer() {
   if (answered) return;
   const item = quizQueue[quizIdx];
-  finishAnswer(false, document.getElementById('answer-input').value, true);
+
+  if (item.dir === 'jp2mean') {
+    finishAnswer(false, document.getElementById('answer-input').value, true);
+  } else {
+    const wordInput = document.getElementById('answer-input-word');
+    const readingInput = document.getElementById('answer-input-reading');
+    const wordVal = wordInput.value;
+    const readingVal = readingInput.value;
+    const userVal = item.card.reading
+      ? `${wordVal.trim() || '—'} / ${readingVal.trim() || '—'}`
+      : (wordVal.trim() || '—');
+    finishAnswer(false, userVal, true, { wordCorrect: false, readingCorrect: false });
+  }
 }
 
-function finishAnswer(isCorrect, userVal, revealedOnly) {
+function finishAnswer(isCorrect, userVal, revealedOnly, detail) {
   answered = true;
   const item = quizQueue[quizIdx];
-  const input = document.getElementById('answer-input');
   const feedback = document.getElementById('feedback');
   const feedbackText = document.getElementById('feedback-text');
   const feedbackAnswer = document.getElementById('feedback-answer');
 
-  input.disabled = true;
-  input.classList.add(isCorrect ? 'correct' : 'incorrect');
+  if (item.dir === 'jp2mean') {
+    const input = document.getElementById('answer-input');
+    input.disabled = true;
+    input.classList.add(isCorrect ? 'correct' : 'incorrect');
+  } else {
+    const wordInput = document.getElementById('answer-input-word');
+    const readingInput = document.getElementById('answer-input-reading');
+    wordInput.disabled = true;
+    wordInput.classList.add(detail.wordCorrect ? 'correct' : 'incorrect');
+    if (item.card.reading) {
+      readingInput.disabled = true;
+      readingInput.classList.add(detail.readingCorrect ? 'correct' : 'incorrect');
+    }
+  }
 
   if (isCorrect) {
     scoreCorrect++;
