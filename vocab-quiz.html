@@ -525,7 +525,7 @@ const i18n = {
     backBtn: '← 返回編輯',
     resultDone: '測驗完成！',
     restartSame: '重新測驗',
-    formatHint: '每行一個單字，欄位之間請用 <code>Tab</code>、<code>-</code>、<code>:</code>、<code>=</code>、<code>→</code> 或兩個以上空格分隔。<br>例如：<code>食べる（たべる）- 吃</code> 或 <code>勉強する　べんきょうする　念書</code>（讀音建議寫在括號內）。<br>意思可有多個，用 <code>,</code> 或 <code>/</code>、<code>、</code> 分隔，作答時符合任一個即算正確。',
+    formatHint: '每行一個單字，欄位之間請用 <code>Tab</code>、<code>-</code>、<code>:</code>、<code>=</code>、<code>→</code> 或兩個以上空格分隔。<br>例如：<code>食べる（たべる）- 吃</code> 或 <code>勉強する　べんきょうする　念書</code>（讀音建議寫在括號內）。<br>也支援 <code>單字。讀音：意思</code> 格式，例如：<code>食べる。たべる：吃, eat</code>。<br>意思可有多個，用 <code>,</code> 或 <code>/</code>、<code>、</code> 分隔，作答時符合任一個即算正確。',
     parseCount: (n) => `已偵測到 ${n} 個單字。`,
     parseEmpty: '尚未偵測到任何單字，請確認格式。',
     qLabelJp: '請輸入意思',
@@ -588,7 +588,7 @@ const i18n = {
     backBtn: '← Back to edit',
     resultDone: 'Quiz complete!',
     restartSame: 'Retake quiz',
-    formatHint: 'One entry per line. Separate fields with <code>Tab</code>, <code>-</code>, <code>:</code>, <code>=</code>, <code>→</code>, or 2+ spaces.<br>e.g. <code>食べる（たべる）- to eat</code> or <code>勉強する　べんきょうする　to study</code> (put readings in parentheses).<br>Multiple meanings can be separated by <code>,</code>, <code>/</code>, or <code>、</code> — any one of them counts as correct.',
+    formatHint: 'One entry per line. Separate fields with <code>Tab</code>, <code>-</code>, <code>:</code>, <code>=</code>, <code>→</code>, or 2+ spaces.<br>e.g. <code>食べる（たべる）- to eat</code> or <code>勉強する　べんきょうする　to study</code> (put readings in parentheses).<br>Also supports <code>word。reading：meaning</code>, e.g. <code>食べる。たべる：to eat</code>.<br>Multiple meanings can be separated by <code>,</code>, <code>/</code>, or <code>、</code> — any one of them counts as correct.',
     parseCount: (n) => `Detected ${n} vocabulary entries.`,
     parseEmpty: 'No entries detected yet. Please check the format.',
     qLabelJp: 'Type the meaning',
@@ -667,6 +667,19 @@ function parseNotes(text) {
     line = line.replace(/^(\d+[.)、]\s*|[-*•・]\s+)/, '').trim();
     if (!line) continue;
 
+    let word, reading, meaning;
+
+    // Special format: 単語。読み方：意味
+    const specialMatch = line.match(/^(.+?)。(.+?)[:：](.+)$/);
+    if (specialMatch) {
+      word = specialMatch[1].trim();
+      reading = specialMatch[2].trim();
+      meaning = specialMatch[3].trim();
+      if (!word || !reading || !meaning) continue;
+      cards.push({ word, reading, meaning });
+      continue;
+    }
+
     let parts;
     if (line.includes('\t')) {
       parts = line.split('\t').map(s => s.trim()).filter(Boolean);
@@ -677,7 +690,6 @@ function parseNotes(text) {
       }
     }
 
-    let word, reading, meaning;
     if (parts.length >= 3) {
       word = parts[0];
       reading = parts[1];
