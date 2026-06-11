@@ -292,6 +292,39 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
 
 .empty-msg { color: var(--text-muted); font-size: 0.9rem; padding: 8px 0; }
 
+/* Practice screen */
+#practice-screen { display: none; }
+
+.practice-textarea {
+  width: 100%;
+  max-width: 520px;
+  min-height: 160px;
+  margin: 0 auto;
+  display: block;
+  padding: 16px;
+  font-size: 1.6rem;
+  line-height: 1.8;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans JP', sans-serif;
+  text-align: center;
+  resize: vertical;
+  color: var(--text);
+}
+.practice-textarea:focus { outline: none; border-color: var(--primary-light); }
+
+.practice-answer {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-faint);
+  border: 1px solid var(--border);
+  display: none;
+}
+.practice-answer.show { display: block; }
+.practice-answer .label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.practice-answer .value { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+
 @media (max-width: 600px) {
   .quiz-prompt { font-size: 1.5rem; }
   main { padding: 14px; }
@@ -329,6 +362,15 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
         <div class="section-title" data-i18n="settingsTitle">2. 測驗設定</div>
         <div class="options-row">
           <div class="options-group">
+            <label class="group-label" data-i18n="modeLabel">模式</label>
+            <div class="radio-row">
+              <label><input type="radio" name="session-mode" value="quiz" checked onchange="onModeChange()"> <span data-i18n="modeQuiz">問答測驗</span></label>
+              <label><input type="radio" name="session-mode" value="practice" onchange="onModeChange()"> <span data-i18n="modePractice">寫字練習</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="options-row">
+          <div class="options-group" id="direction-group">
             <label class="group-label" data-i18n="directionLabel">出題方向</label>
             <div class="radio-row">
               <label><input type="radio" name="direction" value="jp2mean" checked> <span data-i18n="dirJp2Mean">單字 → 意思</span></label>
@@ -345,7 +387,7 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
         </div>
         <div id="parse-status" class="hint"></div>
         <div class="btn-row">
-          <button class="btn btn-primary" id="start-btn" onclick="startQuiz()" data-i18n="startQuiz">開始測驗</button>
+          <button class="btn btn-primary" id="start-btn" onclick="startSession()" data-i18n="startQuiz">開始測驗</button>
         </div>
       </div>
     </div>
@@ -416,6 +458,38 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
     </div>
   </div>
 
+  <!-- PRACTICE SCREEN -->
+  <div id="practice-screen">
+    <div class="section">
+      <div class="section-body">
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="practice-progress-fill"></div></div>
+        <div class="progress-meta">
+          <span id="practice-progress-text"></span>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-direction-tag" data-i18n="practiceTag">請寫出對應的日文單字與讀音</div>
+          <div class="quiz-prompt" id="practice-prompt"></div>
+
+          <textarea class="practice-textarea" id="practice-input" autocapitalize="off" spellcheck="false"></textarea>
+
+          <div class="practice-answer" id="practice-answer"></div>
+
+          <div class="quiz-actions">
+            <button class="btn btn-secondary" onclick="clearPracticeInput()" data-i18n="clearBtn">清空</button>
+            <button class="btn btn-secondary" onclick="togglePracticeAnswer()" data-i18n="revealBtn">顯示答案</button>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="practice-prev-btn" onclick="practiceNav(-1)" data-i18n="prevBtn">← 上一個</button>
+          <button class="btn btn-primary" id="practice-next-btn" onclick="practiceNav(1)" data-i18n="nextWordBtn">下一個 →</button>
+          <button class="btn btn-secondary" onclick="backToSetup()" data-i18n="backBtn">← 返回編輯</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -428,6 +502,9 @@ const i18n = {
     loadSample: '載入範例',
     clearInput: '清空',
     settingsTitle: '2. 測驗設定',
+    modeLabel: '模式',
+    modeQuiz: '問答測驗',
+    modePractice: '寫字練習',
     directionLabel: '出題方向',
     dirJp2Mean: '單字 → 意思',
     dirMean2Jp: '意思 → 單字',
@@ -435,9 +512,16 @@ const i18n = {
     optionsLabel: '選項',
     shuffleOpt: '隨機排序',
     startQuiz: '開始測驗',
+    startPractice: '開始練習',
     checkBtn: '確認答案',
     revealBtn: '顯示答案',
+    clearBtn: '清空',
     nextBtn: '下一題',
+    prevBtn: '← 上一個',
+    nextWordBtn: '下一個 →',
+    finishBtn: '完成 ✓',
+    practiceTag: '請寫出對應的日文單字與讀音',
+    progressTextPractice: (cur, total) => `第 ${cur} / ${total} 個`,
     backBtn: '← 返回編輯',
     resultDone: '測驗完成！',
     restartSame: '重新測驗',
@@ -481,6 +565,9 @@ const i18n = {
     loadSample: 'Load sample',
     clearInput: 'Clear',
     settingsTitle: '2. Quiz settings',
+    modeLabel: 'Mode',
+    modeQuiz: 'Q&A Quiz',
+    modePractice: 'Writing Practice',
     directionLabel: 'Question direction',
     dirJp2Mean: 'Word → Meaning',
     dirMean2Jp: 'Meaning → Word',
@@ -488,9 +575,16 @@ const i18n = {
     optionsLabel: 'Options',
     shuffleOpt: 'Shuffle order',
     startQuiz: 'Start Quiz',
+    startPractice: 'Start Practice',
     checkBtn: 'Check Answer',
     revealBtn: 'Show Answer',
+    clearBtn: 'Clear',
     nextBtn: 'Next',
+    prevBtn: '← Previous',
+    nextWordBtn: 'Next →',
+    finishBtn: 'Finish ✓',
+    practiceTag: 'Write the matching Japanese word & reading',
+    progressTextPractice: (cur, total) => `Word ${cur} / ${total}`,
     backBtn: '← Back to edit',
     resultDone: 'Quiz complete!',
     restartSame: 'Retake quiz',
@@ -547,9 +641,13 @@ function applyI18n() {
   document.getElementById('format-hint').innerHTML = t('formatHint');
   document.getElementById('notes-input').placeholder = t('sample').split('\n')[0];
   updateParseStatus();
+  onModeChange();
   if (cards.length) {
     if (document.getElementById('quiz-screen').style.display !== 'none') renderQuestion();
     if (document.getElementById('result-screen').style.display !== 'none') renderResult();
+  }
+  if (practiceQueue.length && document.getElementById('practice-screen').style.display !== 'none') {
+    renderPracticeCard();
   }
 }
 
@@ -616,6 +714,21 @@ let scoreCorrect = 0;
 let scoreWrong = 0;
 let wrongList = [];
 let answered = false;
+let practiceQueue = [];
+let practiceIdx = 0;
+
+function onModeChange() {
+  const modeEl = document.querySelector('input[name="session-mode"]:checked');
+  const mode = modeEl ? modeEl.value : 'quiz';
+  document.getElementById('direction-group').style.display = mode === 'practice' ? 'none' : '';
+  document.getElementById('start-btn').textContent = mode === 'practice' ? t('startPractice') : t('startQuiz');
+}
+
+function startSession() {
+  const mode = document.querySelector('input[name="session-mode"]:checked').value;
+  if (mode === 'practice') startPractice();
+  else startQuiz();
+}
 
 /* ---------------- Setup screen ---------------- */
 function loadSample() {
@@ -702,6 +815,7 @@ function startQuiz() {
 function backToSetup() {
   document.getElementById('quiz-screen').style.display = 'none';
   document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('practice-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
 }
 
@@ -956,6 +1070,67 @@ function restartSame() {
   document.getElementById('result-screen').style.display = 'none';
   document.getElementById('quiz-screen').style.display = 'block';
   renderQuestion();
+}
+
+/* ---------------- Practice screen ---------------- */
+function startPractice() {
+  const text = document.getElementById('notes-input').value;
+  cards = parseNotes(text);
+  if (cards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
+  const shuffle = document.getElementById('shuffle-check').checked;
+  practiceQueue = shuffle ? shuffleArray(cards) : cards.slice();
+  practiceIdx = 0;
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('practice-screen').style.display = 'block';
+  renderPracticeCard();
+}
+
+function renderPracticeCard() {
+  const card = practiceQueue[practiceIdx];
+
+  document.getElementById('practice-progress-fill').style.width = `${((practiceIdx + 1) / practiceQueue.length) * 100}%`;
+  document.getElementById('practice-progress-text').textContent = t('progressTextPractice', practiceIdx + 1, practiceQueue.length);
+
+  document.getElementById('practice-prompt').textContent = card.meaning;
+
+  const answerEl = document.getElementById('practice-answer');
+  answerEl.className = 'practice-answer';
+  answerEl.innerHTML = `<span class="label">${t('correctAnswer')}</span><span class="value">${escapeHtml([card.word, card.reading].filter(Boolean).join(' / '))}</span>`;
+
+  const input = document.getElementById('practice-input');
+  input.value = '';
+  input.focus();
+
+  document.getElementById('practice-prev-btn').disabled = practiceIdx === 0;
+  document.getElementById('practice-next-btn').textContent = practiceIdx === practiceQueue.length - 1 ? t('finishBtn') : t('nextWordBtn');
+}
+
+function clearPracticeInput() {
+  const input = document.getElementById('practice-input');
+  input.value = '';
+  input.focus();
+}
+
+function togglePracticeAnswer() {
+  document.getElementById('practice-answer').classList.toggle('show');
+}
+
+function practiceNav(delta) {
+  const next = practiceIdx + delta;
+  if (next < 0) return;
+  if (next >= practiceQueue.length) {
+    backToSetup();
+    return;
+  }
+  practiceIdx = next;
+  renderPracticeCard();
 }
 </script>
 </body>
