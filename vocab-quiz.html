@@ -669,13 +669,20 @@ function parseNotes(text) {
 
     let word, reading, meaning;
 
-    // Special format: 単語。読み方：意味
-    const specialMatch = line.match(/^(.+?)。(.+?)[:：](.+)$/);
+    // Special format: 単語。読み方[：意味]
+    const specialMatch = line.match(/^(.+?)。(.+)$/);
     if (specialMatch) {
       word = specialMatch[1].trim();
-      reading = specialMatch[2].trim();
-      meaning = specialMatch[3].trim();
-      if (!word || !reading || !meaning) continue;
+      const rest = specialMatch[2];
+      const colonMatch = rest.match(/^(.+?)[:：](.+)$/);
+      if (colonMatch) {
+        reading = colonMatch[1].trim();
+        meaning = colonMatch[2].trim();
+      } else {
+        reading = rest.trim();
+        meaning = '';
+      }
+      if (!word || !reading) continue;
       cards.push({ word, reading, meaning });
       continue;
     }
@@ -805,7 +812,13 @@ function startQuiz() {
   const direction = document.querySelector('input[name="direction"]:checked').value;
   const shuffle = document.getElementById('shuffle-check').checked;
 
-  let order = shuffle ? shuffleArray(cards) : cards.slice();
+  const usableCards = cards.filter(card => card.meaning);
+  if (usableCards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
+  let order = shuffle ? shuffleArray(usableCards) : usableCards.slice();
   quizQueue = order.map(card => {
     let dir = direction;
     if (direction === 'mixed') dir = Math.random() < 0.5 ? 'jp2mean' : 'mean2jp';
@@ -1059,14 +1072,15 @@ function escapeHtml(s) {
 }
 
 function restartSame() {
-  if (cards.length === 0) {
+  const usableCards = cards.filter(card => card.meaning);
+  if (usableCards.length === 0) {
     backToSetup();
     return;
   }
   const direction = document.querySelector('input[name="direction"]:checked').value;
   const shuffle = document.getElementById('shuffle-check').checked;
 
-  let order = shuffle ? shuffleArray(cards) : cards.slice();
+  let order = shuffle ? shuffleArray(usableCards) : usableCards.slice();
   quizQueue = order.map(card => {
     let dir = direction;
     if (direction === 'mixed') dir = Math.random() < 0.5 ? 'jp2mean' : 'mean2jp';
@@ -1093,8 +1107,14 @@ function startPractice() {
     return;
   }
 
+  const usableCards = cards.filter(card => card.meaning);
+  if (usableCards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
   const shuffle = document.getElementById('shuffle-check').checked;
-  practiceQueue = shuffle ? shuffleArray(cards) : cards.slice();
+  practiceQueue = shuffle ? shuffleArray(usableCards) : usableCards.slice();
   practiceIdx = 0;
 
   document.getElementById('setup-screen').style.display = 'none';
