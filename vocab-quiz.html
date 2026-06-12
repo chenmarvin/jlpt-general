@@ -526,16 +526,16 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
           <textarea class="practice-textarea" id="practice-input" autocapitalize="off" spellcheck="false"></textarea>
 
           <div class="practice-answer" id="practice-answer"></div>
-
-          <div class="quiz-actions">
-            <button class="btn btn-secondary" onclick="clearPracticeInput()" data-i18n="clearBtn">清空</button>
-            <button class="btn btn-secondary" onclick="togglePracticeAnswer()" data-i18n="revealBtn">顯示答案</button>
-          </div>
         </div>
 
         <div class="btn-row">
+          <button class="btn btn-secondary" onclick="clearPracticeInput()" data-i18n="clearBtn">清空</button>
+          <button class="btn btn-secondary" onclick="togglePracticeAnswer()" data-i18n="revealBtn">顯示答案</button>
           <button class="btn btn-secondary" id="practice-prev-btn" onclick="practiceNav(-1)" data-i18n="prevBtn">← 上一個</button>
           <button class="btn btn-primary" id="practice-next-btn" onclick="practiceNav(1)" data-i18n="nextWordBtn">下一個 →</button>
+        </div>
+
+        <div class="btn-row">
           <button class="btn btn-secondary" onclick="backToSetup()" data-i18n="backBtn">← 返回編輯</button>
         </div>
       </div>
