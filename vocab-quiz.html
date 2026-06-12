@@ -367,6 +367,44 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
 .practice-answer .label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
 .practice-answer .value { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
 
+/* Worksheet screen */
+#worksheet-screen { display: none; }
+
+.worksheet-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.worksheet-item:last-child { border-bottom: none; }
+
+.worksheet-label {
+  flex: 0 0 auto;
+  min-width: 160px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text);
+}
+.worksheet-label .reading { font-size: 0.95rem; font-weight: 400; color: var(--text-muted); }
+.worksheet-label .meaning { font-size: 0.9rem; font-weight: 400; color: var(--primary); display: block; }
+
+.worksheet-textarea {
+  flex: 1 1 280px;
+  min-height: 64px;
+  padding: 10px 14px;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans JP', sans-serif;
+  resize: vertical;
+  color: var(--text);
+}
+.worksheet-textarea:focus { outline: none; border-color: var(--primary-light); }
+
 @media (max-width: 600px) {
   .quiz-prompt { font-size: 1.5rem; }
   main { padding: 14px; }
@@ -418,6 +456,7 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
             <div class="radio-row">
               <label><input type="radio" name="session-mode" value="quiz" checked onchange="onModeChange()"> <span data-i18n="modeQuiz">問答測驗</span></label>
               <label><input type="radio" name="session-mode" value="practice" onchange="onModeChange()"> <span data-i18n="modePractice">寫字練習</span></label>
+              <label><input type="radio" name="session-mode" value="worksheet" onchange="onModeChange()"> <span data-i18n="modeWorksheet">練習本</span></label>
             </div>
           </div>
         </div>
@@ -542,6 +581,18 @@ table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
     </div>
   </div>
 
+  <!-- WORKSHEET SCREEN -->
+  <div id="worksheet-screen">
+    <div class="section">
+      <div class="section-body">
+        <div id="worksheet-list"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="backToSetup()" data-i18n="backBtn">← 返回編輯</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <script>
@@ -557,6 +608,7 @@ const i18n = {
     modeLabel: '模式',
     modeQuiz: '問答測驗',
     modePractice: '寫字練習',
+    modeWorksheet: '練習本',
     directionLabel: '出題方向',
     dirJp2Mean: '單字 → 意思',
     dirMean2Jp: '意思 → 單字',
@@ -594,6 +646,7 @@ const i18n = {
       <ul>
         <li><b>問答測驗</b>：依「單字 → 意思」「意思 → 單字」或「混合」方向出題並打分。「意思 → 單字」需同時填寫正確的單字與讀音才算對。</li>
         <li><b>寫字練習</b>：依序顯示單字的意思，提供大輸入框反覆練習書寫，可隨時清空重寫，並用上一個／下一個切換單字，不計分。</li>
+        <li><b>練習本</b>：將所有單字（含單字、讀音、意思）一次列在同一頁，每個單字旁都有一個輸入框，可逐一填寫練習，適合列印或當作練習單使用。</li>
       </ul>
       <h3>4. 其他選項</h3>
       <ul>
@@ -644,6 +697,7 @@ const i18n = {
     modeLabel: 'Mode',
     modeQuiz: 'Q&A Quiz',
     modePractice: 'Writing Practice',
+    modeWorksheet: 'Practice Sheet',
     directionLabel: 'Question direction',
     dirJp2Mean: 'Word → Meaning',
     dirMean2Jp: 'Meaning → Word',
@@ -681,6 +735,7 @@ const i18n = {
       <ul>
         <li><b>Q&A Quiz</b>: questions are generated in the "Word → Meaning", "Meaning → Word", or "Mixed" direction and scored. "Meaning → Word" requires both the correct word and its reading.</li>
         <li><b>Writing Practice</b>: shows each word's meaning one at a time with a large text box for repeated writing practice. You can clear and rewrite anytime, and move between words with Previous/Next. This mode is not scored.</li>
+        <li><b>Practice Sheet</b>: lists all entries (word, reading, and meaning) on a single page, each with its own input box for writing practice — handy for printing or use as a worksheet.</li>
       </ul>
       <h3>4. Other options</h3>
       <ul>
@@ -749,6 +804,9 @@ function applyI18n() {
   }
   if (practiceQueue.length && document.getElementById('practice-screen').style.display !== 'none') {
     renderPracticeCard();
+  }
+  if (worksheetCards.length && document.getElementById('worksheet-screen').style.display !== 'none') {
+    renderWorksheet();
   }
 }
 
@@ -850,13 +908,14 @@ let practiceIdx = 0;
 function onModeChange() {
   const modeEl = document.querySelector('input[name="session-mode"]:checked');
   const mode = modeEl ? modeEl.value : 'quiz';
-  document.getElementById('direction-group').style.display = mode === 'practice' ? 'none' : '';
-  document.getElementById('start-btn').textContent = mode === 'practice' ? t('startPractice') : t('startQuiz');
+  document.getElementById('direction-group').style.display = mode === 'quiz' ? '' : 'none';
+  document.getElementById('start-btn').textContent = mode === 'quiz' ? t('startQuiz') : t('startPractice');
 }
 
 function startSession() {
   const mode = document.querySelector('input[name="session-mode"]:checked').value;
   if (mode === 'practice') startPractice();
+  else if (mode === 'worksheet') startWorksheet();
   else startQuiz();
 }
 
@@ -952,6 +1011,7 @@ function backToSetup() {
   document.getElementById('quiz-screen').style.display = 'none';
   document.getElementById('result-screen').style.display = 'none';
   document.getElementById('practice-screen').style.display = 'none';
+  document.getElementById('worksheet-screen').style.display = 'none';
   document.getElementById('setup-screen').style.display = 'block';
 }
 
@@ -1274,6 +1334,41 @@ function practiceNav(delta) {
   }
   practiceIdx = next;
   renderPracticeCard();
+}
+
+/* ---------------- Worksheet screen ---------------- */
+let worksheetCards = [];
+
+function startWorksheet() {
+  const text = document.getElementById('notes-input').value;
+  cards = parseNotes(text);
+  if (cards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
+  const shuffle = document.getElementById('shuffle-check').checked;
+  worksheetCards = shuffle ? shuffleArray(cards) : cards.slice();
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('practice-screen').style.display = 'none';
+  document.getElementById('worksheet-screen').style.display = 'block';
+  renderWorksheet();
+}
+
+function renderWorksheet() {
+  const listEl = document.getElementById('worksheet-list');
+  listEl.innerHTML = worksheetCards.map(card => {
+    const reading = card.reading ? `<span class="reading">‐${escapeHtml(card.reading)}</span>` : '';
+    const meaning = card.meaning ? `<span class="meaning">（${escapeHtml(card.meaning)}）</span>` : '';
+    return `
+      <div class="worksheet-item">
+        <div class="worksheet-label">${escapeHtml(card.word)}${reading}${meaning}</div>
+        <textarea class="worksheet-textarea" autocapitalize="off" spellcheck="false"></textarea>
+      </div>`;
+  }).join('');
 }
 </script>
 </body>
