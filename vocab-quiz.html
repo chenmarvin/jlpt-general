@@ -798,21 +798,16 @@ function applyI18n() {
   document.getElementById('notes-input').placeholder = t('sample').split('\n')[0];
   updateParseStatus();
   onModeChange();
-  if (cards.length) {
-    if (document.getElementById('quiz-screen').style.display !== 'none') renderQuestion();
-    if (document.getElementById('result-screen').style.display !== 'none') renderResult();
-  }
-  if (practiceQueue.length && document.getElementById('practice-screen').style.display !== 'none') {
-    renderPracticeCard();
-  }
-  if (worksheetCards.length && document.getElementById('worksheet-screen').style.display !== 'none') {
-    renderWorksheet();
-  }
+  if (currentScreen === 'quiz' && quizQueue.length) renderQuestion();
+  if (currentScreen === 'result' && quizQueue.length) renderResult();
+  if (currentScreen === 'practice' && practiceQueue.length) renderPracticeCard();
+  if (currentScreen === 'worksheet' && worksheetCards.length) renderWorksheet();
 }
 
 function toggleLang() {
   currentLang = currentLang === 'zh-TW' ? 'en' : 'zh-TW';
   applyI18n();
+  saveState();
 }
 
 function toggleHelp(show) {
@@ -902,8 +897,11 @@ let scoreCorrect = 0;
 let scoreWrong = 0;
 let wrongList = [];
 let answered = false;
+let lastAnswerResult = null;
 let practiceQueue = [];
 let practiceIdx = 0;
+let worksheetCards = [];
+let currentScreen = 'setup';
 
 function onModeChange() {
   const modeEl = document.querySelector('input[name="session-mode"]:checked');
@@ -919,18 +917,153 @@ function startSession() {
   else startQuiz();
 }
 
+/* ---------------- Screen switching & persistence ---------------- */
+const STORAGE_KEY = 'jlptVocabQuizState';
+
+let isRestoring = false;
+
+function showScreen(name) {
+  currentScreen = name;
+  document.getElementById('setup-screen').style.display = name === 'setup' ? 'block' : 'none';
+  document.getElementById('quiz-screen').style.display = name === 'quiz' ? 'block' : 'none';
+  document.getElementById('result-screen').style.display = name === 'result' ? 'block' : 'none';
+  document.getElementById('practice-screen').style.display = name === 'practice' ? 'block' : 'none';
+  document.getElementById('worksheet-screen').style.display = name === 'worksheet' ? 'block' : 'none';
+  saveState();
+}
+
+function getQuizInputState() {
+  const item = quizQueue[quizIdx];
+  if (!item) return null;
+  if (item.dir === 'jp2mean') {
+    return { wordVal: document.getElementById('answer-input').value };
+  }
+  return {
+    wordVal: document.getElementById('answer-input-word').value,
+    readingVal: document.getElementById('answer-input-reading').value
+  };
+}
+
+function saveState() {
+  if (isRestoring) return;
+  const state = {
+    lang: currentLang,
+    notes: document.getElementById('notes-input').value,
+    sessionMode: document.querySelector('input[name="session-mode"]:checked')?.value || 'quiz',
+    direction: document.querySelector('input[name="direction"]:checked')?.value || 'jp2mean',
+    shuffle: document.getElementById('shuffle-check').checked,
+    screen: currentScreen,
+    cards, quizQueue, quizIdx, scoreCorrect, scoreWrong, wrongList,
+    answered, lastAnswerResult,
+    quizInput: getQuizInputState(),
+    practiceQueue, practiceIdx,
+    practiceInputVal: document.getElementById('practice-input').value,
+    practiceAnswerShown: document.getElementById('practice-answer').classList.contains('show'),
+    worksheetCards,
+    worksheetValues: Array.from(document.querySelectorAll('.worksheet-textarea')).map(el => el.value)
+  };
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { /* ignore storage errors */ }
+}
+
+function restoreState() {
+  isRestoring = true;
+  let state = null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = JSON.parse(raw);
+  } catch (e) { /* ignore corrupt state */ }
+
+  if (state) {
+    currentLang = state.lang || 'zh-TW';
+    document.getElementById('notes-input').value = state.notes || '';
+    if (state.sessionMode) {
+      const el = document.querySelector(`input[name="session-mode"][value="${state.sessionMode}"]`);
+      if (el) el.checked = true;
+    }
+    if (state.direction) {
+      const el = document.querySelector(`input[name="direction"][value="${state.direction}"]`);
+      if (el) el.checked = true;
+    }
+    if (typeof state.shuffle === 'boolean') document.getElementById('shuffle-check').checked = state.shuffle;
+
+    cards = state.cards || [];
+    quizQueue = state.quizQueue || [];
+    quizIdx = state.quizIdx || 0;
+    scoreCorrect = state.scoreCorrect || 0;
+    scoreWrong = state.scoreWrong || 0;
+    wrongList = state.wrongList || [];
+    practiceQueue = state.practiceQueue || [];
+    practiceIdx = state.practiceIdx || 0;
+    worksheetCards = state.worksheetCards || [];
+
+    currentScreen = state.screen || 'setup';
+    if (currentScreen === 'quiz' && !(quizQueue.length && quizIdx < quizQueue.length)) currentScreen = 'setup';
+    if (currentScreen === 'result' && !quizQueue.length) currentScreen = 'setup';
+    if (currentScreen === 'practice' && !(practiceQueue.length && practiceIdx < practiceQueue.length)) currentScreen = 'setup';
+    if (currentScreen === 'worksheet' && !worksheetCards.length) currentScreen = 'setup';
+  }
+
+  applyI18n();
+  showScreen(currentScreen);
+
+  if (!state) {
+    isRestoring = false;
+    saveState();
+    return;
+  }
+
+  if (currentScreen === 'quiz') {
+    const item = quizQueue[quizIdx];
+    const qInput = state.quizInput || {};
+    if (item.dir === 'jp2mean') {
+      document.getElementById('answer-input').value = qInput.wordVal || '';
+    } else {
+      document.getElementById('answer-input-word').value = qInput.wordVal || '';
+      document.getElementById('answer-input-reading').value = qInput.readingVal || '';
+    }
+    if (state.answered && state.lastAnswerResult) {
+      answered = true;
+      lastAnswerResult = state.lastAnswerResult;
+      applyAnswerUI(item, lastAnswerResult.isCorrect, lastAnswerResult.revealedOnly, lastAnswerResult.detail);
+    }
+  } else if (currentScreen === 'practice') {
+    document.getElementById('practice-input').value = state.practiceInputVal || '';
+    if (state.practiceAnswerShown) document.getElementById('practice-answer').classList.add('show');
+  } else if (currentScreen === 'worksheet') {
+    const vals = state.worksheetValues || [];
+    document.querySelectorAll('.worksheet-textarea').forEach((el, i) => { if (vals[i]) el.value = vals[i]; });
+  }
+
+  isRestoring = false;
+  saveState();
+}
+
 /* ---------------- Setup screen ---------------- */
 function loadSample() {
   document.getElementById('notes-input').value = t('sample');
   updateParseStatus();
+  saveState();
 }
 function clearInput() {
   document.getElementById('notes-input').value = '';
   updateParseStatus();
+  saveState();
 }
 document.addEventListener('DOMContentLoaded', () => {
-  applyI18n();
-  document.getElementById('notes-input').addEventListener('input', updateParseStatus);
+  restoreState();
+  document.getElementById('notes-input').addEventListener('input', () => { updateParseStatus(); saveState(); });
+  document.querySelectorAll('input[name="session-mode"]').forEach(el => el.addEventListener('change', saveState));
+  document.querySelectorAll('input[name="direction"]').forEach(el => el.addEventListener('change', saveState));
+  document.getElementById('shuffle-check').addEventListener('change', saveState);
+  document.getElementById('answer-input').addEventListener('input', saveState);
+  document.getElementById('answer-input-word').addEventListener('input', saveState);
+  document.getElementById('answer-input-reading').addEventListener('input', saveState);
+  document.getElementById('practice-input').addEventListener('input', saveState);
+  document.getElementById('worksheet-list').addEventListener('input', e => {
+    if (e.target.classList.contains('worksheet-textarea')) saveState();
+  });
   const onEnter = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -1000,19 +1133,15 @@ function startQuiz() {
   scoreCorrect = 0;
   scoreWrong = 0;
   wrongList = [];
+  answered = false;
+  lastAnswerResult = null;
 
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'none';
-  document.getElementById('quiz-screen').style.display = 'block';
+  showScreen('quiz');
   renderQuestion();
 }
 
 function backToSetup() {
-  document.getElementById('quiz-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'none';
-  document.getElementById('practice-screen').style.display = 'none';
-  document.getElementById('worksheet-screen').style.display = 'none';
-  document.getElementById('setup-screen').style.display = 'block';
+  showScreen('setup');
 }
 
 /* ---------------- Quiz screen ---------------- */
@@ -1089,6 +1218,8 @@ function renderQuestion() {
   document.getElementById('check-btn').style.display = '';
   document.getElementById('reveal-btn').style.display = '';
   document.getElementById('next-btn').style.display = 'none';
+
+  saveState();
 }
 
 function checkAnswer() {
@@ -1139,9 +1270,7 @@ function revealAnswer() {
   }
 }
 
-function finishAnswer(isCorrect, userVal, revealedOnly, detail) {
-  answered = true;
-  const item = quizQueue[quizIdx];
+function applyAnswerUI(item, isCorrect, revealedOnly, detail) {
   const feedback = document.getElementById('feedback');
   const feedbackText = document.getElementById('feedback-text');
   const feedbackAnswer = document.getElementById('feedback-answer');
@@ -1162,15 +1291,31 @@ function finishAnswer(isCorrect, userVal, revealedOnly, detail) {
   }
 
   if (isCorrect) {
-    scoreCorrect++;
     feedback.className = 'feedback show correct';
     feedbackText.textContent = t('correct');
     feedbackAnswer.innerHTML = '';
   } else {
-    scoreWrong++;
     feedback.className = 'feedback show incorrect';
     feedbackText.textContent = revealedOnly ? '' : t('incorrect');
     feedbackAnswer.innerHTML = `<span class="label">${t('correctAnswer')}</span>${getDisplayAnswer(item)}`;
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('reveal-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+}
+
+function finishAnswer(isCorrect, userVal, revealedOnly, detail) {
+  answered = true;
+  const item = quizQueue[quizIdx];
+  lastAnswerResult = { isCorrect, revealedOnly: !!revealedOnly, detail: detail || null };
+
+  applyAnswerUI(item, isCorrect, revealedOnly, detail);
+
+  if (isCorrect) {
+    scoreCorrect++;
+  } else {
+    scoreWrong++;
     wrongList.push({
       item,
       yourAnswer: userVal && userVal.trim() ? userVal.trim() : '—'
@@ -1180,10 +1325,8 @@ function finishAnswer(isCorrect, userVal, revealedOnly, detail) {
   document.getElementById('score-correct').textContent = t('scoreCorrect', scoreCorrect);
   document.getElementById('score-wrong').textContent = t('scoreWrong', scoreWrong);
 
-  document.getElementById('check-btn').style.display = 'none';
-  document.getElementById('reveal-btn').style.display = 'none';
-  document.getElementById('next-btn').style.display = '';
   document.getElementById('next-btn').focus();
+  saveState();
 }
 
 function nextQuestion() {
@@ -1198,8 +1341,7 @@ function nextQuestion() {
 
 /* ---------------- Result screen ---------------- */
 function showResult() {
-  document.getElementById('quiz-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'block';
+  showScreen('result');
   renderResult();
 }
 
@@ -1263,9 +1405,10 @@ function restartSame() {
   scoreCorrect = 0;
   scoreWrong = 0;
   wrongList = [];
+  answered = false;
+  lastAnswerResult = null;
 
-  document.getElementById('result-screen').style.display = 'none';
-  document.getElementById('quiz-screen').style.display = 'block';
+  showScreen('quiz');
   renderQuestion();
 }
 
@@ -1288,10 +1431,7 @@ function startPractice() {
   practiceQueue = shuffle ? shuffleArray(usableCards) : usableCards.slice();
   practiceIdx = 0;
 
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'none';
-  document.getElementById('quiz-screen').style.display = 'none';
-  document.getElementById('practice-screen').style.display = 'block';
+  showScreen('practice');
   renderPracticeCard();
 }
 
@@ -1313,16 +1453,20 @@ function renderPracticeCard() {
 
   document.getElementById('practice-prev-btn').disabled = practiceIdx === 0;
   document.getElementById('practice-next-btn').textContent = practiceIdx === practiceQueue.length - 1 ? t('finishBtn') : t('nextWordBtn');
+
+  saveState();
 }
 
 function clearPracticeInput() {
   const input = document.getElementById('practice-input');
   input.value = '';
   input.focus();
+  saveState();
 }
 
 function togglePracticeAnswer() {
   document.getElementById('practice-answer').classList.toggle('show');
+  saveState();
 }
 
 function practiceNav(delta) {
@@ -1337,8 +1481,6 @@ function practiceNav(delta) {
 }
 
 /* ---------------- Worksheet screen ---------------- */
-let worksheetCards = [];
-
 function startWorksheet() {
   const text = document.getElementById('notes-input').value;
   cards = parseNotes(text);
@@ -1350,11 +1492,7 @@ function startWorksheet() {
   const shuffle = document.getElementById('shuffle-check').checked;
   worksheetCards = shuffle ? shuffleArray(cards) : cards.slice();
 
-  document.getElementById('setup-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'none';
-  document.getElementById('quiz-screen').style.display = 'none';
-  document.getElementById('practice-screen').style.display = 'none';
-  document.getElementById('worksheet-screen').style.display = 'block';
+  showScreen('worksheet');
   renderWorksheet();
 }
 
@@ -1369,6 +1507,7 @@ function renderWorksheet() {
         <textarea class="worksheet-textarea" autocapitalize="off" spellcheck="false"></textarea>
       </div>`;
   }).join('');
+  saveState();
 }
 </script>
 </body>
