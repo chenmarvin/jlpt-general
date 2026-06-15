@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日語單字測驗 | Japanese Vocab Quiz</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #3730a3;
+  --primary-light: #4f46e5;
+  --primary-faint: #eef2ff;
+  --ok: #15803d;
+  --ok-light: #dcfce7;
+  --ok-border: #86efac;
+  --bad: #b91c1c;
+  --bad-light: #fee2e2;
+  --bad-border: #fca5a5;
+  --surface: #ffffff;
+  --bg: #f8f9ff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+header {
+  background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+  color: white;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(55,48,163,0.3);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.02em; }
+header p { font-size: 0.85rem; opacity: 0.8; margin-top: 2px; }
+
+.lang-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.lang-btn:hover { background: rgba(255,255,255,0.35); }
+
+.header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+main { max-width: 760px; margin: 0 auto; padding: 24px; }
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  max-width: 620px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+.modal-box h2 { color: var(--primary); margin-bottom: 12px; font-size: 1.2rem; }
+.modal-box h3 { color: var(--primary); margin: 16px 0 6px; font-size: 1rem; }
+.modal-box p, .modal-box li { font-size: 0.92rem; margin-bottom: 6px; }
+.modal-box ul, .modal-box ol { padding-left: 22px; margin-bottom: 10px; }
+.modal-box code { background: var(--primary-faint); padding: 1px 5px; border-radius: 4px; font-size: 0.85em; }
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+}
+.modal-close:hover { color: var(--text); }
+
+.section {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.section-body { padding: 20px; }
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 220px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans JP', monospace;
+  font-size: 0.95rem;
+  resize: vertical;
+  color: var(--text);
+}
+textarea:focus { outline: 2px solid var(--primary-light); outline-offset: -1px; }
+
+.hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.7;
+}
+.hint code {
+  background: var(--primary-faint);
+  color: var(--primary);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.78rem;
+}
+
+.options-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px 0;
+  align-items: center;
+}
+.options-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.options-group label.group-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.radio-row { display: flex; gap: 14px; flex-wrap: wrap; }
+.radio-row label, .checkbox-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-primary { background: var(--primary-light); color: white; }
+.btn-primary:hover { background: var(--primary); }
+.btn-primary:disabled { background: var(--text-light); cursor: not-allowed; }
+.btn-secondary { background: var(--primary-faint); color: var(--primary); }
+.btn-secondary:hover { background: #e0e7ff; }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+/* Quiz screen */
+#quiz-screen { display: none; }
+
+.progress-bar-track {
+  background: var(--border);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-bar-fill {
+  background: var(--primary-light);
+  height: 100%;
+  transition: width 0.25s;
+}
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.score-pill { display: flex; gap: 12px; }
+.score-pill span.ok { color: var(--ok); font-weight: 700; }
+.score-pill span.bad { color: var(--bad); font-weight: 700; }
+
+.quiz-card {
+  text-align: center;
+  padding: 32px 16px;
+}
+.quiz-direction-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-faint);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  letter-spacing: 0.03em;
+}
+.quiz-prompt {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+.quiz-reading {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  min-height: 1.4em;
+}
+
+.answer-input {
+  width: 100%;
+  max-width: 420px;
+  padding: 14px 16px;
+  font-size: 1.1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.answer-input:focus { outline: none; border-color: var(--primary-light); }
+.answer-input.correct { border-color: var(--ok-border); background: var(--ok-light); color: var(--ok); }
+.answer-input.incorrect { border-color: var(--bad-border); background: var(--bad-light); color: var(--bad); }
+
+.answer-input-pair {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+.answer-field {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.answer-field .answer-input { max-width: none; }
+.answer-field-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-align: center;
+}
+
+.feedback {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  display: none;
+}
+.feedback.show { display: block; }
+.feedback.correct { background: var(--ok-light); color: var(--ok); border: 1px solid var(--ok-border); }
+.feedback.incorrect { background: var(--bad-light); color: var(--bad); border: 1px solid var(--bad-border); }
+.feedback .answer-detail { margin-top: 6px; font-weight: 700; font-size: 1.05rem; color: var(--text); }
+.feedback .answer-detail .label { font-weight: 400; font-size: 0.8rem; color: var(--text-muted); display: block; }
+
+.quiz-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* Results screen */
+#result-screen { display: none; }
+.result-score {
+  text-align: center;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+.result-score span { font-size: 1.2rem; color: var(--text-muted); font-weight: 600; }
+.result-sub { text-align: center; color: var(--text-muted); margin-bottom: 20px; }
+
+table.review-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+table.review-table th, table.review-table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+table.review-table th { color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+table.review-table td.your-answer.wrong { color: var(--bad); }
+table.review-table td.correct-answer { color: var(--ok); font-weight: 600; }
+
+.empty-msg { color: var(--text-muted); font-size: 0.9rem; padding: 8px 0; }
+
+/* Practice screen */
+#practice-screen { display: none; }
+
+.practice-textarea {
+  width: 100%;
+  max-width: 520px;
+  min-height: 160px;
+  margin: 0 auto;
+  display: block;
+  padding: 16px;
+  font-size: 1.6rem;
+  line-height: 1.8;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans JP', sans-serif;
+  text-align: center;
+  resize: vertical;
+  color: var(--text);
+}
+.practice-textarea:focus { outline: none; border-color: var(--primary-light); }
+
+.practice-answer {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-faint);
+  border: 1px solid var(--border);
+  display: none;
+}
+.practice-answer.show { display: block; }
+.practice-answer .label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.practice-answer .value { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+
+/* Worksheet screen */
+#worksheet-screen { display: none; }
+
+.worksheet-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.worksheet-item:last-child { border-bottom: none; }
+
+.worksheet-label {
+  flex: 0 0 auto;
+  min-width: 160px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: var(--text);
+}
+.worksheet-label .reading { font-size: 0.95rem; font-weight: 400; color: var(--text-muted); }
+.worksheet-label .meaning { font-size: 0.9rem; font-weight: 400; color: var(--primary); display: block; }
+
+.worksheet-textarea {
+  flex: 1 1 280px;
+  min-height: 64px;
+  padding: 10px 14px;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans JP', sans-serif;
+  resize: vertical;
+  color: var(--text);
+}
+.worksheet-textarea:focus { outline: none; border-color: var(--primary-light); }
+
+@media (max-width: 600px) {
+  .quiz-prompt { font-size: 1.5rem; }
+  main { padding: 14px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 data-i18n="title">日語單字測驗</h1>
+    <p data-i18n="subtitle">貼上單字筆記，立即生成問答測驗</p>
+  </div>
+  <div class="header-actions">
+    <button class="lang-btn" id="help-btn" onclick="toggleHelp(true)" data-i18n="helpBtn">說明</button>
+    <button class="lang-btn" id="lang-toggle-btn" onclick="toggleLang()">English</button>
+  </div>
+</header>
+
+<div class="modal-overlay" id="help-modal" onclick="if(event.target===this) toggleHelp(false)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="toggleHelp(false)" aria-label="Close">&times;</button>
+    <div id="help-content"></div>
+  </div>
+</div>
+
+<main>
+
+  <!-- SETUP SCREEN -->
+  <div id="setup-screen">
+    <div class="section">
+      <div class="section-body">
+        <div class="section-title" data-i18n="pasteTitle">1. 貼上單字筆記</div>
+        <textarea id="notes-input" placeholder=""></textarea>
+        <div class="hint" id="format-hint"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="loadSample()" data-i18n="loadSample">載入範例</button>
+          <button class="btn btn-secondary" onclick="clearInput()" data-i18n="clearInput">清空</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-body">
+        <div class="section-title" data-i18n="settingsTitle">2. 測驗設定</div>
+        <div class="options-row">
+          <div class="options-group">
+            <label class="group-label" data-i18n="modeLabel">模式</label>
+            <div class="radio-row">
+              <label><input type="radio" name="session-mode" value="quiz" checked onchange="onModeChange()"> <span data-i18n="modeQuiz">問答測驗</span></label>
+              <label><input type="radio" name="session-mode" value="practice" onchange="onModeChange()"> <span data-i18n="modePractice">寫字練習</span></label>
+              <label><input type="radio" name="session-mode" value="worksheet" onchange="onModeChange()"> <span data-i18n="modeWorksheet">練習本</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="options-row">
+          <div class="options-group" id="direction-group">
+            <label class="group-label" data-i18n="directionLabel">出題方向</label>
+            <div class="radio-row">
+              <label><input type="radio" name="direction" value="jp2mean" checked> <span data-i18n="dirJp2Mean">單字 → 意思</span></label>
+              <label><input type="radio" name="direction" value="mean2jp"> <span data-i18n="dirMean2Jp">意思 → 單字</span></label>
+              <label><input type="radio" name="direction" value="mixed"> <span data-i18n="dirMixed">混合（隨機）</span></label>
+            </div>
+          </div>
+          <div class="options-group">
+            <label class="group-label" data-i18n="optionsLabel">選項</label>
+            <div class="checkbox-row">
+              <label><input type="checkbox" id="shuffle-check" checked> <span data-i18n="shuffleOpt">隨機排序</span></label>
+            </div>
+          </div>
+        </div>
+        <div id="parse-status" class="hint"></div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="start-btn" onclick="startSession()" data-i18n="startQuiz">開始測驗</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen">
+    <div class="section">
+      <div class="section-body">
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
+        <div class="progress-meta">
+          <span id="progress-text"></span>
+          <span class="score-pill">
+            <span class="ok" id="score-correct"></span>
+            <span class="bad" id="score-wrong"></span>
+          </span>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-direction-tag" id="direction-tag"></div>
+          <div class="quiz-prompt" id="quiz-prompt"></div>
+          <div class="quiz-reading" id="quiz-reading"></div>
+
+          <input type="text" class="answer-input" id="answer-input" autocomplete="off" autocapitalize="off" spellcheck="false">
+
+          <div class="answer-input-pair" id="answer-input-pair" style="display:none">
+            <div class="answer-field">
+              <label class="answer-field-label" data-i18n="labelWord">單字</label>
+              <input type="text" class="answer-input" id="answer-input-word" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="answer-field" id="answer-field-reading">
+              <label class="answer-field-label" data-i18n="labelReading">讀音</label>
+              <input type="text" class="answer-input" id="answer-input-reading" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </div>
+          </div>
+
+          <div class="feedback" id="feedback">
+            <div id="feedback-text"></div>
+            <div class="answer-detail" id="feedback-answer"></div>
+          </div>
+
+          <div class="quiz-actions">
+            <button class="btn btn-primary" id="check-btn" onclick="checkAnswer()" data-i18n="checkBtn">確認答案</button>
+            <button class="btn btn-secondary" id="reveal-btn" onclick="revealAnswer()" data-i18n="revealBtn">顯示答案</button>
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" style="display:none" data-i18n="nextBtn">下一題</button>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="backToSetup()" data-i18n="backBtn">← 返回編輯</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="result-screen">
+    <div class="section">
+      <div class="section-body">
+        <div class="result-score"><span id="result-score-num"></span> <span id="result-score-total"></span></div>
+        <div class="result-sub" data-i18n="resultDone">測驗完成！</div>
+        <div id="review-area"></div>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn btn-primary" onclick="restartSame()" data-i18n="restartSame">重新測驗</button>
+          <button class="btn btn-secondary" onclick="backToSetup()" data-i18n="backBtn">← 返回編輯</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRACTICE SCREEN -->
+  <div id="practice-screen">
+    <div class="section">
+      <div class="section-body">
+        <div class="progress-bar-track"><div class="progress-bar-fill" id="practice-progress-fill"></div></div>
+        <div class="progress-meta">
+          <span id="practice-progress-text"></span>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-direction-tag" data-i18n="practiceTag">請寫出對應的日文單字與讀音</div>
+          <div class="quiz-prompt" id="practice-prompt"></div>
+
+          <textarea class="practice-textarea" id="practice-input" autocapitalize="off" spellcheck="false"></textarea>
+
+          <div class="practice-answer" id="practice-answer"></div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="clearPracticeInput()" data-i18n="clearBtn">清空</button>
+          <button class="btn btn-secondary" onclick="togglePracticeAnswer()" data-i18n="revealBtn">顯示答案</button>
+          <button class="btn btn-secondary" id="practice-prev-btn" onclick="practiceNav(-1)" data-i18n="prevBtn">← 上一個</button>
+          <button class="btn btn-primary" id="practice-next-btn" onclick="practiceNav(1)" data-i18n="nextWordBtn">下一個 →</button>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="backToSetup()" data-i18n="backBtn">← 返回編輯</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKSHEET SCREEN -->
+  <div id="worksheet-screen">
+    <div class="section">
+      <div class="section-body">
+        <div id="worksheet-list"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="backToSetup()" data-i18n="backBtn">← 返回編輯</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* ---------------- i18n ---------------- */
+const i18n = {
+  'zh-TW': {
+    title: '日語單字測驗',
+    subtitle: '貼上單字筆記，立即生成問答測驗',
+    pasteTitle: '1. 貼上單字筆記',
+    loadSample: '載入範例',
+    clearInput: '清空',
+    settingsTitle: '2. 測驗設定',
+    modeLabel: '模式',
+    modeQuiz: '問答測驗',
+    modePractice: '寫字練習',
+    modeWorksheet: '練習本',
+    directionLabel: '出題方向',
+    dirJp2Mean: '單字 → 意思',
+    dirMean2Jp: '意思 → 單字',
+    dirMixed: '混合（隨機）',
+    optionsLabel: '選項',
+    shuffleOpt: '隨機排序',
+    startQuiz: '開始測驗',
+    startPractice: '開始練習',
+    checkBtn: '確認答案',
+    revealBtn: '顯示答案',
+    clearBtn: '清空',
+    nextBtn: '下一題',
+    prevBtn: '← 上一個',
+    nextWordBtn: '下一個 →',
+    finishBtn: '完成 ✓',
+    practiceTag: '請寫出對應的日文單字與讀音',
+    progressTextPractice: (cur, total) => `第 ${cur} / ${total} 個`,
+    backBtn: '← 返回編輯',
+    resultDone: '測驗完成！',
+    restartSame: '重新測驗',
+    formatHint: '每行一個單字，欄位之間請用 <code>Tab</code>、<code>-</code>、<code>:</code>、<code>=</code>、<code>→</code> 或兩個以上空格分隔。<br>例如：<code>食べる（たべる）- 吃</code> 或 <code>勉強する　べんきょうする　念書</code>（讀音建議寫在括號內）。<br>也支援 <code>單字。讀音：意思</code> 格式，例如：<code>食べる。たべる：吃, eat</code>。<br>意思可有多個，用 <code>,</code> 或 <code>/</code>、<code>、</code> 分隔，作答時符合任一個即算正確。',
+    helpBtn: '說明',
+    helpContent: `
+      <h2>使用說明</h2>
+      <h3>1. 貼上單字筆記</h3>
+      <p>在第一個欄位貼上你的單字筆記，每行一個單字。系統會自動偵測格式並解析出「單字」「讀音」「意思」。也可以按「載入範例」先試用看看。</p>
+      <h3>2. 支援的筆記格式</h3>
+      <ul>
+        <li>使用 <code>Tab</code>、<code>-</code>、<code>:</code>、<code>=</code>、<code>→</code> 或兩個以上空白分隔欄位，例如：<code>食べる（たべる）- 吃, eat</code></li>
+        <li>讀音可寫在漢字後的括號內，例如：<code>勉強する（べんきょうする）　念書</code></li>
+        <li>也支援 <code>單字。讀音：意思</code> 格式，例如：<code>食べる。たべる：吃, eat</code>；冒號與意思可省略，例如：<code>私。わたし</code>（此時該單字不會出現在測驗題目中，但仍會被計入偵測數量）</li>
+        <li>一個單字可以有多個意思，用 <code>,</code>、<code>/</code> 或 <code>、</code> 分隔，作答時答對其中一個即算正確</li>
+      </ul>
+      <h3>3. 測驗模式</h3>
+      <ul>
+        <li><b>問答測驗</b>：依「單字 → 意思」「意思 → 單字」或「混合」方向出題並打分。「意思 → 單字」需同時填寫正確的單字與讀音才算對。</li>
+        <li><b>寫字練習</b>：依序顯示單字的意思，提供大輸入框反覆練習書寫，可隨時清空重寫，並用上一個／下一個切換單字，不計分。</li>
+        <li><b>練習本</b>：將所有單字（含單字、讀音、意思）一次列在同一頁，每個單字旁都有一個輸入框，可逐一填寫練習，適合列印或當作練習單使用。</li>
+      </ul>
+      <h3>4. 其他選項</h3>
+      <ul>
+        <li><b>隨機排序</b>：開啟後每次測驗/練習的單字順序會打亂。</li>
+        <li>右上角可切換中文／英文介面語言。</li>
+        <li>測驗結束後可查看每題的對錯與正確答案，並可選擇重新測驗或返回編輯筆記。</li>
+      </ul>
+    `,
+    parseCount: (n) => `已偵測到 ${n} 個單字。`,
+    parseEmpty: '尚未偵測到任何單字，請確認格式。',
+    qLabelJp: '請輸入意思',
+    qLabelMean: '請輸入單字與讀音',
+    labelWord: '單字',
+    labelReading: '讀音',
+    correct: '✓ 答對了！',
+    incorrect: '✗ 答錯了',
+    yourAnswer: '你的答案',
+    correctAnswer: '正確答案',
+    revealedNotice: '答案：',
+    progressText: (cur, total) => `第 ${cur} / ${total} 題`,
+    scoreCorrect: (n) => `正確 ${n}`,
+    scoreWrong: (n) => `錯誤 ${n}`,
+    reviewHeaderQ: '題目',
+    reviewHeaderYour: '你的答案',
+    reviewHeaderCorrect: '正確答案',
+    noWrong: '太厲害了，全部答對！🎉',
+    pleaseInput: '請先輸入單字筆記。',
+    sample:
+`単語 - 意味
+食べる（たべる）- 吃, eat
+飲む（のむ）- 喝
+勉強する（べんきょうする）- 念書、學習
+学校（がっこう）- 學校
+先生（せんせい）- 老師, 醫生
+電車（でんしゃ）- 電車
+忙しい（いそがしい）- 忙碌的
+楽しい（たのしい）- 開心的, 快樂的
+毎日（まいにち）- 每天
+時間（じかん）- 時間`
+  },
+  'en': {
+    title: 'Japanese Vocab Quiz',
+    subtitle: 'Paste your vocabulary notes and turn them into a Q&A quiz',
+    pasteTitle: '1. Paste your vocabulary notes',
+    loadSample: 'Load sample',
+    clearInput: 'Clear',
+    settingsTitle: '2. Quiz settings',
+    modeLabel: 'Mode',
+    modeQuiz: 'Q&A Quiz',
+    modePractice: 'Writing Practice',
+    modeWorksheet: 'Practice Sheet',
+    directionLabel: 'Question direction',
+    dirJp2Mean: 'Word → Meaning',
+    dirMean2Jp: 'Meaning → Word',
+    dirMixed: 'Mixed (random)',
+    optionsLabel: 'Options',
+    shuffleOpt: 'Shuffle order',
+    startQuiz: 'Start Quiz',
+    startPractice: 'Start Practice',
+    checkBtn: 'Check Answer',
+    revealBtn: 'Show Answer',
+    clearBtn: 'Clear',
+    nextBtn: 'Next',
+    prevBtn: '← Previous',
+    nextWordBtn: 'Next →',
+    finishBtn: 'Finish ✓',
+    practiceTag: 'Write the matching Japanese word & reading',
+    progressTextPractice: (cur, total) => `Word ${cur} / ${total}`,
+    backBtn: '← Back to edit',
+    resultDone: 'Quiz complete!',
+    restartSame: 'Retake quiz',
+    formatHint: 'One entry per line. Separate fields with <code>Tab</code>, <code>-</code>, <code>:</code>, <code>=</code>, <code>→</code>, or 2+ spaces.<br>e.g. <code>食べる（たべる）- to eat</code> or <code>勉強する　べんきょうする　to study</code> (put readings in parentheses).<br>Also supports <code>word。reading：meaning</code>, e.g. <code>食べる。たべる：to eat</code>.<br>Multiple meanings can be separated by <code>,</code>, <code>/</code>, or <code>、</code> — any one of them counts as correct.',
+    helpBtn: 'Help',
+    helpContent: `
+      <h2>How to use</h2>
+      <h3>1. Paste your vocabulary notes</h3>
+      <p>Paste your notes into the first box, one entry per line. The app automatically detects the format and extracts the "word", "reading", and "meaning" for each entry. Click "Load sample" to try it out first.</p>
+      <h3>2. Supported note formats</h3>
+      <ul>
+        <li>Separate fields with <code>Tab</code>, <code>-</code>, <code>:</code>, <code>=</code>, <code>→</code>, or 2+ spaces, e.g. <code>食べる（たべる）- to eat, eat</code></li>
+        <li>The reading can be written in parentheses after the kanji, e.g. <code>勉強する（べんきょうする）　to study</code></li>
+        <li>Also supports <code>word。reading：meaning</code>, e.g. <code>食べる。たべる：to eat</code>. The colon and meaning are optional, e.g. <code>私。わたし</code> (such entries are still counted but won't appear in quizzes)</li>
+        <li>A word can have multiple meanings separated by <code>,</code>, <code>/</code>, or <code>、</code> — matching any one of them counts as correct</li>
+      </ul>
+      <h3>3. Quiz modes</h3>
+      <ul>
+        <li><b>Q&A Quiz</b>: questions are generated in the "Word → Meaning", "Meaning → Word", or "Mixed" direction and scored. "Meaning → Word" requires both the correct word and its reading.</li>
+        <li><b>Writing Practice</b>: shows each word's meaning one at a time with a large text box for repeated writing practice. You can clear and rewrite anytime, and move between words with Previous/Next. This mode is not scored.</li>
+        <li><b>Practice Sheet</b>: lists all entries (word, reading, and meaning) on a single page, each with its own input box for writing practice — handy for printing or use as a worksheet.</li>
+      </ul>
+      <h3>4. Other options</h3>
+      <ul>
+        <li><b>Shuffle order</b>: randomizes the order of entries each time you start a quiz or practice session.</li>
+        <li>Switch between Chinese and English using the button in the top-right corner.</li>
+        <li>After a quiz, you can review each question's correct/incorrect status and the correct answer, then retake the quiz or go back to edit your notes.</li>
+      </ul>
+    `,
+    parseCount: (n) => `Detected ${n} vocabulary entries.`,
+    parseEmpty: 'No entries detected yet. Please check the format.',
+    qLabelJp: 'Type the meaning',
+    qLabelMean: 'Type the word and its reading',
+    labelWord: 'Word',
+    labelReading: 'Reading',
+    correct: '✓ Correct!',
+    incorrect: '✗ Incorrect',
+    yourAnswer: 'Your answer',
+    correctAnswer: 'Correct answer',
+    revealedNotice: 'Answer: ',
+    progressText: (cur, total) => `Question ${cur} / ${total}`,
+    scoreCorrect: (n) => `Correct ${n}`,
+    scoreWrong: (n) => `Wrong ${n}`,
+    reviewHeaderQ: 'Question',
+    reviewHeaderYour: 'Your answer',
+    reviewHeaderCorrect: 'Correct answer',
+    noWrong: 'Perfect score! 🎉',
+    pleaseInput: 'Please paste some vocabulary notes first.',
+    sample:
+`word - meaning
+食べる（たべる）- to eat
+飲む（のむ）- to drink
+勉強する（べんきょうする）- to study
+学校（がっこう）- school
+先生（せんせい）- teacher, doctor
+電車（でんしゃ）- train
+忙しい（いそがしい）- busy
+楽しい（たのしい）- fun, enjoyable
+毎日（まいにち）- every day
+時間（じかん）- time`
+  }
+};
+
+let currentLang = 'zh-TW';
+
+function t(key, ...args) {
+  const val = i18n[currentLang][key];
+  return typeof val === 'function' ? val(...args) : val;
+}
+
+function applyI18n() {
+  document.documentElement.lang = currentLang === 'zh-TW' ? 'zh-TW' : 'en';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = i18n[currentLang][key];
+    if (typeof val === 'string') el.innerHTML = val;
+  });
+  document.getElementById('lang-toggle-btn').textContent = currentLang === 'zh-TW' ? 'English' : '中文';
+  document.getElementById('format-hint').innerHTML = t('formatHint');
+  document.getElementById('help-content').innerHTML = t('helpContent');
+  document.getElementById('notes-input').placeholder = t('sample').split('\n')[0];
+  updateParseStatus();
+  onModeChange();
+  if (currentScreen === 'quiz' && quizQueue.length) renderQuestion();
+  if (currentScreen === 'result' && quizQueue.length) renderResult();
+  if (currentScreen === 'practice' && practiceQueue.length) renderPracticeCard();
+  if (currentScreen === 'worksheet' && worksheetCards.length) renderWorksheet();
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'zh-TW' ? 'en' : 'zh-TW';
+  applyI18n();
+  saveState();
+}
+
+function toggleHelp(show) {
+  const modal = document.getElementById('help-modal');
+  if (show === undefined) show = !modal.classList.contains('show');
+  modal.classList.toggle('show', show);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') toggleHelp(false);
+});
+
+/* ---------------- Parsing ---------------- */
+function parseNotes(text) {
+  const lines = text.split(/\r?\n/);
+  const cards = [];
+  for (let raw of lines) {
+    let line = raw.trim();
+    if (!line) continue;
+    // strip leading numbering / bullets, e.g. "1. ", "1) ", "12、", "- ", "・"
+    line = line.replace(/^(\d+[.)、]\s*|[-*•・]\s+)/, '').trim();
+    if (!line) continue;
+
+    let word, reading, meaning;
+
+    // Special format: 単語。読み方[：意味]
+    const specialMatch = line.match(/^(.+?)。(.+)$/);
+    if (specialMatch) {
+      word = specialMatch[1].trim();
+      const rest = specialMatch[2];
+      const colonMatch = rest.match(/^(.+?)[:：](.+)$/);
+      if (colonMatch) {
+        reading = colonMatch[1].trim();
+        meaning = colonMatch[2].trim();
+      } else {
+        reading = rest.trim();
+        meaning = '';
+      }
+      if (!word || !reading) continue;
+      cards.push({ word, reading, meaning });
+      continue;
+    }
+
+    let parts;
+    if (line.includes('\t')) {
+      parts = line.split('\t').map(s => s.trim()).filter(Boolean);
+    } else {
+      parts = line.split(/\s*[-–—：:＝=→]\s*/).map(s => s.trim()).filter(Boolean);
+      if (parts.length < 2) {
+        parts = line.split(/[\s　]{2,}/).map(s => s.trim()).filter(Boolean);
+      }
+    }
+
+    if (parts.length >= 3) {
+      word = parts[0];
+      reading = parts[1];
+      meaning = parts.slice(2).join(' / ');
+    } else if (parts.length === 2) {
+      word = parts[0];
+      meaning = parts[1];
+    } else {
+      continue; // not enough info to form a Q&A pair
+    }
+
+    // skip likely header rows
+    if (/^(単語|word|term|vocab(ulary)?|漢字|かな|読み方)$/i.test(word)) continue;
+
+    // extract reading from parentheses in word, e.g. 食べる（たべる）
+    const m = word.match(/^(.+?)[(（]([^)）]+)[)）](.*)$/);
+    if (m) {
+      word = m[1].trim();
+      if (!reading) reading = m[2].trim();
+      if (m[3] && m[3].trim()) meaning = (m[3].trim() + ' / ' + meaning).trim();
+    }
+
+    if (!word || !meaning) continue;
+    cards.push({ word, reading: reading || '', meaning });
+  }
+  return cards;
+}
+
+/* ---------------- State ---------------- */
+let cards = [];
+let quizQueue = [];
+let quizIdx = 0;
+let scoreCorrect = 0;
+let scoreWrong = 0;
+let wrongList = [];
+let answered = false;
+let lastAnswerResult = null;
+let practiceQueue = [];
+let practiceIdx = 0;
+let worksheetCards = [];
+let currentScreen = 'setup';
+
+function onModeChange() {
+  const modeEl = document.querySelector('input[name="session-mode"]:checked');
+  const mode = modeEl ? modeEl.value : 'quiz';
+  document.getElementById('direction-group').style.display = mode === 'quiz' ? '' : 'none';
+  document.getElementById('start-btn').textContent = mode === 'quiz' ? t('startQuiz') : t('startPractice');
+}
+
+function startSession() {
+  const mode = document.querySelector('input[name="session-mode"]:checked').value;
+  if (mode === 'practice') startPractice();
+  else if (mode === 'worksheet') startWorksheet();
+  else startQuiz();
+}
+
+/* ---------------- Screen switching & persistence ---------------- */
+const STORAGE_KEY = 'jlptVocabQuizState';
+
+let isRestoring = false;
+
+function showScreen(name) {
+  currentScreen = name;
+  document.getElementById('setup-screen').style.display = name === 'setup' ? 'block' : 'none';
+  document.getElementById('quiz-screen').style.display = name === 'quiz' ? 'block' : 'none';
+  document.getElementById('result-screen').style.display = name === 'result' ? 'block' : 'none';
+  document.getElementById('practice-screen').style.display = name === 'practice' ? 'block' : 'none';
+  document.getElementById('worksheet-screen').style.display = name === 'worksheet' ? 'block' : 'none';
+  saveState();
+}
+
+function getQuizInputState() {
+  const item = quizQueue[quizIdx];
+  if (!item) return null;
+  if (item.dir === 'jp2mean') {
+    return { wordVal: document.getElementById('answer-input').value };
+  }
+  return {
+    wordVal: document.getElementById('answer-input-word').value,
+    readingVal: document.getElementById('answer-input-reading').value
+  };
+}
+
+function saveState() {
+  if (isRestoring) return;
+  const state = {
+    lang: currentLang,
+    notes: document.getElementById('notes-input').value,
+    sessionMode: document.querySelector('input[name="session-mode"]:checked')?.value || 'quiz',
+    direction: document.querySelector('input[name="direction"]:checked')?.value || 'jp2mean',
+    shuffle: document.getElementById('shuffle-check').checked,
+    screen: currentScreen,
+    cards, quizQueue, quizIdx, scoreCorrect, scoreWrong, wrongList,
+    answered, lastAnswerResult,
+    quizInput: getQuizInputState(),
+    practiceQueue, practiceIdx,
+    practiceInputVal: document.getElementById('practice-input').value,
+    practiceAnswerShown: document.getElementById('practice-answer').classList.contains('show'),
+    worksheetCards,
+    worksheetValues: Array.from(document.querySelectorAll('.worksheet-textarea')).map(el => el.value)
+  };
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) { /* ignore storage errors */ }
+}
+
+function restoreState() {
+  isRestoring = true;
+  let state = null;
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) state = JSON.parse(raw);
+  } catch (e) { /* ignore corrupt state */ }
+
+  if (state) {
+    currentLang = state.lang || 'zh-TW';
+    document.getElementById('notes-input').value = state.notes || '';
+    if (state.sessionMode) {
+      const el = document.querySelector(`input[name="session-mode"][value="${state.sessionMode}"]`);
+      if (el) el.checked = true;
+    }
+    if (state.direction) {
+      const el = document.querySelector(`input[name="direction"][value="${state.direction}"]`);
+      if (el) el.checked = true;
+    }
+    if (typeof state.shuffle === 'boolean') document.getElementById('shuffle-check').checked = state.shuffle;
+
+    cards = state.cards || [];
+    quizQueue = state.quizQueue || [];
+    quizIdx = state.quizIdx || 0;
+    scoreCorrect = state.scoreCorrect || 0;
+    scoreWrong = state.scoreWrong || 0;
+    wrongList = state.wrongList || [];
+    practiceQueue = state.practiceQueue || [];
+    practiceIdx = state.practiceIdx || 0;
+    worksheetCards = state.worksheetCards || [];
+
+    currentScreen = state.screen || 'setup';
+    if (currentScreen === 'quiz' && !(quizQueue.length && quizIdx < quizQueue.length)) currentScreen = 'setup';
+    if (currentScreen === 'result' && !quizQueue.length) currentScreen = 'setup';
+    if (currentScreen === 'practice' && !(practiceQueue.length && practiceIdx < practiceQueue.length)) currentScreen = 'setup';
+    if (currentScreen === 'worksheet' && !worksheetCards.length) currentScreen = 'setup';
+  }
+
+  applyI18n();
+  showScreen(currentScreen);
+
+  if (!state) {
+    isRestoring = false;
+    saveState();
+    return;
+  }
+
+  if (currentScreen === 'quiz') {
+    const item = quizQueue[quizIdx];
+    const qInput = state.quizInput || {};
+    if (item.dir === 'jp2mean') {
+      document.getElementById('answer-input').value = qInput.wordVal || '';
+    } else {
+      document.getElementById('answer-input-word').value = qInput.wordVal || '';
+      document.getElementById('answer-input-reading').value = qInput.readingVal || '';
+    }
+    if (state.answered && state.lastAnswerResult) {
+      answered = true;
+      lastAnswerResult = state.lastAnswerResult;
+      applyAnswerUI(item, lastAnswerResult.isCorrect, lastAnswerResult.revealedOnly, lastAnswerResult.detail);
+    }
+  } else if (currentScreen === 'practice') {
+    document.getElementById('practice-input').value = state.practiceInputVal || '';
+    if (state.practiceAnswerShown) document.getElementById('practice-answer').classList.add('show');
+  } else if (currentScreen === 'worksheet') {
+    const vals = state.worksheetValues || [];
+    document.querySelectorAll('.worksheet-textarea').forEach((el, i) => { if (vals[i]) el.value = vals[i]; });
+  }
+
+  isRestoring = false;
+  saveState();
+}
+
+/* ---------------- Setup screen ---------------- */
+function loadSample() {
+  document.getElementById('notes-input').value = t('sample');
+  updateParseStatus();
+  saveState();
+}
+function clearInput() {
+  document.getElementById('notes-input').value = '';
+  updateParseStatus();
+  saveState();
+}
+document.addEventListener('DOMContentLoaded', () => {
+  restoreState();
+  document.getElementById('notes-input').addEventListener('input', () => { updateParseStatus(); saveState(); });
+  document.querySelectorAll('input[name="session-mode"]').forEach(el => el.addEventListener('change', saveState));
+  document.querySelectorAll('input[name="direction"]').forEach(el => el.addEventListener('change', saveState));
+  document.getElementById('shuffle-check').addEventListener('change', saveState);
+  document.getElementById('answer-input').addEventListener('input', saveState);
+  document.getElementById('answer-input-word').addEventListener('input', saveState);
+  document.getElementById('answer-input-reading').addEventListener('input', saveState);
+  document.getElementById('practice-input').addEventListener('input', saveState);
+  document.getElementById('worksheet-list').addEventListener('input', e => {
+    if (e.target.classList.contains('worksheet-textarea')) saveState();
+  });
+  const onEnter = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (!answered) checkAnswer();
+      else nextQuestion();
+    }
+  };
+  document.getElementById('answer-input').addEventListener('keydown', onEnter);
+  document.getElementById('answer-input-word').addEventListener('keydown', onEnter);
+  document.getElementById('answer-input-reading').addEventListener('keydown', onEnter);
+});
+
+function updateParseStatus() {
+  const text = document.getElementById('notes-input').value;
+  const parsed = parseNotes(text);
+  const statusEl = document.getElementById('parse-status');
+  const startBtn = document.getElementById('start-btn');
+  if (!text.trim()) {
+    statusEl.textContent = '';
+    startBtn.disabled = true;
+    return;
+  }
+  if (parsed.length === 0) {
+    statusEl.textContent = t('parseEmpty');
+    startBtn.disabled = true;
+  } else {
+    statusEl.textContent = t('parseCount', parsed.length);
+    startBtn.disabled = false;
+  }
+}
+
+function shuffleArray(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  const text = document.getElementById('notes-input').value;
+  cards = parseNotes(text);
+  if (cards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
+  const direction = document.querySelector('input[name="direction"]:checked').value;
+  const shuffle = document.getElementById('shuffle-check').checked;
+
+  const usableCards = cards.filter(card => card.meaning);
+  if (usableCards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
+  let order = shuffle ? shuffleArray(usableCards) : usableCards.slice();
+  quizQueue = order.map(card => {
+    let dir = direction;
+    if (direction === 'mixed') dir = Math.random() < 0.5 ? 'jp2mean' : 'mean2jp';
+    if (dir === 'mean2jp' && !card.reading && !card.word) dir = 'jp2mean';
+    return { card, dir };
+  });
+
+  quizIdx = 0;
+  scoreCorrect = 0;
+  scoreWrong = 0;
+  wrongList = [];
+  answered = false;
+  lastAnswerResult = null;
+
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function backToSetup() {
+  showScreen('setup');
+}
+
+/* ---------------- Quiz screen ---------------- */
+function normalize(s) {
+  return s.trim().toLowerCase()
+    .replace(/[\s　]+/g, '')
+    .replace(/[!?。！？、，,.]/g, '');
+}
+
+function getAcceptableAnswers(item) {
+  const { card, dir } = item;
+  if (dir === 'jp2mean') {
+    return card.meaning.split(/[;,、，/／]/).map(s => normalize(s)).filter(Boolean);
+  } else {
+    return [card.word, card.reading].filter(Boolean).map(s => normalize(s));
+  }
+}
+
+function getDisplayAnswer(item) {
+  const { card, dir } = item;
+  if (dir === 'jp2mean') return card.meaning;
+  return [card.word, card.reading].filter(Boolean).join(' / ');
+}
+
+function renderQuestion() {
+  const item = quizQueue[quizIdx];
+  const { card, dir } = item;
+  answered = false;
+
+  document.getElementById('progress-fill').style.width = `${(quizIdx / quizQueue.length) * 100}%`;
+  document.getElementById('progress-text').textContent = t('progressText', quizIdx + 1, quizQueue.length);
+  document.getElementById('score-correct').textContent = t('scoreCorrect', scoreCorrect);
+  document.getElementById('score-wrong').textContent = t('scoreWrong', scoreWrong);
+
+  const promptEl = document.getElementById('quiz-prompt');
+  const readingEl = document.getElementById('quiz-reading');
+  const tagEl = document.getElementById('direction-tag');
+
+  const input = document.getElementById('answer-input');
+  const pair = document.getElementById('answer-input-pair');
+  const wordInput = document.getElementById('answer-input-word');
+  const readingInput = document.getElementById('answer-input-reading');
+  const readingField = document.getElementById('answer-field-reading');
+
+  if (dir === 'jp2mean') {
+    promptEl.textContent = card.word;
+    readingEl.textContent = card.reading || '';
+    tagEl.textContent = t('qLabelJp');
+
+    input.style.display = '';
+    pair.style.display = 'none';
+    input.value = '';
+    input.className = 'answer-input';
+    input.disabled = false;
+    input.focus();
+  } else {
+    promptEl.textContent = card.meaning;
+    readingEl.textContent = '';
+    tagEl.textContent = t('qLabelMean');
+
+    input.style.display = 'none';
+    pair.style.display = 'flex';
+    readingField.style.display = card.reading ? '' : 'none';
+    wordInput.value = '';
+    wordInput.className = 'answer-input';
+    wordInput.disabled = false;
+    readingInput.value = '';
+    readingInput.className = 'answer-input';
+    readingInput.disabled = false;
+    wordInput.focus();
+  }
+
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('check-btn').style.display = '';
+  document.getElementById('reveal-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+
+  saveState();
+}
+
+function checkAnswer() {
+  if (answered) return;
+  const item = quizQueue[quizIdx];
+
+  if (item.dir === 'jp2mean') {
+    const input = document.getElementById('answer-input');
+    const userVal = input.value;
+    const userNorm = normalize(userVal);
+    const acceptable = getAcceptableAnswers(item);
+    const isCorrect = acceptable.includes(userNorm) && userNorm !== '';
+    finishAnswer(isCorrect, userVal);
+  } else {
+    const wordInput = document.getElementById('answer-input-word');
+    const readingInput = document.getElementById('answer-input-reading');
+    const wordVal = wordInput.value;
+    const readingVal = readingInput.value;
+
+    const wordCorrect = wordVal.trim() !== '' && normalize(wordVal) === normalize(item.card.word);
+    const readingCorrect = !item.card.reading
+      || (readingVal.trim() !== '' && normalize(readingVal) === normalize(item.card.reading));
+    const isCorrect = wordCorrect && readingCorrect;
+
+    const userVal = item.card.reading
+      ? `${wordVal.trim() || '—'} / ${readingVal.trim() || '—'}`
+      : (wordVal.trim() || '—');
+
+    finishAnswer(isCorrect, userVal, false, { wordCorrect, readingCorrect });
+  }
+}
+
+function revealAnswer() {
+  if (answered) return;
+  const item = quizQueue[quizIdx];
+
+  if (item.dir === 'jp2mean') {
+    finishAnswer(false, document.getElementById('answer-input').value, true);
+  } else {
+    const wordInput = document.getElementById('answer-input-word');
+    const readingInput = document.getElementById('answer-input-reading');
+    const wordVal = wordInput.value;
+    const readingVal = readingInput.value;
+    const userVal = item.card.reading
+      ? `${wordVal.trim() || '—'} / ${readingVal.trim() || '—'}`
+      : (wordVal.trim() || '—');
+    finishAnswer(false, userVal, true, { wordCorrect: false, readingCorrect: false });
+  }
+}
+
+function applyAnswerUI(item, isCorrect, revealedOnly, detail) {
+  const feedback = document.getElementById('feedback');
+  const feedbackText = document.getElementById('feedback-text');
+  const feedbackAnswer = document.getElementById('feedback-answer');
+
+  if (item.dir === 'jp2mean') {
+    const input = document.getElementById('answer-input');
+    input.disabled = true;
+    input.classList.add(isCorrect ? 'correct' : 'incorrect');
+  } else {
+    const wordInput = document.getElementById('answer-input-word');
+    const readingInput = document.getElementById('answer-input-reading');
+    wordInput.disabled = true;
+    wordInput.classList.add(detail.wordCorrect ? 'correct' : 'incorrect');
+    if (item.card.reading) {
+      readingInput.disabled = true;
+      readingInput.classList.add(detail.readingCorrect ? 'correct' : 'incorrect');
+    }
+  }
+
+  if (isCorrect) {
+    feedback.className = 'feedback show correct';
+    feedbackText.textContent = t('correct');
+    feedbackAnswer.innerHTML = '';
+  } else {
+    feedback.className = 'feedback show incorrect';
+    feedbackText.textContent = revealedOnly ? '' : t('incorrect');
+    feedbackAnswer.innerHTML = `<span class="label">${t('correctAnswer')}</span>${getDisplayAnswer(item)}`;
+  }
+
+  document.getElementById('check-btn').style.display = 'none';
+  document.getElementById('reveal-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+}
+
+function finishAnswer(isCorrect, userVal, revealedOnly, detail) {
+  answered = true;
+  const item = quizQueue[quizIdx];
+  lastAnswerResult = { isCorrect, revealedOnly: !!revealedOnly, detail: detail || null };
+
+  applyAnswerUI(item, isCorrect, revealedOnly, detail);
+
+  if (isCorrect) {
+    scoreCorrect++;
+  } else {
+    scoreWrong++;
+    wrongList.push({
+      item,
+      yourAnswer: userVal && userVal.trim() ? userVal.trim() : '—'
+    });
+  }
+
+  document.getElementById('score-correct').textContent = t('scoreCorrect', scoreCorrect);
+  document.getElementById('score-wrong').textContent = t('scoreWrong', scoreWrong);
+
+  document.getElementById('next-btn').focus();
+  saveState();
+}
+
+function nextQuestion() {
+  quizIdx++;
+  if (quizIdx >= quizQueue.length) {
+    document.getElementById('progress-fill').style.width = '100%';
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+/* ---------------- Result screen ---------------- */
+function showResult() {
+  showScreen('result');
+  renderResult();
+}
+
+function renderResult() {
+  document.getElementById('result-score-num').textContent = `${scoreCorrect} / ${quizQueue.length}`;
+  document.getElementById('result-score-total').textContent = '';
+
+  const reviewArea = document.getElementById('review-area');
+  if (wrongList.length === 0) {
+    reviewArea.innerHTML = `<div class="empty-msg">${t('noWrong')}</div>`;
+    return;
+  }
+
+  let rows = wrongList.map(({ item, yourAnswer }) => {
+    const { card, dir } = item;
+    const question = dir === 'jp2mean'
+      ? `${card.word}${card.reading ? ' (' + card.reading + ')' : ''}`
+      : card.meaning;
+    return `<tr>
+      <td>${escapeHtml(question)}</td>
+      <td class="your-answer wrong">${escapeHtml(yourAnswer)}</td>
+      <td class="correct-answer">${escapeHtml(getDisplayAnswer(item))}</td>
+    </tr>`;
+  }).join('');
+
+  reviewArea.innerHTML = `
+    <table class="review-table">
+      <thead>
+        <tr>
+          <th>${t('reviewHeaderQ')}</th>
+          <th>${t('reviewHeaderYour')}</th>
+          <th>${t('reviewHeaderCorrect')}</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function restartSame() {
+  const usableCards = cards.filter(card => card.meaning);
+  if (usableCards.length === 0) {
+    backToSetup();
+    return;
+  }
+  const direction = document.querySelector('input[name="direction"]:checked').value;
+  const shuffle = document.getElementById('shuffle-check').checked;
+
+  let order = shuffle ? shuffleArray(usableCards) : usableCards.slice();
+  quizQueue = order.map(card => {
+    let dir = direction;
+    if (direction === 'mixed') dir = Math.random() < 0.5 ? 'jp2mean' : 'mean2jp';
+    if (dir === 'mean2jp' && !card.reading && !card.word) dir = 'jp2mean';
+    return { card, dir };
+  });
+
+  quizIdx = 0;
+  scoreCorrect = 0;
+  scoreWrong = 0;
+  wrongList = [];
+  answered = false;
+  lastAnswerResult = null;
+
+  showScreen('quiz');
+  renderQuestion();
+}
+
+/* ---------------- Practice screen ---------------- */
+function startPractice() {
+  const text = document.getElementById('notes-input').value;
+  cards = parseNotes(text);
+  if (cards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
+  const usableCards = cards.filter(card => card.meaning);
+  if (usableCards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
+  const shuffle = document.getElementById('shuffle-check').checked;
+  practiceQueue = shuffle ? shuffleArray(usableCards) : usableCards.slice();
+  practiceIdx = 0;
+
+  showScreen('practice');
+  renderPracticeCard();
+}
+
+function renderPracticeCard() {
+  const card = practiceQueue[practiceIdx];
+
+  document.getElementById('practice-progress-fill').style.width = `${((practiceIdx + 1) / practiceQueue.length) * 100}%`;
+  document.getElementById('practice-progress-text').textContent = t('progressTextPractice', practiceIdx + 1, practiceQueue.length);
+
+  document.getElementById('practice-prompt').textContent = card.meaning;
+
+  const answerEl = document.getElementById('practice-answer');
+  answerEl.className = 'practice-answer';
+  answerEl.innerHTML = `<span class="label">${t('correctAnswer')}</span><span class="value">${escapeHtml([card.word, card.reading].filter(Boolean).join(' / '))}</span>`;
+
+  const input = document.getElementById('practice-input');
+  input.value = '';
+  input.focus();
+
+  document.getElementById('practice-prev-btn').disabled = practiceIdx === 0;
+  document.getElementById('practice-next-btn').textContent = practiceIdx === practiceQueue.length - 1 ? t('finishBtn') : t('nextWordBtn');
+
+  saveState();
+}
+
+function clearPracticeInput() {
+  const input = document.getElementById('practice-input');
+  input.value = '';
+  input.focus();
+  saveState();
+}
+
+function togglePracticeAnswer() {
+  document.getElementById('practice-answer').classList.toggle('show');
+  saveState();
+}
+
+function practiceNav(delta) {
+  const next = practiceIdx + delta;
+  if (next < 0) return;
+  if (next >= practiceQueue.length) {
+    backToSetup();
+    return;
+  }
+  practiceIdx = next;
+  renderPracticeCard();
+}
+
+/* ---------------- Worksheet screen ---------------- */
+function startWorksheet() {
+  const text = document.getElementById('notes-input').value;
+  cards = parseNotes(text);
+  if (cards.length === 0) {
+    alert(t('parseEmpty'));
+    return;
+  }
+
+  const shuffle = document.getElementById('shuffle-check').checked;
+  worksheetCards = shuffle ? shuffleArray(cards) : cards.slice();
+
+  showScreen('worksheet');
+  renderWorksheet();
+}
+
+function renderWorksheet() {
+  const listEl = document.getElementById('worksheet-list');
+  listEl.innerHTML = worksheetCards.map(card => {
+    const reading = card.reading ? `<span class="reading">‐${escapeHtml(card.reading)}</span>` : '';
+    const meaning = card.meaning ? `<span class="meaning">（${escapeHtml(card.meaning)}）</span>` : '';
+    return `
+      <div class="worksheet-item">
+        <div class="worksheet-label">${escapeHtml(card.word)}${reading}${meaning}</div>
+        <textarea class="worksheet-textarea" autocapitalize="off" spellcheck="false"></textarea>
+      </div>`;
+  }).join('');
+  saveState();
+}
+</script>
+</body>
+</html>
