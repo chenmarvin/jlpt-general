@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日文句子拆解器 | Japanese Sentence Parser</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #3730a3;
+  --primary-light: #4f46e5;
+  --primary-faint: #eef2ff;
+  --surface: #ffffff;
+  --bg: #f8f9ff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+
+  /* Chunk type colors */
+  --c-noun: #1d4ed8;        --c-noun-bg: #dbeafe;
+  --c-verb: #15803d;        --c-verb-bg: #dcfce7;
+  --c-adjective: #7c3aed;   --c-adjective-bg: #ede9fe;
+  --c-adverb: #b45309;      --c-adverb-bg: #fef3c7;
+  --c-pronoun: #0e7490;     --c-pronoun-bg: #cffafe;
+  --c-particle: #6b7280;    --c-particle-bg: #f3f4f6;
+  --c-aux: #9f1239;         --c-aux-bg: #ffe4e6;
+  --c-phrase: #4338ca;      --c-phrase-bg: #e0e7ff;
+  --c-other: #374151;       --c-other-bg: #f9fafb;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+  color: white;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px rgba(55,48,163,0.3);
+  gap: 12px;
+}
+.header-title h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.02em; }
+.header-title p { font-size: 0.85rem; opacity: 0.8; margin-top: 2px; }
+.back-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.back-btn:hover { background: rgba(255,255,255,0.35); }
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 24px;
+}
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { order: -1; }
+}
+
+/* Card */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.card-header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.card-body { padding: 20px; }
+
+/* Input area */
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+#sentence-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 1.1rem;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color 0.2s;
+  resize: vertical;
+  min-height: 56px;
+}
+#sentence-input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+}
+#sentence-input::placeholder { color: var(--text-light); }
+
+.parse-btn {
+  padding: 12px 24px;
+  background: var(--primary-light);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  white-space: nowrap;
+  height: 56px;
+}
+.parse-btn:hover { background: var(--primary); }
+.parse-btn:active { transform: scale(0.97); }
+.parse-btn:disabled { background: var(--text-light); cursor: not-allowed; }
+
+/* Result area */
+#result-area { margin-top: 20px; display: none; }
+
+.result-original {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.8;
+  word-break: break-all;
+}
+.result-bracket {
+  font-size: 1.2rem;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 4px;
+  line-height: 1.8;
+  word-break: break-all;
+}
+.result-bracket .bracket-chunk {
+  background: var(--primary-faint);
+  border-radius: 4px;
+  padding: 0 2px;
+}
+.result-translation {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--primary-light);
+}
+
+/* Chunk tokens */
+.chunks-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+.chunks-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chunk-token {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: default;
+  position: relative;
+  transition: transform 0.15s;
+}
+.chunk-token:hover { transform: translateY(-2px); }
+.chunk-token:hover .chunk-tooltip { opacity: 1; visibility: visible; pointer-events: auto; }
+
+.chunk-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.chunk-reading {
+  font-size: 0.7rem;
+  margin-top: 2px;
+  opacity: 0.75;
+}
+.chunk-meaning-inline {
+  font-size: 0.72rem;
+  margin-top: 3px;
+  opacity: 0.85;
+  text-align: center;
+}
+
+/* Tooltip */
+.chunk-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s;
+  z-index: 10;
+  pointer-events: none;
+  line-height: 1.5;
+  text-align: center;
+}
+.chunk-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #1e293b;
+}
+
+/* Type colors */
+.type-noun       { background: var(--c-noun-bg);       color: var(--c-noun); }
+.type-verb       { background: var(--c-verb-bg);       color: var(--c-verb); }
+.type-adjective  { background: var(--c-adjective-bg);  color: var(--c-adjective); }
+.type-adverb     { background: var(--c-adverb-bg);     color: var(--c-adverb); }
+.type-pronoun    { background: var(--c-pronoun-bg);    color: var(--c-pronoun); }
+.type-particle   { background: var(--c-particle-bg);   color: var(--c-particle); }
+.type-aux_verb   { background: var(--c-aux-bg);        color: var(--c-aux); }
+.type-conjunction { background: var(--c-other-bg);     color: var(--c-other); }
+.type-noun_phrase  { background: var(--c-phrase-bg);   color: var(--c-phrase); }
+.type-verb_phrase  { background: var(--c-verb-bg);     color: var(--c-verb); }
+.type-adj_phrase   { background: var(--c-adjective-bg);color: var(--c-adjective); }
+.type-interjection { background: var(--c-other-bg);    color: var(--c-other); }
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-muted);
+  padding: 20px 0;
+}
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary-light);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Error */
+.error-msg {
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  margin-top: 12px;
+}
+
+/* History */
+.sidebar {}
+
+.history-empty {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.history-list { display: flex; flex-direction: column; gap: 0; }
+
+.history-item {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+}
+.history-item:last-child { border-bottom: none; }
+.history-item:hover { background: var(--bg); }
+.history-item.active { background: var(--primary-faint); }
+
+.history-sentence {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+  word-break: break-all;
+  padding-right: 28px;
+}
+.history-translation {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.history-time {
+  font-size: 0.72rem;
+  color: var(--text-light);
+}
+.history-del {
+  position: absolute;
+  top: 14px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-light);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.history-del:hover { color: #b91c1c; background: #fee2e2; }
+
+.clear-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.clear-btn:hover { border-color: #fca5a5; color: #b91c1c; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    <h1>日文句子拆解器</h1>
+    <p>Japanese Sentence Parser</p>
+  </div>
+  <a href="index.html" class="back-btn">← 返回練習</a>
+</header>
+
+<div class="layout">
+  <!-- Main panel -->
+  <div class="main-panel">
+    <div class="card">
+      <div class="card-header">
+        <h2>輸入句子</h2>
+      </div>
+      <div class="card-body">
+        <div class="input-row">
+          <textarea
+            id="sentence-input"
+            placeholder="輸入日文句子，例：このなかでいちばん高いのはどれですか"
+            rows="2"
+          ></textarea>
+          <button class="parse-btn" id="parse-btn" onclick="parseSentence()">拆解</button>
+        </div>
+        <div id="loading" style="display:none" class="loading">
+          <div class="spinner"></div>
+          <span>AI 分析中…</span>
+        </div>
+        <div id="error-msg" class="error-msg" style="display:none"></div>
+
+        <div id="result-area">
+          <div class="result-original" id="result-original"></div>
+          <div class="result-bracket" id="result-bracket"></div>
+          <div class="result-translation" id="result-translation"></div>
+
+          <div class="chunks-title">語法拆解 Grammar Breakdown</div>
+          <div class="chunks-grid" id="chunks-grid"></div>
+
+          <div class="legend" id="legend"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar: history -->
+  <div class="sidebar">
+    <div class="card" style="position:sticky;top:24px">
+      <div class="card-header">
+        <h2>歷史記錄</h2>
+        <button class="clear-btn" onclick="clearHistory()">清除全部</button>
+      </div>
+      <div id="history-container">
+        <div class="history-empty">尚無記錄</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TYPE_LABELS = {
+  noun: '名詞', verb: '動詞', adjective: '形容詞', adverb: '副詞',
+  pronoun: '代名詞', particle: '助詞', aux_verb: '助動詞',
+  conjunction: '接續詞', noun_phrase: '名詞片語', verb_phrase: '動詞片語',
+  adj_phrase: '形容詞片語', interjection: '感嘆詞',
+};
+
+const TYPE_COLORS = {
+  noun:       '#1d4ed8', noun_phrase:  '#4338ca',
+  verb:       '#15803d', verb_phrase:  '#15803d',
+  adjective:  '#7c3aed', adj_phrase:   '#7c3aed',
+  adverb:     '#b45309',
+  pronoun:    '#0e7490',
+  particle:   '#6b7280', aux_verb:     '#9f1239',
+  conjunction:'#374151', interjection: '#374151',
+};
+
+let history = [];
+let currentId = null;
+
+async function parseSentence() {
+  const input = document.getElementById('sentence-input');
+  const sentence = input.value.trim();
+  if (!sentence) return;
+
+  setLoading(true);
+  hideError();
+  document.getElementById('result-area').style.display = 'none';
+
+  try {
+    const res = await fetch('/api/parse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sentence }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '解析失敗');
+
+    renderResult(data);
+    currentId = data.id;
+    await loadHistory();
+    highlightActive(data.id);
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    setLoading(false);
+  }
+}
+
+function renderResult(data) {
+  document.getElementById('result-original').textContent = data.original;
+  document.getElementById('result-translation').textContent = data.translation;
+
+  // Bracket view
+  let bracketHTML = '';
+  (data.chunks || []).forEach(chunk => {
+    if (chunk.highlighted) {
+      bracketHTML += `<span class="bracket-chunk">[${escHtml(chunk.text)}]</span>`;
+    } else {
+      bracketHTML += escHtml(chunk.text);
+    }
+  });
+  document.getElementById('result-bracket').innerHTML = bracketHTML;
+
+  // Chunks grid
+  const grid = document.getElementById('chunks-grid');
+  grid.innerHTML = '';
+  const typesUsed = new Set();
+
+  (data.chunks || []).forEach(chunk => {
+    const typeKey = chunk.type || 'other';
+    typesUsed.add(typeKey);
+    const cls = `type-${typeKey}`;
+    const label = TYPE_LABELS[typeKey] || typeKey;
+
+    const el = document.createElement('div');
+    el.className = `chunk-token ${cls}`;
+    el.innerHTML = `
+      <span class="chunk-text">${escHtml(chunk.text)}</span>
+      ${chunk.reading && chunk.reading !== chunk.text
+        ? `<span class="chunk-reading">${escHtml(chunk.reading)}</span>`
+        : ''}
+      <span class="chunk-meaning-inline">${escHtml(chunk.meaning || '')}</span>
+      <div class="chunk-tooltip">${escHtml(label)}<br>${escHtml(chunk.reading || '')} → ${escHtml(chunk.meaning || '')}</div>
+    `;
+    grid.appendChild(el);
+  });
+
+  // Legend
+  const legend = document.getElementById('legend');
+  legend.innerHTML = '';
+  typesUsed.forEach(t => {
+    const color = TYPE_COLORS[t] || '#374151';
+    const label = TYPE_LABELS[t] || t;
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `<div class="legend-dot" style="background:${color}"></div><span>${label}</span>`;
+    legend.appendChild(item);
+  });
+
+  document.getElementById('result-area').style.display = 'block';
+}
+
+async function loadHistory() {
+  const res = await fetch('/api/history');
+  history = await res.json();
+  renderHistory();
+}
+
+function renderHistory() {
+  const container = document.getElementById('history-container');
+  if (!history.length) {
+    container.innerHTML = '<div class="history-empty">尚無記錄</div>';
+    return;
+  }
+  container.innerHTML = '<div class="history-list">' +
+    history.map(item => `
+      <div class="history-item${item.id === currentId ? ' active' : ''}" data-id="${item.id}" onclick="loadHistoryItem(${item.id})">
+        <div class="history-sentence">${escHtml(item.original)}</div>
+        <div class="history-translation">${escHtml(item.translation || '')}</div>
+        <div class="history-time">${formatTime(item.timestamp)}</div>
+        <button class="history-del" onclick="deleteHistoryItem(event, ${item.id})" title="刪除">×</button>
+      </div>
+    `).join('') +
+  '</div>';
+}
+
+function loadHistoryItem(id) {
+  const item = history.find(h => h.id === id);
+  if (!item) return;
+  currentId = id;
+  document.getElementById('sentence-input').value = item.original;
+  renderResult(item);
+  highlightActive(id);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function highlightActive(id) {
+  currentId = id;
+  document.querySelectorAll('.history-item').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.id) === id);
+  });
+}
+
+async function deleteHistoryItem(e, id) {
+  e.stopPropagation();
+  await fetch(`/api/history/${id}`, { method: 'DELETE' });
+  if (currentId === id) {
+    currentId = null;
+    document.getElementById('result-area').style.display = 'none';
+  }
+  await loadHistory();
+}
+
+async function clearHistory() {
+  if (!history.length) return;
+  if (!confirm('確定要清除所有歷史記錄？')) return;
+  await fetch('/api/history', { method: 'DELETE' });
+  currentId = null;
+  document.getElementById('result-area').style.display = 'none';
+  await loadHistory();
+}
+
+function setLoading(v) {
+  document.getElementById('loading').style.display = v ? 'flex' : 'none';
+  document.getElementById('parse-btn').disabled = v;
+}
+
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideError() {
+  document.getElementById('error-msg').style.display = 'none';
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleString('zh-TW', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+}
+
+// Enter key to parse
+document.getElementById('sentence-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    parseSentence();
+  }
+});
+
+// Load history on start
+loadHistory();
+</script>
+</body>
+</html>
